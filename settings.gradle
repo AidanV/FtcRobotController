@@ -1,2 +1,6 @@
 include ':FtcRobotController'
+//include ':TeamCode'
+include ':ftc265'
+project(':ftc265').projectDir=file('/Users/aidanv/Documents/GitHub/ftc265')
 include ':TeamCode'
+project(':TeamCode').projectDir=file('/Users/aidanv/Documents/GitHub/TeamCode')
