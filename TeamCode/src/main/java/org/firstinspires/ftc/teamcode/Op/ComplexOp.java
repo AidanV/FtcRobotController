@@ -1,17 +1,10 @@
 package org.firstinspires.ftc.teamcode.Op;
 
-import android.view.inspector.InspectionCompanion;
-
 import com.arcrobotics.ftclib.geometry.Pose2d;
-import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.hardware.*;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 import org.firstinspires.ftc.teamcode.Calculators.OtherCalcs;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneRobotName_Box.SkystoneRobotMap;
 import org.firstinspires.ftc.teamcode.Hardware.FreightRobotName_NA.RobotMap;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,9 +13,6 @@ import org.firstinspires.ftc.teamcode.Calculators.Interfaces;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.CompleteController;
 import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.*;
 
 public abstract class ComplexOp extends LinearOpMode{
@@ -30,6 +20,8 @@ public abstract class ComplexOp extends LinearOpMode{
     private MecanumDrive mecanumDrive;
 
     double previousHeading = 0;
+
+    private Pose2d initPose = null;
 
     public void ComplexMove(Interfaces.SpeedCalc speedCalc,
                             Interfaces.MotionCalc motionCalc,
@@ -50,7 +42,7 @@ public abstract class ComplexOp extends LinearOpMode{
         } catch (SocketException e) {
             e.printStackTrace();
         }
-
+        if(initPose == null) initPose = d.robot.slamra.getLastReceivedCameraUpdate().pose;
         while(d.progress < 1.0) {
             //_______________________
 //            if(ds != null) {
@@ -94,16 +86,20 @@ public abstract class ComplexOp extends LinearOpMode{
 //            d.preWPos.set(d.wPos);
 //            d.wPos.add(deltaMove);
 
-            d.wPos.set(
-                    d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getX()*100.0,
-                    d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getY()*100.0);
+            Vector2D slamraPos = new Vector2D(
+                    (d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getX()-initPose.getTranslation().getX())*100.0,
+                    (d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getY()-initPose.getTranslation().getY())*100.0);
 
-            d.heading = 180.0 - d.robot.slamra.getLastReceivedCameraUpdate().pose.getRotation().getDegrees();
+            slamraPos.rotateBy(Math.toRadians(startPositionAndOrientation().StartNorthOffset));
+            slamraPos.add(startPositionAndOrientation().StartPos);
+            d.wPos.set(slamraPos);
+
+            d.heading = d.robot.slamra.getLastReceivedCameraUpdate().pose.getRotation().getDegrees() - initPose.getRotation().getDegrees();
 
             if(orientationCalc != null) d.currentCommand.orientationSpeed = orientationCalc.CalcOrientation(d);
             if(motionCalc != null) {
                 d.currentCommand.motionSpeed = motionCalc.CalcMotion(d);
-                d.currentCommand.motionSpeed.rotateBy(Math.toRadians(-d.heading));
+                d.currentCommand.motionSpeed.rotateBy(Math.toRadians(90-d.heading));
             }
             if(speedCalc != null) d.currentCommand.speed = speedCalc.CalcSpeed(d);
 
@@ -133,7 +129,10 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("right joystick x", d.driver.rs().x);
 //            telemetry.addData("wobble position", d.robot.wobbleEx.getCurrentPosition());
 //            telemetry.addData("offset", d.robot.wobbleOffset);
-            telemetry.addData("power error", d.powerError);
+            telemetry.addData("right stick x", d.driver.rs().x);
+            telemetry.addData("right stick x raw", gamepad1.right_stick_x);
+            telemetry.addData("bop", d.robot.barm.getCurrentPosition());
+            telemetry.addData("top", d.robot.tarm.getCurrentPosition());
             //telemetry.addData("goal position", d.goalPosition);
 
 //            telemetry.addData("goal position", d.goalBox);
@@ -204,19 +203,25 @@ public abstract class ComplexOp extends LinearOpMode{
     public Interfaces.MoveData d = new Interfaces.MoveData();//if you delete this the world will end
 
     void initHardware(HardwareMap hwMap) {
+        telemetry.addData("ENTERED INIT HARDWARE", "<-");
         d.robot = new RobotMap(hwMap);//, startPositionAndOrientation());
-        d.robot.slamra.setPose(new Pose2d(
-                startPositionAndOrientation().StartPos.x/100,
-                startPositionAndOrientation().StartPos.y/100,
-                new Rotation2d()));//Math.toRadians(startPositionAndOrientation().StartHeading))));
+//        d.robot.slamra.setPose(new Pose2d(0, 0,
+////                startPositionAndOrientation().StartPos.x/100,
+////                startPositionAndOrientation().StartPos.y/100,
+//
+//                new Rotation2d(0)));//Math.toRadians(startPositionAndOrientation().StartHeading))));
         d.robot.slamra.start();
+
         mecanumDrive = new MecanumDrive(d);
-        return;
     }
 
     public abstract Interfaces.MoveData.StartData startPositionAndOrientation();
 
     public abstract void body() throws InterruptedException;
+
+    public void initMove() throws InterruptedException{
+
+    }
 
     void exit(){//so we don't run into a wall at full speed
         d.robot.bright.setPower(0);
@@ -269,8 +274,10 @@ public abstract class ComplexOp extends LinearOpMode{
         posDisplay.CalcOther(d);
 
         telemetry.addData("Place robot here", "\n"+d.field);
-        telemetry.addData("heading"," "+d.startData.StartHeading+" | position: ("+String.valueOf(Math.round(d.startData.StartPos.x))+", "+String.valueOf(Math.round(d.startData.StartPos.y))+")");
+        telemetry.addData("heading"," "+d.startData.StartNorthOffset +" | position: ("+String.valueOf(Math.round(d.startData.StartPos.x))+", "+String.valueOf(Math.round(d.startData.StartPos.y))+")");
         telemetry.update();
+
+        initMove();
 
         waitForStart();
 

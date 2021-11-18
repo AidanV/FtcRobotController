@@ -39,10 +39,10 @@ public class Interfaces {
          */
         public static class StartData {
             public Vector2D StartPos;
-            public double StartHeading;
-            public StartData(Vector2D startPos, double startHeading){
+            public double StartNorthOffset;
+            public StartData(Vector2D startPos, double startNorthOffset){
                 this.StartPos = startPos;
-                this.StartHeading = startHeading;
+                this.StartNorthOffset = startNorthOffset;
             }
         }
         public StartData startData = null;
@@ -53,9 +53,8 @@ public class Interfaces {
          */
         public RobotMap robot = null;
 
-        public double shooterCommand = 0;
-        public double bleftCommand = 0;
-        public double intakeCommand = 0;
+        public double initBarmPos = 0;
+        public double initTarmPos = 0;
 
         public boolean aimToPowerOverride = false;
 

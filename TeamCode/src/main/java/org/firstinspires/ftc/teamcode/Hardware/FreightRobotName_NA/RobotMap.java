@@ -25,11 +25,13 @@ import com.arcrobotics.ftclib.geometry.Translation2d;
 
 public class RobotMap {
 
-    public static DcMotor bright, fright, bleft, fleft;//, shooter, intake, wobble;
+    public static DcMotor bright, fright, bleft, fleft, barm, tarm, sarm, duck;//, shooter, intake, wobble;
 
 //    public static int wobbleOffset = 0;
 
-    public static DcMotorEx brightEx, frightEx, bleftEx, fleftEx;//, shooterEx, intakeEx, wobbleEx;
+    public static DcMotorEx brightEx, frightEx, bleftEx, fleftEx, barmEx, tarmEx, sarmEx, duckEx;//, shooterEx, intakeEx, wobbleEx;
+
+    public static DigitalChannel bop, top;
 
 //    public static Servo bucket, pusher, graber;
 
@@ -61,37 +63,65 @@ public class RobotMap {
          */
 //PIDCoefficients pidDrive = new PIDCoefficients(50, 10, 0);
         PIDFCoefficients pidDrive = new PIDFCoefficients(20, 12, 5, 17.5);//p5 i2 d5 f17.5
+        PIDFCoefficients pidArm = new PIDFCoefficients(20, 5, 0, 17.5);//p5 i2 d5 f17.5
 
         bright = hw.get(DcMotor.class, "bright");
-        //RUN_USING_ENCODER gives each motor a PID and ensures the motors run at the same speed every time.
-        bright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bright.setDirection(DcMotorSimple.Direction.REVERSE);
-        bright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        brightEx = (DcMotorEx) bright;
-        brightEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+        //RUN_USING_ENCODER gives each motor a PID and ensures the motors run at the same speed every time.
+//        bright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        bright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        bright.setDirection(DcMotorSimple.Direction.REVERSE);
+//        bright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        brightEx = (DcMotorEx) bright;
+//        brightEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
 
         fright = hw.get(DcMotor.class, "fright");
-        fright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        fright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fright.setDirection(DcMotorSimple.Direction.REVERSE);
-        fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frightEx = (DcMotorEx) fright;
-        frightEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+//        fright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        fright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        fright.setDirection(DcMotorSimple.Direction.REVERSE);
+//        fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        frightEx = (DcMotorEx) fright;
+//        frightEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
 
         bleft = hw.get(DcMotor.class, "bleft");
-        bleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        bleftEx = (DcMotorEx) bleft;
-        bleftEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+        bleft.setDirection(DcMotorSimple.Direction.FORWARD);
+//        bleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        bleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        bleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        bleftEx = (DcMotorEx) bleft;
+//        bleftEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
 
         fleft = hw.get(DcMotor.class, "fleft");
-        fleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        fleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        fleftEx = (DcMotorEx) fleft;
-        fleftEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+        fleft.setDirection(DcMotorSimple.Direction.FORWARD);
+//        fleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        fleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        fleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        fleftEx = (DcMotorEx) fleft;
+//        fleftEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+
+        barm = hw.get(DcMotor.class, "barm");
+        barm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        barm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        barm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        barmEx = (DcMotorEx) barm;
+        barmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidArm);
+
+        tarm = hw.get(DcMotor.class, "tarm");
+        tarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        tarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        tarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        tarmEx = (DcMotorEx) tarm;
+        tarmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidArm);
+
+        sarm = hw.get(DcMotor.class, "sarm");
+//        sarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        sarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        sarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        sarmEx = (DcMotorEx) sarm;
+//        sarmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+
+        duck = hw.get(DcMotor.class, "duck");
 
 //        intake = hw.get(DcMotor.class, "intake");
 //        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -132,6 +162,15 @@ public class RobotMap {
 //        motorControllerEx.setPIDCoefficients(motorIndex, DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
 
 
+        bop = hw.get(DigitalChannel.class, "bop");
+
+        // set the digital channel to input.
+        bop.setMode(DigitalChannel.Mode.INPUT);
+
+        top = hw.get(DigitalChannel.class, "top");
+
+        // set the digital channel to input.
+        top.setMode(DigitalChannel.Mode.INPUT);
 
         /**
          * @see NavX is constructed with the heading from the beginning of an {@link org.firstinspires.ftc.teamcode.ftc10650.Auto} and
@@ -189,7 +228,7 @@ public class RobotMap {
 
         if (slamra == null) {
             //set offset from center of robot here
-            slamra = new T265Camera(new Transform2d(new Translation2d(0.0, 0.0), new Rotation2d(Math.toRadians(90.0))), 1.0, hw.appContext);//oC was 0.1
+            slamra = new T265Camera(new Transform2d(new Translation2d(0, 0), new Rotation2d()), 1.0, hw.appContext);//oC was 0.1
 
         }
 //        slamra.start();

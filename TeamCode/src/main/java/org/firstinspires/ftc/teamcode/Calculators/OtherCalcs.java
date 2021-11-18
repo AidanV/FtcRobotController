@@ -754,6 +754,42 @@ public class OtherCalcs {
 ////            }
 ////            return new MyDonutStackOtherCalc();
 ////    }
+    public static Interfaces.OtherCalc Arm(){
+
+
+        return new Interfaces.OtherCalc(){
+            private double myProgress = 0;
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+
+            @Override
+            public void CalcOther(Interfaces.MoveData d){
+                d.robot.barmEx.setVelocity(1500*(-d.manip.ls().x/2.5));
+                d.robot.tarmEx.setVelocity(1500*(-d.manip.ls().y/2.5));
+                d.robot.sarm.setPower(-d.manip.rs().x/2.5);
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc Duck(){
+
+
+        return new Interfaces.OtherCalc(){
+            private double myProgress = 0;
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+
+            @Override
+            public void CalcOther(Interfaces.MoveData d){
+                d.robot.duck.setPower(d.manip.lt()-d.manip.rt());
+            }
+        };
+    }
+
 
     public static Interfaces.OtherCalc TeleOpMatch(){
 
@@ -797,7 +833,7 @@ public class OtherCalcs {
                 int adjustedRow = (int)Math.round((d.wPos.y/realFieldHeight)* stringFieldHeight);
                 String rval = "";
                 for(int row = stringFieldHeight-1; row>-1; row--){
-                    if(row == stringFieldHeight-1) rval += "\u2004________________________________________\n";
+                    if(row == stringFieldHeight-1) rval += "\u2004______________________________________________\n";
                     rval += "|";
 
                     for(int col = 0; col< stringFieldWidth; col++){
@@ -818,7 +854,7 @@ public class OtherCalcs {
 
                     }
                 }
-                rval += "_________________________________________\u2004";
+                rval += "_______________________________________________\u2004";
                 d.field = rval;
             }
 

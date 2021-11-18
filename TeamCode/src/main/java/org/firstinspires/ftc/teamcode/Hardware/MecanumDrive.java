@@ -50,7 +50,7 @@ public class MecanumDrive {
         robot.frightEx.setVelocity(maxVeloicty * frSpeed / largest);
         robot.bleftEx.setVelocity(maxVeloicty * blSpeed / largest);
         robot.brightEx.setVelocity(maxVeloicty * brSpeed / largest);
-        d.bleftCommand = maxVeloicty * blSpeed / largest;
+//        d.bleftCommand = maxVeloicty * blSpeed / largest;
     }
 
 
@@ -75,7 +75,8 @@ public class MecanumDrive {
         double bleftSpeed  = speed*(motionVector.y - motionVector.x) + rotate;
         double brightSpeed = speed*(motionVector.y + motionVector.x) - rotate;
 
-        setVelocities(1900, fleftSpeed, frightSpeed, bleftSpeed, brightSpeed);
+        setSpeeds(fleftSpeed, frightSpeed, bleftSpeed, brightSpeed);
+//        setVelocities(1900, fleftSpeed, frightSpeed, bleftSpeed, brightSpeed);
     }
 
     public Vector2D getVectorDistanceCm(){
