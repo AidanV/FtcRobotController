@@ -188,8 +188,8 @@ public class SpeedCalcs {
             MILLIS,
             PROG
         }
-        double rampToSpeed;
-        double atDimension;
+        public double rampToSpeed;
+        public double atDimension;
         timeOrProg timeProg;
         public ProgressSpeed(double rampToSpeed, double atDimension, timeOrProg timeOrProg){
             this.rampToSpeed = rampToSpeed;

@@ -96,6 +96,10 @@ public abstract class ComplexOp extends LinearOpMode{
 
             d.heading = d.robot.slamra.getLastReceivedCameraUpdate().pose.getRotation().getDegrees() - initPose.getRotation().getDegrees();
 
+
+            d.arm.update();
+
+
             if(orientationCalc != null) d.currentCommand.orientationSpeed = orientationCalc.CalcOrientation(d);
             if(motionCalc != null) {
                 d.currentCommand.motionSpeed = motionCalc.CalcMotion(d);
@@ -129,10 +133,12 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("right joystick x", d.driver.rs().x);
 //            telemetry.addData("wobble position", d.robot.wobbleEx.getCurrentPosition());
 //            telemetry.addData("offset", d.robot.wobbleOffset);
-            telemetry.addData("right stick x", d.driver.rs().x);
-            telemetry.addData("right stick x raw", gamepad1.right_stick_x);
-            telemetry.addData("bop", d.robot.barm.getCurrentPosition());
-            telemetry.addData("top", d.robot.tarm.getCurrentPosition());
+//            telemetry.addData("right stick x", d.driver.rs().x);
+//            telemetry.addData("right stick x raw", gamepad1.right_stick_x);
+//            telemetry.addData("bop", d.robot.barm.getCurrentPosition());
+//            telemetry.addData("top", d.robot.tarm.getCurrentPosition());
+            telemetry.addData("barmAngle", d.barmAngle);
+            telemetry.addData("tarmAngle", d.tarmAngle);
             //telemetry.addData("goal position", d.goalPosition);
 
 //            telemetry.addData("goal position", d.goalBox);

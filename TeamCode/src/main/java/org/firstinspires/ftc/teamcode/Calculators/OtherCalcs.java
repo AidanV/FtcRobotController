@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.PowerShotPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.StackDeterminationPipeline;
 import org.firstinspires.ftc.teamcode.Utilities.*;
+
+import java.util.Vector;
 //import org.openftc.easyopencv.OpenCvCamera;
 //import org.openftc.easyopencv.OpenCvCameraRotation;
 
@@ -769,6 +771,34 @@ public class OtherCalcs {
                 d.robot.barmEx.setVelocity(1500*(-d.manip.ls().x/2.5));
                 d.robot.tarmEx.setVelocity(1500*(-d.manip.ls().y/2.5));
                 d.robot.sarm.setPower(-d.manip.rs().x/2.5);
+            }
+        };
+    }
+
+
+
+    public static Interfaces.OtherCalc ArmPath(final Vector<SpeedCalcs.ProgressSpeed> speeds, final Vector<Vector3D> points){
+
+        return new Interfaces.OtherCalc(){
+            private double myProgress = 0;
+            private boolean first = true;
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+
+            @Override
+            public void CalcOther(Interfaces.MoveData d){
+                if(first){
+                    d.arm.setArmPath(points);
+                    d.arm.setProgressSpeeds(speeds);
+                }
+                if(d.manip.b()){
+                    d.arm.move();
+                }
+//                d.robot.barmEx.setVelocity(1500*(-d.manip.ls().x/2.5));
+//                d.robot.tarmEx.setVelocity(1500*(-d.manip.ls().y/2.5));
+//                d.robot.sarm.setPower(-d.manip.rs().x/2.5);
             }
         };
     }

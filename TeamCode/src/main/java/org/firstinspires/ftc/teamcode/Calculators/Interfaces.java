@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.Calculators;
 
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.StackDeterminationPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.FreightRobotName_NA.RobotMap;
-import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.CompleteController;
+import org.firstinspires.ftc.teamcode.Utilities.*;
 //import org.opencv.core.Rect;
 
 
@@ -12,6 +12,8 @@ public class Interfaces {
 
 
     public static class MoveData{
+
+
 
 
         /**
@@ -53,10 +55,29 @@ public class Interfaces {
          */
         public RobotMap robot = null;
 
+
         public double initBarmPos = 0;
         public double initTarmPos = 0;
+        public double initSarmPos = 0;
 
-        public boolean aimToPowerOverride = false;
+        public final double initBarmPosOffsetFromZeroTicsToHorizontal = 0;
+        public final double initTarmPosOffsetFromZeroTicsToHorizontal = 0;
+
+        public Arm arm = new Arm(this);
+
+        public float barmAngle = 0;
+        public final double tickPerDegreeBarm = 0;
+        public final double maxTickPerSecondBarm = 0;
+
+        public float tarmAngle = 0;
+        public double tickPerDegreeTarm = 0;
+        public double maxTickPerDegreeTarm = 0;
+
+        public float sarmAngle = 0;
+        public final double tickPerDegreeSarm = 0;
+        public final double maxTickPerDegreeSarm = 0;
+
+//        public boolean aimToPowerOverride = false;
 
         /**
          * the reason the gyro is not passed as a gyro into move data and instead as a heading is so that all
