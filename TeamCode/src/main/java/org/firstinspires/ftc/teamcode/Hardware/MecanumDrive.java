@@ -75,8 +75,8 @@ public class MecanumDrive {
         double bleftSpeed  = speed*(motionVector.y - motionVector.x) + rotate;
         double brightSpeed = speed*(motionVector.y + motionVector.x) - rotate;
 
-        setSpeeds(fleftSpeed, frightSpeed, bleftSpeed, brightSpeed);
-//        setVelocities(1900, fleftSpeed, frightSpeed, bleftSpeed, brightSpeed);
+//        setSpeeds(fleftSpeed, frightSpeed, bleftSpeed, brightSpeed);
+        setVelocities(1900, fleftSpeed, frightSpeed, bleftSpeed, brightSpeed);
     }
 
     public Vector2D getVectorDistanceCm(){

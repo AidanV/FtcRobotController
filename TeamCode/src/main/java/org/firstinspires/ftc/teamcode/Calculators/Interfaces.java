@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Calculators;
 
 
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.StackDeterminationPipeline;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.FreightRobotName_NA.RobotMap;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.CompleteController;
 import org.firstinspires.ftc.teamcode.Utilities.*;
@@ -13,7 +14,7 @@ public class Interfaces {
 
     public static class MoveData{
 
-
+        public Telemetry telemetry;
 
 
         /**
@@ -60,24 +61,24 @@ public class Interfaces {
         public double initTarmPos = 0;
         public double initSarmPos = 0;
 
-        public final double initBarmPosOffsetFromZeroTicsToHorizontal = 0;
-        public final double initTarmPosOffsetFromZeroTicsToHorizontal = 0;
+        public final int initBarmPosOffsetFromZeroTicsToHorizontal = -48;
+        public final int initTarmPosOffsetFromZeroTicsToHorizontal = -1320;
 
         public Arm arm = new Arm(this);
 
         public float barmAngle = 0;
-        public final double tickPerDegreeBarm = 0;
+        public final double tickPerDegreeBarm = (926-434)/45.0; //916 turned 45 downwards 434
         public final double maxTickPerSecondBarm = 0;
 
         public float tarmAngle = 0;
-        public double tickPerDegreeTarm = 0;
+        public double tickPerDegreeTarm = (92-(-599))/90.0; //start 92 turned 90 upwards -599
         public double maxTickPerDegreeTarm = 0;
 
         public float sarmAngle = 0;
-        public final double tickPerDegreeSarm = 0;
+        public final double tickPerDegreeSarm = 1876/180.0; //start 0 turned 180 to 1876
         public final double maxTickPerDegreeSarm = 0;
 
-//        public boolean aimToPowerOverride = false;
+        public boolean aimToPowerOverride = false;
 
         /**
          * the reason the gyro is not passed as a gyro into move data and instead as a heading is so that all

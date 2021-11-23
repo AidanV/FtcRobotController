@@ -42,7 +42,7 @@ public abstract class ComplexOp extends LinearOpMode{
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        if(initPose == null) initPose = d.robot.slamra.getLastReceivedCameraUpdate().pose;
+//        if(initPose == null) initPose = d.robot.slamra.getLastReceivedCameraUpdate().pose;
         while(d.progress < 1.0) {
             //_______________________
 //            if(ds != null) {
@@ -86,15 +86,15 @@ public abstract class ComplexOp extends LinearOpMode{
 //            d.preWPos.set(d.wPos);
 //            d.wPos.add(deltaMove);
 
-            Vector2D slamraPos = new Vector2D(
-                    (d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getX()-initPose.getTranslation().getX())*100.0,
-                    (d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getY()-initPose.getTranslation().getY())*100.0);
+//            Vector2D slamraPos = new Vector2D(
+//                    (d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getX()-initPose.getTranslation().getX())*100.0,
+//                    (d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getY()-initPose.getTranslation().getY())*100.0);
 
-            slamraPos.rotateBy(Math.toRadians(startPositionAndOrientation().StartNorthOffset));
-            slamraPos.add(startPositionAndOrientation().StartPos);
-            d.wPos.set(slamraPos);
+//            slamraPos.rotateBy(Math.toRadians(startPositionAndOrientation().StartNorthOffset));
+//            slamraPos.add(startPositionAndOrientation().StartPos);
+//            d.wPos.set(slamraPos);
 
-            d.heading = d.robot.slamra.getLastReceivedCameraUpdate().pose.getRotation().getDegrees() - initPose.getRotation().getDegrees();
+//            d.heading = d.robot.slamra.getLastReceivedCameraUpdate().pose.getRotation().getDegrees() - initPose.getRotation().getDegrees();
 
 
             d.arm.update();
@@ -137,8 +137,18 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("right stick x raw", gamepad1.right_stick_x);
 //            telemetry.addData("bop", d.robot.barm.getCurrentPosition());
 //            telemetry.addData("top", d.robot.tarm.getCurrentPosition());
+
+//            telemetry.addData("barm ticks", d.robot.barm.getCurrentPosition()-d.initBarmPos);
+//            telemetry.addData("tarm ticks", d.robot.tarm.getCurrentPosition()-d.initTarmPos);
+//            telemetry.addData("sarm ticks", d.robot.sarm.getCurrentPosition()-d.initSarmPos);
+            telemetry.addData("barm velocity", d.debugData1);
+            telemetry.addData("tarm velocity", d.debugData2);
             telemetry.addData("barmAngle", d.barmAngle);
             telemetry.addData("tarmAngle", d.tarmAngle);
+            telemetry.addData("x", d.arm.getCartesian().x);
+            telemetry.addData("y", d.arm.getCartesian().y);
+            telemetry.addData("z", d.arm.getCartesian().z);
+
             //telemetry.addData("goal position", d.goalPosition);
 
 //            telemetry.addData("goal position", d.goalBox);
@@ -208,15 +218,18 @@ public abstract class ComplexOp extends LinearOpMode{
     //How data is transferred between calculators and complexOp
     public Interfaces.MoveData d = new Interfaces.MoveData();//if you delete this the world will end
 
+
     void initHardware(HardwareMap hwMap) {
+
         telemetry.addData("ENTERED INIT HARDWARE", "<-");
+        d.telemetry = telemetry;
         d.robot = new RobotMap(hwMap);//, startPositionAndOrientation());
 //        d.robot.slamra.setPose(new Pose2d(0, 0,
 ////                startPositionAndOrientation().StartPos.x/100,
 ////                startPositionAndOrientation().StartPos.y/100,
 //
 //                new Rotation2d(0)));//Math.toRadians(startPositionAndOrientation().StartHeading))));
-        d.robot.slamra.start();
+//        d.robot.slamra.start();
 
         mecanumDrive = new MecanumDrive(d);
     }
@@ -234,7 +247,7 @@ public abstract class ComplexOp extends LinearOpMode{
         d.robot.fright.setPower(0);
         d.robot.bleft.setPower(0);
         d.robot.fleft.setPower(0);
-        d.robot.slamra.stop();
+//        d.robot.slamra.stop();
 
     }
 

@@ -78,7 +78,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 worldDist += d.wPos.distance(d.preWPos);
                 myProgress = worldDist / curveLength;
                 double targetHeading = ((curveToHeading-curveFromHeading)*myProgress);
-                d.debugData1 = targetHeading;
+//                d.debugData1 = targetHeading;
                 return curve.getRotatedBy((Math.PI/2)-Math.toRadians((targetHeading))).getNormalized();
 
             }

@@ -775,6 +775,52 @@ public class OtherCalcs {
         };
     }
 
+    public static Interfaces.OtherCalc Claw(){
+
+        return new Interfaces.OtherCalc() {
+
+            double clawPosition = 0.5;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                if(d.tarmAngle > 90.0){
+                    clawPosition = 0.4* (180-d.tarmAngle)/90.0 + 0.6;
+                } else {
+                    clawPosition = -0.4* d.tarmAngle/90.0+0.6;
+                }
+                d.robot.grip.setPosition(d.manip.rt()/2.0 +.5);
+//                if(d.manip.u()) clawPosition += .05;
+//                else if (d.manip.d()) clawPosition -= .05;
+                d.telemetry.addData("claw position", clawPosition);
+                d.robot.claw.setPosition(clawPosition);//min .2 max 1 center .6
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc Arm2D(){
+
+
+        return new Interfaces.OtherCalc(){
+            private double myProgress = 0;
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+
+            @Override
+            public void CalcOther(Interfaces.MoveData d){
+                d.arm.setArm2DVelocity(d.manip.ls().x, d.manip.ls().y);
+                d.arm.thetaVelocity(d.manip.rs().x);
+            }
+        };
+    }
+
+
+
 
 
     public static Interfaces.OtherCalc ArmPath(final Vector<SpeedCalcs.ProgressSpeed> speeds, final Vector<Vector3D> points){
@@ -795,6 +841,10 @@ public class OtherCalcs {
                 }
                 if(d.manip.b()){
                     d.arm.move();
+                } else {
+                    d.robot.tarmEx.setVelocity(0);
+                    d.robot.barmEx.setVelocity(0);
+                    d.robot.sarmEx.setVelocity(0);
                 }
 //                d.robot.barmEx.setVelocity(1500*(-d.manip.ls().x/2.5));
 //                d.robot.tarmEx.setVelocity(1500*(-d.manip.ls().y/2.5));
