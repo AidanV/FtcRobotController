@@ -102,40 +102,107 @@ public class Arm {
 
 
 
-    public void setArm2DVelocity(double xCommand, double yCommand) {
+    public void setArm2DVelocity(double xCommand, double yCommand, double thetaCommand) {
+        //min z for clearing base = 0.078
+        //min x plane for not hitting front of robot = 0.26
+
+        //min difference between barm = 128.78 and tarm = -5.73 angle
+        // max diff barm tarm 333.9
+        double minDifferenceBarmTarmFront = -5.73-(128.78-180.0);
+        double maxDifferenceBarmTarmBack = 330.0;
+
+        //min z = -.15
 
         xCommand *= 0.1;
         yCommand *= 0.1;
 
 //        d.telemetry.addData("currentX", currentXY.x);
 //        d.telemetry.addData("currentY", currentXY.y);
-        float x = (float) (currentXY.x + xCommand);
-        float y = (float) (currentXY.y + yCommand);
-//        d.telemetry.addData("x", x);
-//        d.telemetry.addData("y", y);
-        float tarmAng = (float) Math.acos((x * x + y * y - barmLength * barmLength - tarmLength * tarmLength) / (2 * barmLength * tarmLength));
-
-
-        float barmNegAng = (float) (Math.atan2(y, x) - Math.atan2((tarmLength * Math.sin(-tarmAng)), (barmLength + tarmLength * Math.cos(-tarmAng))));
-        float barmAng = (float) (Math.atan2(y, x) - Math.atan2((tarmLength*Math.sin(tarmAng)),(barmLength + tarmLength*Math.cos(tarmAng))));
-
-        if(Math.abs(Math.PI/2.0-barmAng)>=Math.abs(Math.PI/2.0-barmNegAng)){
-            barmAng = barmNegAng;
-            tarmAng *= -1.0;
+        float x = 0;
+        float y = 0;
+        float minY = -0.15f;
+        if(currentXY.y + yCommand < minY && yCommand <= 0.0){
+            y = minY;
+        } else {
+            y = (float) (currentXY.y + yCommand);
         }
 
-//        d.telemetry.addData("tarmAng", tarmAng);
-//        d.telemetry.addData("barmAng", barmAng);
-        float deltaTarmAng = (float) (Math.toDegrees(tarmAng + barmAng) - d.tarmAngle);
-        float deltaBarmAng = (float) (Math.toDegrees(barmAng) - d.barmAngle);
+//        if (currentXY.y < .078) {
+//            if (currentXY.x + xCommand < 0.26 && currentXY.x > 0 && xCommand <= 0){
+//                x = 0.26f;
+////            } else if (currentXY.x + xCommand > -0.29 && currentXY.x < 0 && xCommand >= 0){
+////                x = -0.29f;
+//            } else {
+//                x = (float) (currentXY.x + xCommand);
+//            }
+//        } else {
+//            x = (float) (currentXY.x + xCommand);
+//        }
+
+        d.telemetry.addData("sarm angle", d.sarmAngle);
+        if (currentXY.y < .078) {
+            if (currentR3.x + Math.cos(Math.toRadians(d.sarmAngle))*xCommand < 0.305 && currentR3.x > 0 && xCommand <= 0){
+                d.telemetry.addData("x condition 1", 0.26/Math.cos(Math.toRadians(d.sarmAngle)));
+                x = (float) (0.26/Math.cos(Math.toRadians(d.sarmAngle)));
+//            } else if (currentR3.x + Math.cos(Math.toRadians(d.sarmAngle))*xCommand > -0.29 && currentR3.x < 0 && xCommand >= 0){
+//                x = -0.29f;
+            } else {
+                x = (float) (currentXY.x + xCommand);
+            }
+        } else {
+            x = (float) (currentXY.x + xCommand);
+        }
+
+//        d.telemetry.addData("x", x);
+//        d.telemetry.addData("y", y);
+        float targetTarmAngle = 0;
+        float targetBarmAngle = 0;
+        if(x*x + y*y < Math.pow(tarmLength + barmLength, 2)) {
+            targetTarmAngle = (float) Math.acos((x * x + y * y - barmLength * barmLength - tarmLength * tarmLength) / (2 * barmLength * tarmLength));
+            float targetBarmNegAngle = (float) (Math.atan2(y, x) - Math.atan2((tarmLength * Math.sin(-targetTarmAngle)), (barmLength + tarmLength * Math.cos(-targetTarmAngle))));
+            targetBarmAngle = (float) (Math.atan2(y, x) - Math.atan2((tarmLength * Math.sin(targetTarmAngle)), (barmLength + tarmLength * Math.cos(targetTarmAngle))));
+            if (Math.abs(Math.PI / 2.0 - targetBarmAngle) >= Math.abs(Math.PI / 2.0 - targetBarmNegAngle)) {
+                targetBarmAngle = targetBarmNegAngle;
+                targetTarmAngle *= -1.0;
+            }
+        } else {
+            d.telemetry.addData("barm tarm angle else", Math.atan2(y, x));
+            targetBarmAngle = (float) Math.atan2(y, x);
+            targetTarmAngle = 0f;
+        }
+
+        //min barm = 8 degrees //max barm = 156
+        if(Math.toDegrees(targetBarmAngle) < 8){
+            targetBarmAngle = 8;
+        } else if (Math.toDegrees(targetBarmAngle) >156){
+            targetBarmAngle = 156;
+        }
+        d.telemetry.addData("targetTarmAng", Math.toDegrees(targetTarmAngle + targetBarmAngle));
+        d.telemetry.addData("targetBarmAngle", Math.toDegrees(targetBarmAngle));
+        d.telemetry.addData("angle difference", Math.toDegrees(targetTarmAngle)+180.0);
+        if(Math.toDegrees(targetTarmAngle)+180.0 < minDifferenceBarmTarmFront){
+            targetTarmAngle = (float) Math.toRadians(-180.0+minDifferenceBarmTarmFront);
+            d.telemetry.addData("arm difference command", -180.0+minDifferenceBarmTarmFront);
+        } else if(Math.toDegrees(targetTarmAngle)+180.0 > maxDifferenceBarmTarmBack){
+            targetTarmAngle = (float) Math.toRadians(-180+maxDifferenceBarmTarmBack);
+        }
+
+
+//        d.telemetry.addData("targetTarmAngle", targetTarmAngle);
+//        d.telemetry.addData("targetBarmAngle", targetBarmAngle);
+        float deltaTarmAng = (float) (Math.toDegrees(targetTarmAngle + targetBarmAngle) - d.tarmAngle);
+        float deltaBarmAng = (float) (Math.toDegrees(targetBarmAngle) - d.barmAngle);
 //        d.telemetry.addData("deltaBarmAng", deltaBarmAng);
 //        d.telemetry.addData("deltaTarmAng", deltaTarmAng);
+
+//        if(thetaCommand > )
 
 
 //        d.telemetry.addData("speed command barm", d.tickPerDegreeBarm * deltaBarmAng / deltaTime);
 //        d.telemetry.addData("speed command tarm", d.tickPerDegreeTarm * deltaTarmAng / deltaTime);
         d.robot.barmEx.setVelocity(d.tickPerDegreeBarm * deltaBarmAng / deltaTime);
         d.robot.tarmEx.setVelocity(d.tickPerDegreeTarm * deltaTarmAng / deltaTime);
+        d.robot.sarmEx.setPower(thetaCommand/5.0);
 //        d.robot.barmEx.setVelocity(Math.abs((d.tickPerDegreeBarm * deltaBarmAng / deltaTime))>1000?1000*Math.signum(d.tickPerDegreeBarm * deltaBarmAng / deltaTime):d.tickPerDegreeBarm * deltaBarmAng / deltaTime);
 //        d.robot.tarmEx.setVelocity(Math.abs((d.tickPerDegreeBarm * deltaBarmAng / deltaTime))>1000?1000*Math.signum(d.tickPerDegreeBarm * deltaBarmAng / deltaTime):d.tickPerDegreeBarm * deltaBarmAng / deltaTime);
 
@@ -187,7 +254,7 @@ public class Arm {
 //        Vector3D deltaR3 = currentR3.to(targetR3);
         updateTargetSpeed();
         xyPlane.multiply(speed);
-        setArm2DVelocity(xyPlane.x, xyPlane.y);
+//        setArm2DVelocity(xyPlane.x, xyPlane.y);
         double theta = targetR3.z;
 
         if(theta < -170) theta = 190-(theta-(-170));

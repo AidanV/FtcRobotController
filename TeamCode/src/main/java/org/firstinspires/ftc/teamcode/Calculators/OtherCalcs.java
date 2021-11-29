@@ -813,8 +813,8 @@ public class OtherCalcs {
 
             @Override
             public void CalcOther(Interfaces.MoveData d){
-                d.arm.setArm2DVelocity(d.manip.ls().x, d.manip.ls().y);
-                d.arm.thetaVelocity(d.manip.rs().x);
+                d.arm.setArm2DVelocity(d.manip.ls().x, d.manip.ls().y, d.manip.rs().x);
+//                d.arm.thetaVelocity(d.manip.rs().x);
             }
         };
     }
@@ -840,7 +840,7 @@ public class OtherCalcs {
                     d.arm.setProgressSpeeds(speeds);
                 }
                 if(d.manip.b()){
-                    d.arm.move();
+//                    d.arm.move();
                 } else {
                     d.robot.tarmEx.setVelocity(0);
                     d.robot.barmEx.setVelocity(0);

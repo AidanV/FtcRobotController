@@ -6,6 +6,11 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.vuforia.Vuforia;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.CubeFindPipeline;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.NavX;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.VexEncoder;
@@ -44,9 +49,12 @@ public class RobotMap {
 
 //    public static OpenCvInternalCamera yeetCam;
 
+//    public static OpenCvInternalCamera ClawCam;
+
 //    public final StackDeterminationPipeline pipeline = new StackDeterminationPipeline();
 
 //    public static T265Camera slamra = null;
+    public static OpenCvCamera clawCam;
 
     public static HardwareMap hw;
 
@@ -64,7 +72,8 @@ public class RobotMap {
          */
 //PIDCoefficients pidDrive = new PIDCoefficients(50, 10, 0);
         PIDFCoefficients pidDrive = new PIDFCoefficients(20, 12, 5, 17.5);//p5 i2 d5 f17.5
-        PIDFCoefficients pidArm = new PIDFCoefficients(20, 5, 0, 17.5);//p5 i2 d5 f17.5
+        PIDFCoefficients pidBarm = new PIDFCoefficients(20, 5, 0, 17.5);//p5 i2 d5 f17.5
+        PIDFCoefficients pidTarm = new PIDFCoefficients(20, 0, 2.5, 30);//p5 i2 d5 f17.5
 
         bright = hw.get(DcMotor.class, "bright");
         bright.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -106,14 +115,14 @@ public class RobotMap {
         barm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         barm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         barmEx = (DcMotorEx) barm;
-        barmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidArm);
+        barmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidBarm);
 
         tarm = hw.get(DcMotor.class, "tarm");
         tarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         tarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         tarmEx = (DcMotorEx) tarm;
-        tarmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidArm);
+        tarmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidTarm);
 
         sarm = hw.get(DcMotor.class, "sarm");
         sarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -229,6 +238,38 @@ public class RobotMap {
       //  yeetCam.initVuforia(hw, true);
         //yeetCam = hw.get(WebcamName.class, "yeetCam");
 
+//        int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
+//        ClawCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+//        ClawCam.openCameraDeviceAsync(
+//                new OpenCvCamera.AsyncCameraOpenListener() {
+//                    @Override
+//                    public void onOpened() {
+//                        ClawCam.startStreaming(1920, 1080);
+//                    }
+//
+//                    @Override
+//                    public void onError(int errorCode) {
+//
+//                    }
+//                }
+//        );
+        int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
+        WebcamName webcamName = hw.get(WebcamName.class, "ClawCam");
+        clawCam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+        clawCam.openCameraDeviceAsync(
+                new OpenCvCamera.AsyncCameraOpenListener() {
+                    @Override
+                    public void onOpened() {
+                        clawCam.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
+                        clawCam.setPipeline(new CubeFindPipeline());
+                    }
+
+                    @Override
+                    public void onError(int errorCode) {
+
+                    }
+                }
+        );
 //        if (slamra == null) {
 //            //set offset from center of robot here
 //            slamra = new T265Camera(new Transform2d(new Translation2d(0, 0), new Rotation2d()), 1.0, hw.appContext);//oC was 0.1
