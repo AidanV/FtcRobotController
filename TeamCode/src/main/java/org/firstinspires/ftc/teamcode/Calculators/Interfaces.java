@@ -157,7 +157,7 @@ public class Interfaces {
 
 
 
-
+        public int duckPos = -1;
 
         public Vector2D powerCenter = new Vector2D(-1, -1);
 

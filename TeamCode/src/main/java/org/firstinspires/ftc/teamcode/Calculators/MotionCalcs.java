@@ -104,6 +104,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
             private ArrayList<Vector2D> ePosArray = new ArrayList<Vector2D>();//this is the vector the robot is traveling towards
             private ArrayList<Vector2D> preEPosArray = new ArrayList<Vector2D>();//this is the vector the robot is coming from
             private ArrayList<SegmentData> segmentDataArray = new ArrayList<SegmentData>();//this is a list of necessary information about the segments
+            private int currentSegmentIndex = 0;
             // ^ is used for determining the distance traveled
 
 
@@ -146,6 +147,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 // Return the last one if none are in range
                 return segmentDataArray.get(segmentDataArray.size()-1);
             }
+
 
 
             /**
@@ -254,12 +256,24 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                     firstLoop = false;
                 }
 
-                worldDist += d.wPos.distance(d.preWPos);
+//                worldDist += d.wPos.distance(d.preWPos);
+//                currentSegment = GetSegmentByWorldDist(worldDist);
                 //Making a ratio of how much we have traveled over what we should travel to create progress
-                myProgress = worldDist / totalDist;
 
-                SegmentData currentSegment = GetSegmentByWorldDist(worldDist);
-                double segmentProgress = (worldDist - currentSegment.worldStartDist)/currentSegment.length;
+
+
+                SegmentData currentSegment = segmentDataArray.get(currentSegmentIndex);
+                myProgress = (currentSegment.worldStartDist + d.wPos.distance(currentSegment.startPos)) / totalDist;
+//                double segmentProgress = (worldDist - currentSegment.worldStartDist)/currentSegment.length;
+                double segmentProgress = (currentSegment.startPos.distance(d.wPos))/currentSegment.length;
+                if(segmentProgress > .97) {
+                    currentSegmentIndex++;
+                    if(currentSegmentIndex >= segmentDataArray.size()){
+                        myProgress = 1.00;
+                    } else {
+                        currentSegment = segmentDataArray.get(currentSegmentIndex);
+                    }
+                }
                 //System.out.print("segmentProgress: ");System.out.println(segmentProgress);
                 Vector2D rval = null;
                 if (currentSegment instanceof CurveData)
@@ -289,6 +303,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
             private ArrayList<Vector2D> ePosArray = new ArrayList<Vector2D>();//this is the vector the robot is traveling towards
             private ArrayList<Vector2D> preEPosArray = new ArrayList<Vector2D>();//this is the vector the robot is coming from
             private ArrayList<SegmentData> segmentDataArray = new ArrayList<SegmentData>();//this is a list of necessary information about the segments
+            private SegmentData currentSegment = null;
             // ^ is used for determining the distance traveled
 
 
@@ -331,6 +346,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 // Return the last one if none are in range
                 return segmentDataArray.get(segmentDataArray.size()-1);
             }
+
 
 
             /**
@@ -434,6 +450,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                         }
                     }
                     totalDist = CalcWorldDists();
+                    currentSegment = segmentDataArray.get(0);
                     //so it doesn't loop again //very important
                     firstLoop = false;
                 }
@@ -443,6 +460,8 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 myProgress = worldDist / totalDist;
 
                 SegmentData currentSegment = GetSegmentByWorldDist(worldDist);
+
+
                 double segmentProgress = (worldDist - currentSegment.worldStartDist)/currentSegment.length;
                 //System.out.print("segmentProgress: ");System.out.println(segmentProgress);
                 Vector2D rval = null;

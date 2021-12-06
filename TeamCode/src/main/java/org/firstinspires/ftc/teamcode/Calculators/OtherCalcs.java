@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.Calculators;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.GoalPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.PowerShotPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.StackDeterminationPipeline;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
-import java.util.Vector;
+        import java.util.Vector;
 //import org.openftc.easyopencv.OpenCvCamera;
 //import org.openftc.easyopencv.OpenCvCameraRotation;
 
@@ -782,12 +780,18 @@ public class OtherCalcs {
             double clawPosition = 0.5;
             @Override
             public void CalcOther(Interfaces.MoveData d) {
+
+                if (d.manip.b()){
+                    d.robot.grip.setPosition(1.0);
+                } else if(d.robot.cubeFindPipeline.isCubeClose() || d.robot.cubeFindPipeline.isDuckClose()){
+                    d.robot.grip.setPosition(0.5);
+                }
                 if(d.tarmAngle > 90.0){
                     clawPosition = 0.4* (180-d.tarmAngle)/90.0 + 0.6;
                 } else {
                     clawPosition = -0.4* d.tarmAngle/90.0+0.6;
                 }
-                d.robot.grip.setPosition(d.manip.rt()/2.0 +.5);
+//                d.robot.grip.setPosition(d.manip.rt()/2.0 +.5);
 //                if(d.manip.u()) clawPosition += .05;
 //                else if (d.manip.d()) clawPosition -= .05;
                 d.telemetry.addData("claw position", clawPosition);
@@ -814,6 +818,69 @@ public class OtherCalcs {
             @Override
             public void CalcOther(Interfaces.MoveData d){
                 d.arm.setArm2DVelocity(d.manip.ls().x, d.manip.ls().y, d.manip.rs().x);
+//                d.arm.thetaVelocity(d.manip.rs().x);
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc FindTurnToCube(){
+
+
+        return new Interfaces.OtherCalc(){
+            private double myProgress = 0;
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+
+            @Override
+            public void CalcOther(Interfaces.MoveData d){
+                d.telemetry.addData("cam fps", d.robot.clawCam.getFps());
+                if(d.manip.a()) {
+                    try {
+
+                        if (d.sarmAngle < 30.0 && d.sarmAngle > -30.0) {
+                            double command = -d.robot.cubeFindPipeline.getCubeXValueCommand();
+                            if (command > .1) command = .1;
+                            else if (command < -.1) command = -.1;
+                            d.robot.sarm.setPower(command);
+                            d.telemetry.addData("cube x value", d.robot.cubeFindPipeline.getCubeXValueCommand());
+                        } else {
+                            d.robot.sarm.setPower(0.0);
+                        }
+
+                    } catch (Exception e) {
+                        d.robot.sarm.setPower(0.0);
+                        d.telemetry.addData("cube x value", "found nothing");
+                    }
+                } else {
+                    d.robot.sarm.setPower(0.0);
+                }
+
+//                try {
+//                    List<Recognition> recogntions = d.robot.tfod.getUpdatedRecognitions();
+//                    float greatestBottom = -1.0f;
+//                    Recognition bestRecognition = null;
+//                    if(recogntions != null) {
+//                        for (Recognition r : recogntions) {
+//                            if (!r.getLabel().equals("Cube")) continue;
+//                            if (r.getBottom() > greatestBottom) {
+//                                greatestBottom = r.getBottom();
+//                                bestRecognition = r;
+//                            }
+//                        }
+//                    }
+//                    if (bestRecognition == null) {
+//                        d.telemetry.addData("no cube found", "<-");
+//                    } else {
+//                        d.telemetry.addData("left", bestRecognition.getLeft());
+//                        d.telemetry.addData("right", bestRecognition.getRight());
+//                        double command = (bestRecognition.getLeft() + bestRecognition.getRight() / 2.0 / 1920.0) * 2.0 - 0.5;
+//                        d.telemetry.addData("command", command);
+//                    }
+//                } catch (Exception e){
+//                    d.telemetry.addData("exception", e);
+//                }
 //                d.arm.thetaVelocity(d.manip.rs().x);
             }
         };

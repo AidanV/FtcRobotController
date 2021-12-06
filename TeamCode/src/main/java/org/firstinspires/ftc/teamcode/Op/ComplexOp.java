@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Op;
 
 import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Rotation2d;
 import com.qualcomm.robotcore.hardware.*;
 
 import org.firstinspires.ftc.teamcode.Calculators.OtherCalcs;
@@ -20,6 +21,8 @@ public abstract class ComplexOp extends LinearOpMode{
     private MecanumDrive mecanumDrive;
 
     double previousHeading = 0;
+
+    private Vector2D slamraOffset = new Vector2D(-2.0, -16.0);
 
     private Pose2d initPose = null;
 
@@ -42,7 +45,7 @@ public abstract class ComplexOp extends LinearOpMode{
         } catch (SocketException e) {
             e.printStackTrace();
         }
-//        if(initPose == null) initPose = d.robot.slamra.getLastReceivedCameraUpdate().pose;
+
         while(d.progress < 1.0) {
             //_______________________
 //            if(ds != null) {
@@ -86,16 +89,23 @@ public abstract class ComplexOp extends LinearOpMode{
 //            d.preWPos.set(d.wPos);
 //            d.wPos.add(deltaMove);
 
-//            Vector2D slamraPos = new Vector2D(
-//                    (d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getX()-initPose.getTranslation().getX())*100.0,
-//                    (d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getY()-initPose.getTranslation().getY())*100.0);
+            Vector2D slamraPos = new Vector2D(
+                    (d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getX()-initPose.getTranslation().getX())*100.0,
+                    (d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getY()-initPose.getTranslation().getY())*100.0);
+//            slamraPos.subtract(slamraOffset);
+            slamraPos.rotateBy(-Math.toRadians(startPositionAndOrientation().StartNorthOffset));
 
-//            slamraPos.rotateBy(Math.toRadians(startPositionAndOrientation().StartNorthOffset));
-//            slamraPos.add(startPositionAndOrientation().StartPos);
-//            d.wPos.set(slamraPos);
+            slamraPos.add(startPositionAndOrientation().StartPos);
+            slamraPos.subtract(slamraOffset);
 
-//            d.heading = d.robot.slamra.getLastReceivedCameraUpdate().pose.getRotation().getDegrees() - initPose.getRotation().getDegrees();
+//            slamraPos.subtract(slamraOffset);
 
+
+            d.heading = d.robot.slamra.getLastReceivedCameraUpdate().pose.getRotation().getDegrees() - initPose.getRotation().getDegrees();
+
+            slamraPos.add(slamraOffset.getRotatedBy(Math.toRadians(d.heading)));
+
+            d.wPos.set(slamraPos);
 
             d.arm.update();
 
@@ -141,6 +151,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("barm ticks", d.robot.barm.getCurrentPosition()-d.initBarmPos);
 //            telemetry.addData("tarm ticks", d.robot.tarm.getCurrentPosition()-d.initTarmPos);
 //            telemetry.addData("sarm ticks", d.robot.sarm.getCurrentPosition()-d.initSarmPos);
+            telemetry.addData("duck pos", d.duckPos);
             telemetry.addData("barm velocity", d.debugData1);
             telemetry.addData("tarm velocity", d.debugData2);
             telemetry.addData("barmAngle", d.barmAngle);
@@ -224,13 +235,13 @@ public abstract class ComplexOp extends LinearOpMode{
         telemetry.addData("ENTERED INIT HARDWARE", "<-");
         d.telemetry = telemetry;
         d.robot = new RobotMap(hwMap);//, startPositionAndOrientation());
-//        d.robot.slamra.setPose(new Pose2d(0, 0,
-////                startPositionAndOrientation().StartPos.x/100,
-////                startPositionAndOrientation().StartPos.y/100,
-//
-//                new Rotation2d(0)));//Math.toRadians(startPositionAndOrientation().StartHeading))));
-//        d.robot.slamra.start();
+        d.robot.slamra.setPose(new Pose2d(0, 0,
+//                startPositionAndOrientation().StartPos.x/100,
+//                startPositionAndOrientation().StartPos.y/100,
 
+                new Rotation2d(0)));//Math.toRadians(startPositionAndOrientation().StartHeading))));
+        d.robot.slamra.start();
+        if(initPose == null) initPose = d.robot.slamra.getLastReceivedCameraUpdate().pose;
         mecanumDrive = new MecanumDrive(d);
     }
 
@@ -247,7 +258,7 @@ public abstract class ComplexOp extends LinearOpMode{
         d.robot.fright.setPower(0);
         d.robot.bleft.setPower(0);
         d.robot.fleft.setPower(0);
-//        d.robot.slamra.stop();
+        d.robot.slamra.stop();
 
     }
 

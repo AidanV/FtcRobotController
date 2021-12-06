@@ -70,6 +70,7 @@ public class OdometryTest extends ComplexOp {
 //                OtherCalcs.ArmPath(s, p),
 
                 OtherCalcs.Arm2D(),
+                OtherCalcs.FindTurnToCube(),
                 OtherCalcs.Claw(),
                 OtherCalcs.Duck(),
                 OtherCalcs.TelemetryPosition());

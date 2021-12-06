@@ -100,6 +100,17 @@ public class Arm {
         blockAvoid.add(new Block(v1, v2));
     }
 
+    public boolean moveTowardTarget(double theta, double x, double y, double speed){
+        double xCommand = Math.max(-speed, Math.min(speed, x-currentXY.x));
+        double yCommand = Math.max(-speed, Math.min(speed, y-currentXY.y));
+        double thetaCommand = Math.max(-speed, Math.min(speed, theta-d.sarmAngle));
+        setArm2DVelocity(xCommand, yCommand, thetaCommand);
+        if(Math.abs(x-currentXY.x) < .1 && Math.abs(y-currentXY.y) < .1 && Math.abs(theta-d.sarmAngle) < .1){
+            setArm2DVelocity(0.0, 0.0, 0.0);
+            return true;
+        }
+        return false;
+    }
 
 
     public void setArm2DVelocity(double xCommand, double yCommand, double thetaCommand) {
@@ -200,25 +211,31 @@ public class Arm {
 
 //        d.telemetry.addData("speed command barm", d.tickPerDegreeBarm * deltaBarmAng / deltaTime);
 //        d.telemetry.addData("speed command tarm", d.tickPerDegreeTarm * deltaTarmAng / deltaTime);
-        d.robot.barmEx.setVelocity(d.tickPerDegreeBarm * deltaBarmAng / deltaTime);
-        d.robot.tarmEx.setVelocity(d.tickPerDegreeTarm * deltaTarmAng / deltaTime);
-        d.robot.sarmEx.setPower(thetaCommand/5.0);
+        double barmSpeed = d.tickPerDegreeBarm * deltaBarmAng / deltaTime;
+        double tarmSpeed = d.tickPerDegreeTarm * deltaTarmAng / deltaTime;
+        double maxVelocity = 800;
+        d.robot.barmEx.setVelocity(Math.abs(barmSpeed)>maxVelocity?Math.signum(barmSpeed)*maxVelocity:barmSpeed);
+        d.robot.tarmEx.setVelocity(Math.abs(tarmSpeed)>maxVelocity?Math.signum(tarmSpeed)*maxVelocity:tarmSpeed);
+
+        if(thetaCommand < 0 && d.sarmAngle<-170) thetaCommand = 0.0;
+        else if(thetaCommand > 0 && d.sarmAngle > 190) thetaCommand = 0.0;
+        d.robot.sarmEx.setPower(thetaCommand/2.5);
 //        d.robot.barmEx.setVelocity(Math.abs((d.tickPerDegreeBarm * deltaBarmAng / deltaTime))>1000?1000*Math.signum(d.tickPerDegreeBarm * deltaBarmAng / deltaTime):d.tickPerDegreeBarm * deltaBarmAng / deltaTime);
 //        d.robot.tarmEx.setVelocity(Math.abs((d.tickPerDegreeBarm * deltaBarmAng / deltaTime))>1000?1000*Math.signum(d.tickPerDegreeBarm * deltaBarmAng / deltaTime):d.tickPerDegreeBarm * deltaBarmAng / deltaTime);
 
     }
 
-    public void thetaVelocity(double thetaCommand){
-        double theta = thetaCommand + d.sarmAngle;
-        d.telemetry.addData("theta", theta);
-        if(theta < -170) theta = 190-(theta-(-170));
-        if(theta > 190) theta = 190;
-        else if(theta < -150) theta = -150;
-        d.telemetry.addData("theta 2", theta);
-        d.telemetry.addData("speed", speed);
-        d.telemetry.addData("theta velocity", speed*(d.tickPerDegreeSarm * (theta) - d.sarmAngle) / deltaTime);
+//    public void setThetaVelocity(double thetaCommand){
+//        double theta = thetaCommand + d.sarmAngle;
+//        d.telemetry.addData("theta", theta);
+//        if(theta < -170) theta = -170;
+//        else if(theta > 190) theta = 190;
+//
+//        d.telemetry.addData("theta 2", theta);
+//        d.telemetry.addData("speed", speed);
+//        d.telemetry.addData("theta velocity", speed*(d.tickPerDegreeSarm * (theta) - d.sarmAngle) / deltaTime);
 //        d.robot.sarmEx.setVelocity((d.tickPerDegreeSarm * (theta) - d.sarmAngle) / deltaTime);
-    }
+//    }
 
     public void update(){
         d.barmAngle = (float) ((d.robot.barm.getCurrentPosition() - d.initBarmPos - d.initBarmPosOffsetFromZeroTicsToHorizontal) / d.tickPerDegreeBarm);

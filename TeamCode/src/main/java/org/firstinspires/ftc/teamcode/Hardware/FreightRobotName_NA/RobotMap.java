@@ -5,8 +5,13 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.vuforia.Vuforia;
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.CubeFindPipeline;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.DuckSpotPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -53,10 +58,37 @@ public class RobotMap {
 
 //    public final StackDeterminationPipeline pipeline = new StackDeterminationPipeline();
 
-//    public static T265Camera slamra = null;
+    public static T265Camera slamra = null;
+
     public static OpenCvCamera clawCam;
 
+    public final CubeFindPipeline cubeFindPipeline = new CubeFindPipeline();
+    public final DuckSpotPipeline duckSpotPipeline = new DuckSpotPipeline();
+
+//    public static TFObjectDetector tfod;
+
     public static HardwareMap hw;
+
+    private VuforiaLocalizer vuforia;
+
+    private static final String VUFORIA_KEY =
+            "Af4WavT/////AAABmet3CRN7OUHOl8JhQYKaT4d/jc6tR5v4mBS80gFNH+kcM47IZJ0/Wlv33X3WvHOE4Fbs5wwYCvlhBZcO+9epF+REYND3wzm/9Fw8Y6+/IY3k0hJakabVGR8+gLvangVgMx14JbDCCLlnOrZpNEtwxCbjFE1HC66otgJwp194aJvXQvz+UloUegXYStFi4viCTUYSZzOfvmBIBFMQURQIVrtO+Pq5qHKPvfveLYmHlcSG40Ppaq5ZR/KrLgJm2DTY+Bjek+fxn/f0RvBypBWXvaFUBgDIhgPj7//KQOpydZL0nJTjdBgQhKIsiBxvd714fTKnZh3vR4/UeJEexVje+/xfOHog15M3sBLYQ4jjAMSn";
+
+    /***
+     *  Two additional model assets are available which only contain a subset of the objects:
+     *  FreightFrenzy_BC.tflite  0: Ball,  1: Cube
+     *  FreightFrenzy_DM.tflite  0: Duck,  1: Marker
+     */
+    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BC.tflite";
+    private static final String[] LABELS = {
+            "Ball",
+            "Cube",
+            "Duck",
+            "Marker"
+    };
+    public TFObjectDetector tfod;
+
+//    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
 
     //public static ModernRoboticsI2cRangeSensor frontRange, backRange;
 
@@ -253,6 +285,7 @@ public class RobotMap {
 //                    }
 //                }
 //        );
+
         int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
         WebcamName webcamName = hw.get(WebcamName.class, "ClawCam");
         clawCam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
@@ -260,8 +293,10 @@ public class RobotMap {
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
-                        clawCam.startStreaming(1920, 1080, OpenCvCameraRotation.UPRIGHT);
-                        clawCam.setPipeline(new CubeFindPipeline());
+                        clawCam.startStreaming(640, 480, OpenCvCameraRotation.UPSIDE_DOWN);
+                        clawCam.setPipeline(duckSpotPipeline);
+//                        clawCam.setPipeline(cubeFindPipeline);
+//                        clawCam.pauseViewport();
                     }
 
                     @Override
@@ -270,11 +305,67 @@ public class RobotMap {
                     }
                 }
         );
-//        if (slamra == null) {
-//            //set offset from center of robot here
-//            slamra = new T265Camera(new Transform2d(new Translation2d(0, 0), new Rotation2d()), 1.0, hw.appContext);//oC was 0.1
+
+//        while(true) {
+//            try {
+//                VuforiaLocalizer.Parameters vuParameters = new VuforiaLocalizer.Parameters();
 //
+//                vuParameters.vuforiaLicenseKey = VUFORIA_KEY;
+//                vuParameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+//
+//                //  Instantiate the Vuforia engine
+//                vuforia = ClassFactory.getInstance().createVuforia(vuParameters);
+//                vuforia.setFrameQueueCapacity(3);
+//
+//                int tfodMonitorViewId = hw.appContext.getResources().getIdentifier(
+//                        "tfodMonitorViewId", "id", hw.appContext.getPackageName());
+//                TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+//                tfodParameters.minResultConfidence = 0.7f;
+//                tfodParameters.isModelTensorFlow2 = true;
+//                tfodParameters.inputSize = 320;
+//                tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+//                tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+//                if (tfod != null) {
+//                    tfod.activate();
+//
+//                    // The TensorFlow software will scale the input images from the camera to a lower resolution.
+//                    // This can result in lower detection accuracy at longer distances (> 55cm or 22").
+//                    // If your target is at distance greater than 50 cm (20") you can adjust the magnification value
+//                    // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
+//                    // should be set to the value of the images used to create the TensorFlow Object Detection model
+//                    // (typically 16/9).
+//                    tfod.setZoom(1, 16.0 / 9.0);
+//
+//                }
+//                break;
+//            } catch (Exception e) {
+//
+//            }
 //        }
+//
+//        final String[] LABELS = {
+//                "Ball",
+//                "Cube",
+//                "Duck",
+//                "Marker"
+//        };
+//
+//        int tfodMonitorViewId = hw.appContext.getResources().getIdentifier(
+//                "tfodMonitorViewId", "id", hw.appContext.getPackageName());
+//        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+//        tfodParameters.minResultConfidence = 0.8f;
+//        tfodParameters.isModelTensorFlow2 = true;
+//        tfodParameters.inputSize = 320;
+//
+//        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, );
+//        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+
+
+        if (slamra == null) {
+            //set offset from center of robot here
+            slamra = new T265Camera(new Transform2d(new Translation2d(0, 0), new Rotation2d()), 1.0, hw.appContext);//oC was 0.1
+
+        }
 
 
     }
