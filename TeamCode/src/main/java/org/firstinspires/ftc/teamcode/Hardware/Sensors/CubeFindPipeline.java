@@ -14,7 +14,6 @@ public class CubeFindPipeline extends OpenCvPipeline {
     Mat hsv = new Mat();
     Mat mask = new Mat();
     Mat hierarchy = new Mat();
-    List<MatOfPoint> contours = new ArrayList<>();
     volatile double cubeXValueCommand = 0;
     volatile boolean cubeXValueCommandGood = false;
     volatile boolean cubeClose = false;
@@ -84,9 +83,11 @@ public class CubeFindPipeline extends OpenCvPipeline {
         Imgproc.Canny(mask, cannyEdges, 10, 100);
 
 //        MatOfPoint totalContours = new MatOfPoint();
-        List<MatOfPoint> tempContours = new ArrayList<>();
-        Imgproc.findContours(cannyEdges, tempContours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-        contours = tempContours;
+
+        List<MatOfPoint> contours = new ArrayList<>();
+        Imgproc.findContours(cannyEdges, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+
+
 //        for(int i =0; i<contours.size(); i++) {
 //            totalContours.push_back(contours.get(i));
 //        }
@@ -149,9 +150,12 @@ public class CubeFindPipeline extends OpenCvPipeline {
 //22, 79.9%, 58.4%
 
 //        Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGB2GRAY);
+        for(MatOfPoint c: contours){
+            c.release();
+        }
         kernel.release();
         cannyEdges.release();
-
+        totalContours.release();
         return input;
     }
 

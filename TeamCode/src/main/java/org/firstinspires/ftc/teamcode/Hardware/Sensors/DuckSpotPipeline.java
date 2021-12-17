@@ -18,11 +18,10 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DuckSpotPipeline extends OpenCvPipeline {
-    Mat grey = new Mat();
+//    Mat grey = new Mat();
     Mat hsv = new Mat();
     Mat mask = new Mat();
     Mat hierarchy = new Mat();
-    List<MatOfPoint> contours = new ArrayList<>();
     volatile int duckPos = -1;
     final int WIDTH = 640;
     final int HEIGHT = 480;
@@ -38,6 +37,7 @@ public class DuckSpotPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        Core.rotate(input, input, Core.ROTATE_180);
 //        final Scalar lower = new Scalar(0, 0, 20);//188.1, 148.92);
 //        final Scalar upper = new Scalar(50, 255, 250);//203.7, 255);
 
@@ -61,9 +61,9 @@ public class DuckSpotPipeline extends OpenCvPipeline {
         Imgproc.Canny(mask, cannyEdges, 10, 100);
 
 //        MatOfPoint totalContours = new MatOfPoint();
-        List<MatOfPoint> tempContours = new ArrayList<>();
-        Imgproc.findContours(cannyEdges, tempContours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
-        contours = tempContours;
+        List<MatOfPoint> contours = new ArrayList<>();
+        Imgproc.findContours(cannyEdges, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+
         double maxArea = 0;
         MatOfPoint largestContour = new MatOfPoint();
         for (MatOfPoint contour : contours) {
@@ -71,6 +71,8 @@ public class DuckSpotPipeline extends OpenCvPipeline {
             if (area > maxArea) {
                 maxArea = area;
                 largestContour = contour;
+            } else {
+                contour.release();
             }
         }
         Rect boundingRect = Imgproc.boundingRect(largestContour);
@@ -117,9 +119,6 @@ public class DuckSpotPipeline extends OpenCvPipeline {
 //        duckClose = duckFound;
 
 
-        for(int i =0; i<contours.size(); i++) {
-            Imgproc.drawContours(hsv, contours, i, new Scalar(100, 50, 100), 5);
-        }
         Imgproc.putText(hsv, Double.toString(boundingRect.x) + ":" + Double.toString(boundingRect.y), new Point(100, 100), FONT_HERSHEY_SIMPLEX, 5, new Scalar(100, 0, 100), 4);
 //        double maxArea = 0
 //        MatOfPoint largestContour = new MatOfPoint();
@@ -150,8 +149,10 @@ public class DuckSpotPipeline extends OpenCvPipeline {
         kernel.release();
         cannyEdges.release();
         nonCroppedHsv.release();
+        largestContour.release();
+        hsv.release();
 
-        return hsv;
+        return input;
     }
     public int getDuckPos(){
         return duckPos;

@@ -42,6 +42,7 @@ public class RawArm extends ComplexOp {
 
         while(opModeIsActive()) {
 //            telemetry.addData("string2", "string2");
+            d.robot.grip.setPosition(0.4);
 
             d.robot.tarm.setPower(d.manip.ls().y / 2.0);
             d.robot.barm.setPower(d.manip.ls().x / 2.0);

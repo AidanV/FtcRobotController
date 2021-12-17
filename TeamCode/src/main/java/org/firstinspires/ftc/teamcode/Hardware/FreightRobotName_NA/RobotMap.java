@@ -105,7 +105,7 @@ public class RobotMap {
 //PIDCoefficients pidDrive = new PIDCoefficients(50, 10, 0);
         PIDFCoefficients pidDrive = new PIDFCoefficients(20, 12, 5, 17.5);//p5 i2 d5 f17.5
         PIDFCoefficients pidBarm = new PIDFCoefficients(20, 5, 0, 17.5);//p5 i2 d5 f17.5
-        PIDFCoefficients pidTarm = new PIDFCoefficients(20, 0, 2.5, 30);//p5 i2 d5 f17.5
+        PIDFCoefficients pidTarm = new PIDFCoefficients(20, 3, 2.5, 30);//p5 i2 d5 f17.5
 
         bright = hw.get(DcMotor.class, "bright");
         bright.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -293,9 +293,10 @@ public class RobotMap {
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
-                        clawCam.startStreaming(640, 480, OpenCvCameraRotation.UPSIDE_DOWN);
+                        clawCam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+
+//                        clawCam.setPipeline(duckSpotPipeline);
                         clawCam.setPipeline(duckSpotPipeline);
-//                        clawCam.setPipeline(cubeFindPipeline);
 //                        clawCam.pauseViewport();
                     }
 
@@ -363,8 +364,12 @@ public class RobotMap {
 
         if (slamra == null) {
             //set offset from center of robot here
-            slamra = new T265Camera(new Transform2d(new Translation2d(0, 0), new Rotation2d()), 1.0, hw.appContext);//oC was 0.1
-
+            slamra = new T265Camera(new Transform2d(new Translation2d(0, 0), new Rotation2d()), 1.0, hw.appContext//,
+//                false,
+//                false,
+//                false
+            );//oC was 0.1
+//            slamra.;
         }
 
 

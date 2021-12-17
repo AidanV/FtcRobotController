@@ -57,9 +57,16 @@ public class Interfaces {
         public RobotMap robot = null;
 
 
-        public double initBarmPos = 0;
-        public double initTarmPos = 0;
-        public double initSarmPos = 0;
+        public static double initBarmPos = 0;
+        public static double initTarmPos = 0;
+        public static double initSarmPos = 0;
+        public static double lastFrameBarmPos = 0;
+        public static double lastFrameTarmPos = 0;
+        public static double lastFrameSarmPos = 0;
+        public static double firstFrameBarmPos = 0;
+        public static double firstFrameTarmPos = 0;
+        public static double firstFrameSarmPos = 0;
+        public static boolean initArmValid = false;
 
         public final int initBarmPosOffsetFromZeroTicsToHorizontal = -48;
         public final int initTarmPosOffsetFromZeroTicsToHorizontal = -1320;

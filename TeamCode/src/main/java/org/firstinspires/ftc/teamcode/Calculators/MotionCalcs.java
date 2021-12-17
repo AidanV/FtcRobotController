@@ -270,6 +270,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                     currentSegmentIndex++;
                     if(currentSegmentIndex >= segmentDataArray.size()){
                         myProgress = 1.00;
+                        return new Vector2D();
                     } else {
                         currentSegment = segmentDataArray.get(currentSegmentIndex);
                     }
