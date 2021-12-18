@@ -47,11 +47,12 @@ public abstract class ComplexOp extends LinearOpMode{
         d.lastCommand = d.currentCommand;
         d.currentCommand = new Interfaces.MoveData.Command(0, vector,0.0);
         DatagramSocket ds = null;
-        try {
-            ds = new DatagramSocket();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            ds = new DatagramSocket();
+//        } catch (SocketException e) {
+//            e.printStackTrace();
+//        }
+
 
         while(d.progress < 1.0) {
             //_______________________
