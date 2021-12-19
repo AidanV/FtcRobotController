@@ -364,7 +364,8 @@ public class RobotMap {
 
         if (slamra == null) {
             //set offset from center of robot here
-            slamra = new T265Camera(new Transform2d(new Translation2d(0, 0), new Rotation2d()), 1.0, hw.appContext
+            // odometryCovariance: 0==all odometry, 1==all 265
+            slamra = new T265Camera(new Transform2d(new Translation2d(0, 0), new Rotation2d()), 0.1, hw.appContext
                     ,
                 true,
                 false,

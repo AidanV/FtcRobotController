@@ -117,6 +117,7 @@ public class Interfaces {
         public Vector2D preWPos = new Vector2D();//this is updated inside of the calculator
         public Vector2D encoderPos = new Vector2D();
         public Vector2D t265Pos = new Vector2D();
+        public long encodePosUpdateTimeMillis = 0;
 
 
         /**

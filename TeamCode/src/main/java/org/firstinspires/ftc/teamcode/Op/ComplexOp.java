@@ -90,9 +90,23 @@ public abstract class ComplexOp extends LinearOpMode{
 //
 //            telemetry.addData("gryo", orientation.thirdAngle);
 //            telemetry.addData("orientation", d.heading);
-//            Vector2D encoderPre = d.encoderPos.clone();
-//            d.encoderPos = mecanumDrive.getVectorDistanceCm();
-//            Vector2D deltaMove = d.encoderPos.getSubtracted(encoderPre);
+
+            double distanceCorrectionFactor = 19.0;
+            Vector2D encoderPre = d.encoderPos.clone();
+            long lastEncoderUpdateTime = d.encodePosUpdateTimeMillis;
+            d.encoderPos = mecanumDrive.getVectorDistanceCm();
+            d.encodePosUpdateTimeMillis = System.currentTimeMillis();
+            Vector2D deltaMove = d.encoderPos.getSubtracted(encoderPre);
+            Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,d.encodePosUpdateTimeMillis - lastEncoderUpdateTime)).getMultiplied(distanceCorrectionFactor);
+            // moveSpeed.y + is moving forward
+            // moveSpeed.x + is moving robot to the right
+            // First value is y value of robot (moving forward == positive)
+            // Second value is x value of robot (positive to left of robot)
+            d.robot.slamra.sendOdometry(-moveSpeed.x,moveSpeed.y);
+
+            telemetry.addData("encodeMoveSpeed X","%.3f", moveSpeed.x);
+            telemetry.addData("encodeMoveSpeed Y","%.3f", moveSpeed.y);
+
 //            deltaMove.rotateBy(Math.toRadians(d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!
 //            d.preWPos.set(d.wPos);
 //            d.wPos.add(deltaMove);
@@ -100,8 +114,8 @@ public abstract class ComplexOp extends LinearOpMode{
             telemetry.addData("new X",p.getTranslation().getX());
             telemetry.addData("new Y",p.getTranslation().getY());
 
-            System.out.println("\n init:" + initPoseX + "    :    " + initPoseY);
-            System.out.println(" pose" + p.getTranslation().getX() + "    :    " + p.getTranslation().getY());
+//            System.out.println("\n init:" + initPoseX + "    :    " + initPoseY);
+//            System.out.println(" pose" + p.getTranslation().getX() + "    :    " + p.getTranslation().getY());
             Vector2D slamraPos = new Vector2D(
                     (p.getTranslation().getX()-initPoseX)*100.0,
                     (p.getTranslation().getY()-initPoseY)*100.0);

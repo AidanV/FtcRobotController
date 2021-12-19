@@ -10,9 +10,9 @@ public class MecanumDrive {
 
     RobotMap robot;
 
-    public static double GEAR_RATIO = 1.0; // for simulator - ours should be 0.5f;
+    public static double GEAR_RATIO = 0.5;//1.0; // for simulator - ours should be 0.5f;
     public static double WHEEL_RADIUS = 5.0;  // 5 cm
-    public static double TICKS_PER_ROTATION = 1120.0;  // From NeveRest (for simulator)  GoBilda should be 383.6f
+    public static double TICKS_PER_ROTATION = 383.5;////1120.0;  // From NeveRest (for simulator)  GoBilda should be 383.6f
 
     public static double CM_PER_TICK = (2 * Math.PI * GEAR_RATIO * WHEEL_RADIUS) / TICKS_PER_ROTATION;
 
