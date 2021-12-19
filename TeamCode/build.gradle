@@ -23,6 +23,10 @@ repositories {
 dependencies {
     implementation project(':FtcRobotController')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
-    implementation 'com.spartronics4915.lib:ftc265:2.1.8'
+    implementation files('/Users/vanduyneai/Documents/GitHub/2021FtcRobotController/librealsense-2.41.1-ftc265.aar')
+    implementation files('/Users/vanduyneai/Documents/GitHub/ftc265/lib/build/outputs/aar/lib-release.aar')
     implementation 'org.openftc:easyopencv:1.5.1'
+    implementation('org.ftclib.ftclib:core:1.2.0') { // For geometry classes
+        exclude group: 'org.ejml', module: 'ejml-all'
+    }
 }
