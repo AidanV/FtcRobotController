@@ -91,8 +91,8 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("gryo", orientation.thirdAngle);
 //            telemetry.addData("orientation", d.heading);
 
-            double distanceCorrectionFactorForward = 19.0; // These need to be recreated
-            double distanceCorrectionFactorSide = 18.64;// These need to be recreated
+            double distanceCorrectionFactorForward = 0.019;
+            double distanceCorrectionFactorSide = 0.01864;
             Vector2D encoderPre = d.encoderPos.clone();
             long lastEncoderUpdateTime = d.encodePosUpdateTimeMillis;
             d.encoderPos = mecanumDrive.getVectorDistanceCm();
