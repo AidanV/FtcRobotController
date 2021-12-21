@@ -91,14 +91,14 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("gryo", orientation.thirdAngle);
 //            telemetry.addData("orientation", d.heading);
 
-            double distanceCorrectionFactorForward = 19.0;
-            double distanceCorrectionFactorSide = 18.64;
+            double distanceCorrectionFactorForward = 19.0; // These need to be recreated
+            double distanceCorrectionFactorSide = 18.64;// These need to be recreated
             Vector2D encoderPre = d.encoderPos.clone();
             long lastEncoderUpdateTime = d.encodePosUpdateTimeMillis;
             d.encoderPos = mecanumDrive.getVectorDistanceCm();
             d.encodePosUpdateTimeMillis = System.currentTimeMillis();
             Vector2D deltaMove = d.encoderPos.getSubtracted(encoderPre);
-            Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,d.encodePosUpdateTimeMillis - lastEncoderUpdateTime));
+            Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,(d.encodePosUpdateTimeMillis - lastEncoderUpdateTime)/1000.0));
             moveSpeed.x *= distanceCorrectionFactorForward;
             moveSpeed.y *= distanceCorrectionFactorSide;
             // moveSpeed.y + is moving forward
@@ -107,8 +107,12 @@ public abstract class ComplexOp extends LinearOpMode{
             // Second value is x value of robot (positive to left of robot)
             d.robot.slamra.sendOdometry(-moveSpeed.x,moveSpeed.y);
 
-            telemetry.addData("encodeMoveSpeed X","%.3f", moveSpeed.x);
-            telemetry.addData("encodeMoveSpeed Y","%.3f", moveSpeed.y);
+            telemetry.addData("initPoseX","%.3f", initPoseX);
+            telemetry.addData("initPoseY","%.3f", initPoseY);
+            telemetry.addData("initPoseDeg","%.3f", initPose.getRotation().getDegrees());
+
+//            telemetry.addData("encodeMoveSpeed X","%.3f", moveSpeed.x);
+//            telemetry.addData("encodeMoveSpeed Y","%.3f", moveSpeed.y);
 
 //            deltaMove.rotateBy(Math.toRadians(d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!
 //            d.preWPos.set(d.wPos);
@@ -123,7 +127,7 @@ public abstract class ComplexOp extends LinearOpMode{
                     (p.getTranslation().getX()-initPoseX)*100.0,
                     (p.getTranslation().getY()-initPoseY)*100.0);
 //            slamraPos.subtract(slamraOffset);
-            slamraPos.rotateBy(-Math.toRadians(startPositionAndOrientation().StartNorthOffset));
+            slamraPos.rotateBy(-Math.toRadians(startPositionAndOrientation().StartNorthOffset + initPose.getRotation().getDegrees()));
 
             slamraPos.add(startPositionAndOrientation().StartPos);
 //            slamraPos.subtract(slamraOffset);
@@ -182,8 +186,6 @@ public abstract class ComplexOp extends LinearOpMode{
             d.arm.update();
             telemetry.addData("barm Angle", d.barmAngle);
             telemetry.addData("tarm Angle", d.tarmAngle);
-            telemetry.addData("initPoseX", initPoseX);
-            telemetry.addData("initPoseY", initPoseY);
 //            telemetry.addData("slamra x", d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getX());
 //            telemetry.addData("slamra y", d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getY());
 //            telemetry.addData("slamra just X", d.robot.slamra.getLastReceivedCameraUpdate().pose.getX());
