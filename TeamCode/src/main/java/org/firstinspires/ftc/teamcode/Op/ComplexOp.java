@@ -27,7 +27,7 @@ public abstract class ComplexOp extends LinearOpMode{
 
     double previousHeading = 0;
 
-    private Vector2D slamraOffset = new Vector2D(-2.0, -16.0);
+//    private Vector2D slamraOffset = new Vector2D(-2.0, -16.0);
 
     private Pose2d initPose = null;
     private double initPoseX = 0.0;
@@ -91,13 +91,16 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("gryo", orientation.thirdAngle);
 //            telemetry.addData("orientation", d.heading);
 
-            double distanceCorrectionFactor = 19.0;
+            double distanceCorrectionFactorForward = 19.0;
+            double distanceCorrectionFactorSide = 18.64;
             Vector2D encoderPre = d.encoderPos.clone();
             long lastEncoderUpdateTime = d.encodePosUpdateTimeMillis;
             d.encoderPos = mecanumDrive.getVectorDistanceCm();
             d.encodePosUpdateTimeMillis = System.currentTimeMillis();
             Vector2D deltaMove = d.encoderPos.getSubtracted(encoderPre);
-            Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,d.encodePosUpdateTimeMillis - lastEncoderUpdateTime)).getMultiplied(distanceCorrectionFactor);
+            Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,d.encodePosUpdateTimeMillis - lastEncoderUpdateTime));
+            moveSpeed.x *= distanceCorrectionFactorForward;
+            moveSpeed.y *= distanceCorrectionFactorSide;
             // moveSpeed.y + is moving forward
             // moveSpeed.x + is moving robot to the right
             // First value is y value of robot (moving forward == positive)
@@ -133,9 +136,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //            slamraPos.add(slamraOffset.getRotatedBy(Math.toRadians(d.heading)));
 
             d.wPos.set(slamraPos);
-
-
-
+            
 
             if(orientationCalc != null) d.currentCommand.orientationSpeed = orientationCalc.CalcOrientation(d);
             if(motionCalc != null) {
