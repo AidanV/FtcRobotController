@@ -92,6 +92,8 @@ public class RobotMap {
 
     //public static ModernRoboticsI2cRangeSensor frontRange, backRange;
 
+    private Transform2d robot265Offset = new Transform2d(new Translation2d(.13, -.02), new Rotation2d());
+
     public RobotMap(HardwareMap hw){//, Interfaces.MoveData.StartData posh) {
 
         this.hw = hw;
@@ -365,7 +367,7 @@ public class RobotMap {
         if (slamra == null) {
             //set offset from center of robot here
             // odometryCovariance: 0==all odometry, 1==all 265
-            slamra = new T265Camera(new Transform2d(new Translation2d(.13, -.02), new Rotation2d()), 0.1, hw.appContext
+            slamra = new T265Camera(robot265Offset, 0.1, hw.appContext
                     ,
                 true,
                 false,
@@ -373,7 +375,16 @@ public class RobotMap {
             );//oC was 0.1
 //            slamra.;
         }
-
-
+    }
+    public void setOdometryCovariance(float covariance)
+    {
+        if (slamra != null)
+        {
+            slamra.setOdometryInfo(
+                    (float)robot265Offset.getTranslation().getX(),
+                    (float)robot265Offset.getTranslation().getY(),
+                    (float)robot265Offset.getRotation().getRadians(),
+                    covariance);
+        }
     }
 }
