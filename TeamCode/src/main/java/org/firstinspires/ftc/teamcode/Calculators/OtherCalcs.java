@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Calculators;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.GoalPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.PowerShotPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.StackDeterminationPipeline;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
         import java.util.Vector;
@@ -43,63 +45,66 @@ public class OtherCalcs {
         };
     }
 
-    public static Interfaces.OtherCalc moveArmOnDuck(){
-        return new Interfaces.OtherCalc() {
-            @Override
-            public void CalcOther(Interfaces.MoveData d) {
-
-                d.arm.moveTowardTarget(-90, -.34, .27, .2);
-//                switch(d.duckPos){
-//                    case 0:
-//                        d.arm.moveTowardTarget(-90, -.31, -.04, .2);
-//                        break;
-//                    case 1:
-//                        d.arm.moveTowardTarget(-90, -.31, .10, .2);
-//                        break;
-//                    case 2:
-//                        d.arm.moveTowardTarget(-90, -.34, .27, .2);
-//                        break;
-//                }
-            }
-
-            @Override
-            public double myProgress(Interfaces.MoveData d) {
-                return 0;
-            }
-        };
-    }
-    public static Interfaces.OtherCalc moveArm(double theta, double x, double y, double speed){
-        return new Interfaces.OtherCalc() {
-            @Override
-            public void CalcOther(Interfaces.MoveData d) {
-                d.arm.moveTowardTarget(theta, x, y, speed);
+//    public static Interfaces.OtherCalc moveArmOnDuck(){
+//        return new Interfaces.OtherCalc() {
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d) {
+//
 //                d.arm.moveTowardTarget(-90, -.34, .27, .2);
-            }
-
-            @Override
-            public double myProgress(Interfaces.MoveData d) {
-                return 0;
-            }
-        };
-    }
-
-    public static Interfaces.OtherCalc moveArmToTele(){
+////                switch(d.duckPos){
+////                    case 0:
+////                        d.arm.moveTowardTarget(-90, -.31, -.04, .2);
+////                        break;
+////                    case 1:
+////                        d.arm.moveTowardTarget(-90, -.31, .10, .2);
+////                        break;
+////                    case 2:
+////                        d.arm.moveTowardTarget(-90, -.34, .27, .2);
+////                        break;
+////                }
+//            }
+//
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return 0;
+//            }
+//        };
+//    }
+//    public static Interfaces.OtherCalc moveArm(double theta, double x, double y, double speed){
+//        return new Interfaces.OtherCalc() {
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d) {
+//                d.arm.moveTowardTarget(theta, x, y, speed);
+////                d.arm.moveTowardTarget(-90, -.34, .27, .2);
+//            }
+//
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return 0;
+//            }
+//        };
+//    }
+    public static Interfaces.OtherCalc TeleLift(){
         return new Interfaces.OtherCalc() {
             @Override
             public void CalcOther(Interfaces.MoveData d) {
-                if(d.manip.y()){
-                    d.arm.moveTowardTarget(90, .34, .33, .3);
-                } else if (d.manip.u()){
-                    d.arm.moveTowardTarget(0, .31, -.15, .3);
-                } else if (d.manip.d()){
-                    d.arm.moveTowardTarget(0, .33, -.03, .3);
-                }
-                else {
-                    d.robot.barm.setPower(0.0);
-                    d.robot.tarm.setPower(0.0);
-                    d.robot.sarm.setPower(0.0);
-                }
+//                d.robot.liftEx.setPower(d.manip.ls().y/5.0);
+                if(d.manip.u()) {
+                    d.robot.lift.setTargetPosition(1585-d.firstLiftPos);//1598 max
+                    d.robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    d.robot.lift.setPower(0.75);
+                } else if(d.manip.d()){
+                    d.robot.lift.setTargetPosition(15-d.firstLiftPos);//0 min
+                    d.robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    d.robot.lift.setPower(0.75);
 
+                } else if(d.manip.r()){
+                    d.robot.lift.setTargetPosition(150-d.firstLiftPos);
+                    d.robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    d.robot.lift.setPower(0.75);
+
+                }
+                d.telemetry.addData("lift Pos", d.robot.lift.getCurrentPosition() - d.firstLiftPos);
             }
 
             @Override
@@ -108,6 +113,79 @@ public class OtherCalcs {
             }
         };
     }
+
+    public static Interfaces.OtherCalc Intake(){
+        return new Interfaces.OtherCalc() {
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                d.robot.intake.setPosition((d.manip.rs().y+1.0)/2.0);
+                if(d.manip.b()){
+                    d.robot.bar.setPosition(0.6);
+                } else {
+                    d.robot.bar.setPosition(0.3);
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
+
+
+
+//    public static Interfaces.OtherCalc moveArmToTele(){
+//        return new Interfaces.OtherCalc() {
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d) {
+//                if(d.manip.y()){
+//                    d.arm.moveTowardTarget(90, .34, .33, .3);
+//                } else if (d.manip.u()){
+//                    d.arm.moveTowardTarget(0, .31, -.15, .3);
+//                } else if (d.manip.d()){
+//                    d.arm.moveTowardTarget(0, .33, -.03, .3);
+//                }
+//                else {
+//                    d.robot.barm.setPower(0.0);
+//                    d.robot.tarm.setPower(0.0);
+//                    d.robot.sarm.setPower(0.0);
+//                }
+//
+//            }
+//
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return 0;
+//            }
+//        };
+//    }
+//    public static Interfaces.OtherCalc changeOdometryCovariance(){
+//        return new Interfaces.OtherCalc() {
+//            private float covariance;
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d) {
+//                if(d.driver.a()){
+//                    covariance = 1.0f;
+//                    d.robot.setOdometryCovariance(covariance);
+//                } else if (d.driver.b()){
+//                    covariance = 0.0f;
+//                    d.robot.setOdometryCovariance(covariance);
+//                }
+//                d.telemetry.addData("covariance", covariance);
+//
+//
+//
+//            }
+//
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return 0;
+//            }
+//        };
+//    }
+
+
 
 
 //    public static Interfaces.OtherCalc Bucket(){
@@ -821,346 +899,346 @@ public class OtherCalcs {
 ////            }
 ////            return new MyDonutStackOtherCalc();
 ////    }
-    public static Interfaces.OtherCalc Arm(){
+//    public static Interfaces.OtherCalc Arm(){
+//
+//
+//        return new Interfaces.OtherCalc(){
+//            private double myProgress = 0;
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return myProgress;
+//            }
+//
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d){
+//                d.arm.setArm2DVelocity(d.manip.ls().x, d.manip.ls().y, d.manip.rs().x);
+//            }
+//        };
+//    }
 
-
-        return new Interfaces.OtherCalc(){
-            private double myProgress = 0;
-            @Override
-            public double myProgress(Interfaces.MoveData d) {
-                return myProgress;
-            }
-
-            @Override
-            public void CalcOther(Interfaces.MoveData d){
-                d.arm.setArm2DVelocity(d.manip.ls().x, d.manip.ls().y, d.manip.rs().x);
-            }
-        };
-    }
-
-    public static Interfaces.OtherCalc ArmTele(){
-
-
-        return new Interfaces.OtherCalc(){
-            private double myProgress = 0;
-            @Override
-            public double myProgress(Interfaces.MoveData d) {
-                return myProgress;
-            }
-
-            @Override
-            public void CalcOther(Interfaces.MoveData d){
-
-
-                if(d.manip.a()) {
-                    try {
-                        double command = -d.robot.cubeFindPipeline.getCubeXValueCommand();
-                        if (command > .1) command = .1;
-                        else if (command < -.1) command = -.1;
-                        if(command > 0.0 && d.sarmAngle > 30.0){
-                            d.robot.sarm.setPower(0.0);
-                        } else if (command < 0.0 && d.sarmAngle < -15.0){
-                            d.robot.sarm.setPower(0.0);
-                        } else {
-                            d.robot.sarm.setPower(command);
-                        }
-                    } catch (Exception e) {
-                        d.robot.sarm.setPower(0.0);
-                        d.telemetry.addData("cube x value", "found nothing");
-                    }
-                } else if(d.manip.y()){
-                    d.arm.moveTowardTarget(90, .34, .36, .4);
-                } else if (d.manip.d()){
-                    d.arm.moveTowardTarget(0, .31, -.15, .3);
-                } else if (d.manip.u()) {
-                    d.arm.moveTowardTarget(0, .33, -.03, .3);
-                } else if (d.manip.lb()){
-                    d.arm.moveTowardTarget(90, .25, .55, .4);
-                } else{
-                    d.arm.setArm2DVelocity(d.manip.ls().x, d.manip.ls().y, -d.manip.rs().x);
-                }
-            }
-        };
-    }
-
-
-
-    public static Interfaces.OtherCalc Claw(){
-
-        return new Interfaces.OtherCalc() {
-
-            double clawPosition = 0.5;
-            @Override
-            public void CalcOther(Interfaces.MoveData d) {
-
-                if (d.manip.b()) {
-                    d.robot.grip.setPosition(1.0);
-                } else if (d.manip.rb()) {
-                    d.robot.grip.setPosition(0.4);
-                } else if (d.robot.cubeFindPipeline.isCubeClose() || d.robot.cubeFindPipeline.isDuckClose()) {
-                    d.robot.grip.setPosition(0.4);
-                }
-                if (d.tarmAngle > 90.0) {
-                    clawPosition = 0.4 * (180 - d.tarmAngle) / 90.0 + 0.6;
-                } else {
-                    clawPosition = -0.4 * d.tarmAngle / 90.0 + 0.6;
-                }
-//                d.robot.grip.setPosition(d.manip.rt()/2.0 +.5);
-//                if(d.manip.u()) clawPosition += .05;
-//                else if (d.manip.d()) clawPosition -= .05;
-                d.telemetry.addData("claw position", clawPosition);
-                d.robot.claw.setPosition(clawPosition);//min .2 max 1 center .6
-            }
-            @Override
-            public double myProgress(Interfaces.MoveData d) {
-                return 0;
-            }
-        };
-    }
-
-    public static Interfaces.OtherCalc Arm2D(){
-
-
-        return new Interfaces.OtherCalc(){
-            private double myProgress = 0;
-            @Override
-            public double myProgress(Interfaces.MoveData d) {
-                return myProgress;
-            }
-
-            @Override
-            public void CalcOther(Interfaces.MoveData d){
-                d.arm.setArm2DVelocity(d.manip.ls().x, d.manip.ls().y, d.manip.rs().x);
-//                d.arm.thetaVelocity(d.manip.rs().x);
-            }
-        };
-    }
-
-    public static Interfaces.OtherCalc FindTurnToCube(){
-
-
-        return new Interfaces.OtherCalc(){
-            private double myProgress = 0;
-            @Override
-            public double myProgress(Interfaces.MoveData d) {
-                return myProgress;
-            }
-
-            @Override
-            public void CalcOther(Interfaces.MoveData d){
-                d.telemetry.addData("cam fps", d.robot.clawCam.getFps());
-                if(d.manip.a()) {
-                    try {
-                        double command = -d.robot.cubeFindPipeline.getCubeXValueCommand();
-                        if (command > .1) command = .1;
-                        else if (command < -.1) command = -.1;
-                        if(command > 0.0 && d.sarmAngle > 30.0){
-                            d.robot.sarm.setPower(0.0);
-                        } else if (command < 0.0 && d.sarmAngle < -15.0){
-                            d.robot.sarm.setPower(0.0);
-                        } else {
-                            d.robot.sarm.setPower(command);
-                        }
-
-//                        if (d.sarmAngle < 30.0 && d.sarmAngle > -30.0) {
-//                            double command = -d.robot.cubeFindPipeline.getCubeXValueCommand();
-//                            if (command > .1) command = .1;
-//                            else if (command < -.1) command = -.1;
-//                            d.robot.sarm.setPower(command);
-//                            d.telemetry.addData("cube x value", d.robot.cubeFindPipeline.getCubeXValueCommand());
-//                        } else {
+//    public static Interfaces.OtherCalc ArmTele(){
+//
+//
+//        return new Interfaces.OtherCalc(){
+//            private double myProgress = 0;
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return myProgress;
+//            }
+//
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d){
+//
+//
+//                if(d.manip.a()) {
+//                    try {
+//                        double command = -d.robot.cubeFindPipeline.getCubeXValueCommand();
+//                        if (command > .1) command = .1;
+//                        else if (command < -.1) command = -.1;
+//                        if(command > 0.0 && d.sarmAngle > 30.0){
 //                            d.robot.sarm.setPower(0.0);
+//                        } else if (command < 0.0 && d.sarmAngle < -15.0){
+//                            d.robot.sarm.setPower(0.0);
+//                        } else {
+//                            d.robot.sarm.setPower(command);
 //                        }
-
-                    } catch (Exception e) {
-                        d.robot.sarm.setPower(0.0);
-                        d.telemetry.addData("cube x value", "found nothing");
-                    }
-                } else {
-                    d.robot.sarm.setPower(0.0);
-                }
-
-//                try {
-//                    List<Recognition> recogntions = d.robot.tfod.getUpdatedRecognitions();
-//                    float greatestBottom = -1.0f;
-//                    Recognition bestRecognition = null;
-//                    if(recogntions != null) {
-//                        for (Recognition r : recogntions) {
-//                            if (!r.getLabel().equals("Cube")) continue;
-//                            if (r.getBottom() > greatestBottom) {
-//                                greatestBottom = r.getBottom();
-//                                bestRecognition = r;
-//                            }
-//                        }
+//                    } catch (Exception e) {
+//                        d.robot.sarm.setPower(0.0);
+//                        d.telemetry.addData("cube x value", "found nothing");
 //                    }
-//                    if (bestRecognition == null) {
-//                        d.telemetry.addData("no cube found", "<-");
-//                    } else {
-//                        d.telemetry.addData("left", bestRecognition.getLeft());
-//                        d.telemetry.addData("right", bestRecognition.getRight());
-//                        double command = (bestRecognition.getLeft() + bestRecognition.getRight() / 2.0 / 1920.0) * 2.0 - 0.5;
-//                        d.telemetry.addData("command", command);
-//                    }
-//                } catch (Exception e){
-//                    d.telemetry.addData("exception", e);
+//                } else if(d.manip.y()){
+//                    d.arm.moveTowardTarget(90, .34, .36, .4);
+//                } else if (d.manip.d()){
+//                    d.arm.moveTowardTarget(0, .31, -.15, .3);
+//                } else if (d.manip.u()) {
+//                    d.arm.moveTowardTarget(0, .33, -.03, .3);
+//                } else if (d.manip.lb()){
+//                    d.arm.moveTowardTarget(90, .25, .55, .4);
+//                } else{
+//                    d.arm.setArm2DVelocity(d.manip.ls().x, d.manip.ls().y, -d.manip.rs().x);
 //                }
-//                d.arm.thetaVelocity(d.manip.rs().x);
-            }
-        };
-    }
-
-    public static Interfaces.OtherCalc FindGC(){
-
-
-        return new Interfaces.OtherCalc(){
-            double clawPosition = 0.5;
-            private double myProgress = 0.0;
-            @Override
-            public double myProgress(Interfaces.MoveData d) {
-                return myProgress;
-            }
-
-            @Override
-            public void CalcOther(Interfaces.MoveData d) {
-
-                d.telemetry.addData("cam fps", d.robot.clawCam.getFps());
-                try {
-                    d.arm.update();
-                    double clawPosition;
-                    if(d.tarmAngle > 90.0){
-                        clawPosition = 0.4* (180-d.tarmAngle)/90.0 + 0.6;
-                    } else {
-                        clawPosition = -0.4* d.tarmAngle/90.0+0.6;
-                    }
-
-//                    d.telemetry.addData("claw position", clawPosition);
-                    d.robot.claw.setPosition(clawPosition);//min .2 max 1 center .6
-                    if (!d.robot.cubeFindPipeline.isCubeClose()) {
-                        double command = -d.robot.cubeFindPipeline.getCubeXValueCommand();
-                        if (command > .1) command = .1;
-                        else if (command < -.1) command = -.1;
-                        if(command > 0.0 && d.sarmAngle > 37.0){
-                            d.robot.sarm.setPower(0.0);
-//                            d.telemetry.addData("sarm", 0.0);
-                        } else if (command < 0.0 && d.sarmAngle < -15.0){
-                            d.robot.sarm.setPower(0.0);
-//                            d.telemetry.addData("sarm", 0.0);
-                        } else {
-                            d.robot.sarm.setPower(command);
-//                            d.telemetry.addData("sarm", command);
-                        }
-//                        d.telemetry.addData("cube x value", d.robot.cubeFindPipeline.getCubeXValueCommand());
-                    } else {
-                        d.robot.sarm.setPower(0.0);
-                        if(d.wPos.x>200) {
-                            d.robot.sarm.setPower(0.0);
-                            d.robot.grip.setPosition(0.5);
-                            myProgress = 1.0;
-                        }
-                    }
-
-
-                } catch (Exception e) {
-
-                    d.robot.sarm.setPower(0.0);
-                    d.telemetry.addData("cube x value", "found nothing");
-                }
-            }
-        };
-    }
-
-
-    public static Interfaces.OtherCalc FindD(){
-
-
-        return new Interfaces.OtherCalc(){
-            double clawPosition = 0.5;
-            private double myProgress = 0.0;
-            @Override
-            public double myProgress(Interfaces.MoveData d) {
-                return myProgress;
-            }
-
-            @Override
-            public void CalcOther(Interfaces.MoveData d) {
-
-                d.telemetry.addData("cam fps", d.robot.clawCam.getFps());
-                try {
-                    d.arm.update();
-                    double clawPosition;
-                    if(d.tarmAngle > 90.0){
-                        clawPosition = 0.4* (180-d.tarmAngle)/90.0 + 0.6;
-                    } else {
-                        clawPosition = -0.4* d.tarmAngle/90.0+0.6;
-                    }
-
-//                    d.telemetry.addData("claw position", clawPosition);
-                    d.robot.claw.setPosition(clawPosition);//min .2 max 1 center .6
-                    if (!d.robot.cubeFindPipeline.isDuckClose()) {
-                        double command = -d.robot.cubeFindPipeline.getCubeXValueCommand();
-                        if (command > .1) command = .1;
-                        else if (command < -.1) command = -.1;
-                        if(command > 0.0 && d.sarmAngle > 37.0){
-                            d.robot.sarm.setPower(0.0);
-//                            d.telemetry.addData("sarm", 0.0);
-                        } else if (command < 0.0 && d.sarmAngle < -20.0){
-                            d.robot.sarm.setPower(0.0);
-//                            d.telemetry.addData("sarm", 0.0);
-                        } else {
-                            d.robot.sarm.setPower(command);
-//                            d.telemetry.addData("sarm", command);
-                        }
-//                        d.telemetry.addData("cube x value", d.robot.cubeFindPipeline.getCubeXValueCommand());
-                    } else {
-                        d.robot.sarm.setPower(0.0);
-                        if(d.wPos.x>200) {
-                            d.robot.sarm.setPower(0.0);
-                            d.robot.grip.setPosition(0.4);
-                            myProgress = 1.0;
-                        }
-                    }
-
-
-                } catch (Exception e) {
-
-                    d.robot.sarm.setPower(0.0);
-                    d.telemetry.addData("cube x value", "found nothing");
-                }
-            }
-        };
-    }
+//            }
+//        };
+//    }
 
 
 
-    public static Interfaces.OtherCalc ArmPath(final Vector<SpeedCalcs.ProgressSpeed> speeds, final Vector<Vector3D> points){
+//    public static Interfaces.OtherCalc Claw(){
+//
+//        return new Interfaces.OtherCalc() {
+//
+//            double clawPosition = 0.5;
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d) {
+//
+//                if (d.manip.b()) {
+//                    d.robot.grip.setPosition(1.0);
+//                } else if (d.manip.rb()) {
+//                    d.robot.grip.setPosition(0.4);
+//                } else if (d.robot.cubeFindPipeline.isCubeClose() || d.robot.cubeFindPipeline.isDuckClose()) {
+//                    d.robot.grip.setPosition(0.4);
+//                }
+//                if (d.tarmAngle > 90.0) {
+//                    clawPosition = 0.4 * (180 - d.tarmAngle) / 90.0 + 0.6;
+//                } else {
+//                    clawPosition = -0.4 * d.tarmAngle / 90.0 + 0.6;
+//                }
+////                d.robot.grip.setPosition(d.manip.rt()/2.0 +.5);
+////                if(d.manip.u()) clawPosition += .05;
+////                else if (d.manip.d()) clawPosition -= .05;
+//                d.telemetry.addData("claw position", clawPosition);
+//                d.robot.claw.setPosition(clawPosition);//min .2 max 1 center .6
+//            }
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return 0;
+//            }
+//        };
+//    }
 
-        return new Interfaces.OtherCalc(){
-            private double myProgress = 0;
-            private boolean first = true;
-            @Override
-            public double myProgress(Interfaces.MoveData d) {
-                return myProgress;
-            }
+//    public static Interfaces.OtherCalc Arm2D(){
+//
+//
+//        return new Interfaces.OtherCalc(){
+//            private double myProgress = 0;
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return myProgress;
+//            }
+//
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d){
+//                d.arm.setArm2DVelocity(d.manip.ls().x, d.manip.ls().y, d.manip.rs().x);
+////                d.arm.thetaVelocity(d.manip.rs().x);
+//            }
+//        };
+//    }
 
-            @Override
-            public void CalcOther(Interfaces.MoveData d){
-                if(first){
-                    d.arm.setArmPath(points);
-                    d.arm.setProgressSpeeds(speeds);
-                }
-                if(d.manip.b()){
-//                    d.arm.move();
-                } else {
-                    d.robot.tarmEx.setVelocity(0);
-                    d.robot.barmEx.setVelocity(0);
-                    d.robot.sarmEx.setVelocity(0);
-                }
-//                d.robot.barmEx.setVelocity(1500*(-d.manip.ls().x/2.5));
-//                d.robot.tarmEx.setVelocity(1500*(-d.manip.ls().y/2.5));
-//                d.robot.sarm.setPower(-d.manip.rs().x/2.5);
-            }
-        };
-    }
+//    public static Interfaces.OtherCalc FindTurnToCube(){
+//
+//
+//        return new Interfaces.OtherCalc(){
+//            private double myProgress = 0;
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return myProgress;
+//            }
+//
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d){
+//                d.telemetry.addData("cam fps", d.robot.clawCam.getFps());
+//                if(d.manip.a()) {
+//                    try {
+//                        double command = -d.robot.cubeFindPipeline.getCubeXValueCommand();
+//                        if (command > .1) command = .1;
+//                        else if (command < -.1) command = -.1;
+//                        if(command > 0.0 && d.sarmAngle > 30.0){
+//                            d.robot.sarm.setPower(0.0);
+//                        } else if (command < 0.0 && d.sarmAngle < -15.0){
+//                            d.robot.sarm.setPower(0.0);
+//                        } else {
+//                            d.robot.sarm.setPower(command);
+//                        }
+//
+////                        if (d.sarmAngle < 30.0 && d.sarmAngle > -30.0) {
+////                            double command = -d.robot.cubeFindPipeline.getCubeXValueCommand();
+////                            if (command > .1) command = .1;
+////                            else if (command < -.1) command = -.1;
+////                            d.robot.sarm.setPower(command);
+////                            d.telemetry.addData("cube x value", d.robot.cubeFindPipeline.getCubeXValueCommand());
+////                        } else {
+////                            d.robot.sarm.setPower(0.0);
+////                        }
+//
+//                    } catch (Exception e) {
+//                        d.robot.sarm.setPower(0.0);
+//                        d.telemetry.addData("cube x value", "found nothing");
+//                    }
+//                } else {
+//                    d.robot.sarm.setPower(0.0);
+//                }
+//
+////                try {
+////                    List<Recognition> recogntions = d.robot.tfod.getUpdatedRecognitions();
+////                    float greatestBottom = -1.0f;
+////                    Recognition bestRecognition = null;
+////                    if(recogntions != null) {
+////                        for (Recognition r : recogntions) {
+////                            if (!r.getLabel().equals("Cube")) continue;
+////                            if (r.getBottom() > greatestBottom) {
+////                                greatestBottom = r.getBottom();
+////                                bestRecognition = r;
+////                            }
+////                        }
+////                    }
+////                    if (bestRecognition == null) {
+////                        d.telemetry.addData("no cube found", "<-");
+////                    } else {
+////                        d.telemetry.addData("left", bestRecognition.getLeft());
+////                        d.telemetry.addData("right", bestRecognition.getRight());
+////                        double command = (bestRecognition.getLeft() + bestRecognition.getRight() / 2.0 / 1920.0) * 2.0 - 0.5;
+////                        d.telemetry.addData("command", command);
+////                    }
+////                } catch (Exception e){
+////                    d.telemetry.addData("exception", e);
+////                }
+////                d.arm.thetaVelocity(d.manip.rs().x);
+//            }
+//        };
+//    }
+
+//    public static Interfaces.OtherCalc FindGC(){
+//
+//
+//        return new Interfaces.OtherCalc(){
+//            double clawPosition = 0.5;
+//            private double myProgress = 0.0;
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return myProgress;
+//            }
+//
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d) {
+//
+//                d.telemetry.addData("cam fps", d.robot.clawCam.getFps());
+//                try {
+//                    d.arm.update();
+//                    double clawPosition;
+//                    if(d.tarmAngle > 90.0){
+//                        clawPosition = 0.4* (180-d.tarmAngle)/90.0 + 0.6;
+//                    } else {
+//                        clawPosition = -0.4* d.tarmAngle/90.0+0.6;
+//                    }
+//
+////                    d.telemetry.addData("claw position", clawPosition);
+//                    d.robot.claw.setPosition(clawPosition);//min .2 max 1 center .6
+//                    if (!d.robot.cubeFindPipeline.isCubeClose()) {
+//                        double command = -d.robot.cubeFindPipeline.getCubeXValueCommand();
+//                        if (command > .1) command = .1;
+//                        else if (command < -.1) command = -.1;
+//                        if(command > 0.0 && d.sarmAngle > 37.0){
+//                            d.robot.sarm.setPower(0.0);
+////                            d.telemetry.addData("sarm", 0.0);
+//                        } else if (command < 0.0 && d.sarmAngle < -15.0){
+//                            d.robot.sarm.setPower(0.0);
+////                            d.telemetry.addData("sarm", 0.0);
+//                        } else {
+//                            d.robot.sarm.setPower(command);
+////                            d.telemetry.addData("sarm", command);
+//                        }
+////                        d.telemetry.addData("cube x value", d.robot.cubeFindPipeline.getCubeXValueCommand());
+//                    } else {
+//                        d.robot.sarm.setPower(0.0);
+//                        if(d.wPos.x>200) {
+//                            d.robot.sarm.setPower(0.0);
+//                            d.robot.grip.setPosition(0.5);
+//                            myProgress = 1.0;
+//                        }
+//                    }
+//
+//
+//                } catch (Exception e) {
+//
+//                    d.robot.sarm.setPower(0.0);
+//                    d.telemetry.addData("cube x value", "found nothing");
+//                }
+//            }
+//        };
+//    }
+
+
+//    public static Interfaces.OtherCalc FindD(){
+//
+//
+//        return new Interfaces.OtherCalc(){
+//            double clawPosition = 0.5;
+//            private double myProgress = 0.0;
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return myProgress;
+//            }
+//
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d) {
+//
+//                d.telemetry.addData("cam fps", d.robot.clawCam.getFps());
+//                try {
+//                    d.arm.update();
+//                    double clawPosition;
+//                    if(d.tarmAngle > 90.0){
+//                        clawPosition = 0.4* (180-d.tarmAngle)/90.0 + 0.6;
+//                    } else {
+//                        clawPosition = -0.4* d.tarmAngle/90.0+0.6;
+//                    }
+//
+////                    d.telemetry.addData("claw position", clawPosition);
+//                    d.robot.claw.setPosition(clawPosition);//min .2 max 1 center .6
+//                    if (!d.robot.cubeFindPipeline.isDuckClose()) {
+//                        double command = -d.robot.cubeFindPipeline.getCubeXValueCommand();
+//                        if (command > .1) command = .1;
+//                        else if (command < -.1) command = -.1;
+//                        if(command > 0.0 && d.sarmAngle > 37.0){
+//                            d.robot.sarm.setPower(0.0);
+////                            d.telemetry.addData("sarm", 0.0);
+//                        } else if (command < 0.0 && d.sarmAngle < -20.0){
+//                            d.robot.sarm.setPower(0.0);
+////                            d.telemetry.addData("sarm", 0.0);
+//                        } else {
+//                            d.robot.sarm.setPower(command);
+////                            d.telemetry.addData("sarm", command);
+//                        }
+////                        d.telemetry.addData("cube x value", d.robot.cubeFindPipeline.getCubeXValueCommand());
+//                    } else {
+//                        d.robot.sarm.setPower(0.0);
+//                        if(d.wPos.x>200) {
+//                            d.robot.sarm.setPower(0.0);
+//                            d.robot.grip.setPosition(0.4);
+//                            myProgress = 1.0;
+//                        }
+//                    }
+//
+//
+//                } catch (Exception e) {
+//
+//                    d.robot.sarm.setPower(0.0);
+//                    d.telemetry.addData("cube x value", "found nothing");
+//                }
+//            }
+//        };
+//    }
+
+
+
+//    public static Interfaces.OtherCalc ArmPath(final Vector<SpeedCalcs.ProgressSpeed> speeds, final Vector<Vector3D> points){
+//
+//        return new Interfaces.OtherCalc(){
+//            private double myProgress = 0;
+//            private boolean first = true;
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return myProgress;
+//            }
+//
+//            @Override
+//            public void CalcOther(Interfaces.MoveData d){
+//                if(first){
+//                    d.arm.setArmPath(points);
+//                    d.arm.setProgressSpeeds(speeds);
+//                }
+//                if(d.manip.b()){
+////                    d.arm.move();
+//                } else {
+//                    d.robot.tarmEx.setVelocity(0);
+//                    d.robot.barmEx.setVelocity(0);
+//                    d.robot.sarmEx.setVelocity(0);
+//                }
+////                d.robot.barmEx.setVelocity(1500*(-d.manip.ls().x/2.5));
+////                d.robot.tarmEx.setVelocity(1500*(-d.manip.ls().y/2.5));
+////                d.robot.sarm.setPower(-d.manip.rs().x/2.5);
+//            }
+//        };
+//    }
 
 
 

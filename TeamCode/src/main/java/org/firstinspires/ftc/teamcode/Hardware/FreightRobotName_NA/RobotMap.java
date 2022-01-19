@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Hardware.FreightRobotName_NA;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.hardware.motors.GoBILDA5202Series;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import com.vuforia.Vuforia;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.Calculators.Interfaces;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.CubeFindPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.DuckSpotPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -35,15 +37,19 @@ import com.arcrobotics.ftclib.geometry.Translation2d;
 
 public class RobotMap {
 
-    public static DcMotor bright, fright, bleft, fleft, barm, tarm, sarm, duck;//, shooter, intake, wobble;
+    public static DcMotor bright, fright, bleft, fleft, lift, duck;// barm, tarm, sarm, duck, shooter, intake, wobble;
 
+//    public static GoBILDA5202Series goBILDA5202Series;
 //    public static int wobbleOffset = 0;
 
-    public static DcMotorEx brightEx, frightEx, bleftEx, fleftEx, barmEx, tarmEx, sarmEx, duckEx;//, shooterEx, intakeEx, wobbleEx;
 
-    public static DigitalChannel bop, top;
+    public static DcMotorEx brightEx, frightEx, bleftEx, fleftEx, liftEx;// duckEx;//, barmEx, tarmEx, sarmEx, duckEx, shooterEx, intakeEx, wobbleEx;
 
-    public static Servo grip, claw;
+//    public static DigitalChannel bop, top;
+
+    public static Servo bar, intake;
+
+//    public static Servo grip, claw;
 //    public static Servo bucket, pusher, graber;
 
 //    public static CRServo vex;
@@ -55,14 +61,15 @@ public class RobotMap {
 //    public static OpenCvInternalCamera yeetCam;
 
 //    public static OpenCvInternalCamera ClawCam;
+    public static OpenCvCamera IntakeCam;
 
 //    public final StackDeterminationPipeline pipeline = new StackDeterminationPipeline();
 
-    public static T265Camera slamra = null;
+//    public static T265Camera slamra = null;
 
-    public static OpenCvCamera clawCam;
+//    public static OpenCvCamera clawCam;
 
-    public final CubeFindPipeline cubeFindPipeline = new CubeFindPipeline();
+//    public final CubeFindPipeline cubeFindPipeline = new CubeFindPipeline();
     public final DuckSpotPipeline duckSpotPipeline = new DuckSpotPipeline();
 
 //    public static TFObjectDetector tfod;
@@ -94,7 +101,7 @@ public class RobotMap {
 
     private Transform2d robot265Offset = new Transform2d(new Translation2d(.13, -.02), new Rotation2d());
 
-    public RobotMap(HardwareMap hw){//, Interfaces.MoveData.StartData posh) {
+    public RobotMap(HardwareMap hw) {//, Interfaces.MoveData.StartData posh) {
 
         this.hw = hw;
         /**
@@ -108,6 +115,10 @@ public class RobotMap {
         PIDFCoefficients pidDrive = new PIDFCoefficients(20, 12, 5, 17.5);//p5 i2 d5 f17.5
         PIDFCoefficients pidBarm = new PIDFCoefficients(20, 5, 0, 17.5);//p5 i2 d5 f17.5
         PIDFCoefficients pidTarm = new PIDFCoefficients(20, 3, 2.5, 30);//p5 i2 d5 f17.5
+
+//        goBILDA5202Series = hw.get(GoBILDA5202Series.class, "gobilda");
+
+
 
         bright = hw.get(DcMotor.class, "bright");
         bright.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -144,28 +155,47 @@ public class RobotMap {
         fleftEx = (DcMotorEx) fleft;
         fleftEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
 
-        barm = hw.get(DcMotor.class, "barm");
-        barm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        barm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        barm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        barmEx = (DcMotorEx) barm;
-        barmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidBarm);
-
-        tarm = hw.get(DcMotor.class, "tarm");
-        tarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        tarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        tarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        tarmEx = (DcMotorEx) tarm;
-        tarmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidTarm);
-
-        sarm = hw.get(DcMotor.class, "sarm");
-        sarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        sarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        sarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        sarmEx = (DcMotorEx) sarm;
-        sarmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+        lift = hw.get(DcMotor.class, "lift");
+        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        liftEx = (DcMotorEx) lift;
+//        liftEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
 
         duck = hw.get(DcMotor.class, "duck");
+        duck.setDirection(DcMotorSimple.Direction.FORWARD);
+//        duck.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        duck.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        duck.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        duckEx = (DcMotorEx) duck;
+//        duckEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+
+
+
+//        barm = hw.get(DcMotor.class, "barm");
+//        barm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        barm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        barm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        barmEx = (DcMotorEx) barm;
+//        barmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidBarm);
+//
+//        tarm = hw.get(DcMotor.class, "tarm");
+//        tarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        tarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        tarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        tarmEx = (DcMotorEx) tarm;
+//        tarmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidTarm);
+//
+//        sarm = hw.get(DcMotor.class, "sarm");
+//        sarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        sarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        sarm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        sarmEx = (DcMotorEx) sarm;
+//        sarmEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+
+//        duck = hw.get(DcMotor.class, "duck");
 
 //        intake = hw.get(DcMotor.class, "intake");
 //        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -206,15 +236,15 @@ public class RobotMap {
 //        motorControllerEx.setPIDCoefficients(motorIndex, DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
 
 
-        bop = hw.get(DigitalChannel.class, "bop");
-
-        // set the digital channel to input.
-        bop.setMode(DigitalChannel.Mode.INPUT);
-
-        top = hw.get(DigitalChannel.class, "top");
-
-        // set the digital channel to input.
-        top.setMode(DigitalChannel.Mode.INPUT);
+//        bop = hw.get(DigitalChannel.class, "bop");
+//
+//        // set the digital channel to input.
+//        bop.setMode(DigitalChannel.Mode.INPUT);
+//
+//        top = hw.get(DigitalChannel.class, "top");
+//
+//        // set the digital channel to input.
+//        top.setMode(DigitalChannel.Mode.INPUT);
 
         /**
          * @see NavX is constructed with the heading from the beginning of an {@link org.firstinspires.ftc.teamcode.ftc10650.Auto} and
@@ -225,10 +255,10 @@ public class RobotMap {
         gyro = hw.get(BNO055IMU.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
 
         gyro.initialize(parameters);
 
@@ -239,8 +269,10 @@ public class RobotMap {
         /**
          * the servos are not currently in use but this is where the would be initialized
          */
-        grip = hw.get(Servo.class, "grip");
-        claw = hw.get(Servo.class, "claw");
+        bar = hw.get(Servo.class, "bar");
+        intake = hw.get(Servo.class, "intake");
+//        grip = hw.get(Servo.class, "grip");
+//        claw = hw.get(Servo.class, "claw");
 //        bucket = hw.get(Servo.class, "bucket");
 //        pusher = hw.get(Servo.class, "pusher");
 //        graber = hw.get(Servo.class, "graber");
@@ -269,7 +301,7 @@ public class RobotMap {
 //                            yeetCam.startStreaming(432, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
 //                        }
 //                    });
-      //  yeetCam.initVuforia(hw, true);
+        //  yeetCam.initVuforia(hw, true);
         //yeetCam = hw.get(WebcamName.class, "yeetCam");
 
 //        int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
@@ -288,17 +320,38 @@ public class RobotMap {
 //                }
 //        );
 
+//        int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
+//        WebcamName webcamName = hw.get(WebcamName.class, "ClawCam");
+//        clawCam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+//        clawCam.openCameraDeviceAsync(
+//                new OpenCvCamera.AsyncCameraOpenListener() {
+//                    @Override
+//                    public void onOpened() {
+//                        clawCam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+//
+////                        clawCam.setPipeline(duckSpotPipeline);
+//                        clawCam.setPipeline(duckSpotPipeline);
+////                        clawCam.pauseViewport();
+//                    }
+//
+//                    @Override
+//                    public void onError(int errorCode) {
+//
+//                    }
+//                }
+//        );
+
         int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
-        WebcamName webcamName = hw.get(WebcamName.class, "ClawCam");
-        clawCam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
-        clawCam.openCameraDeviceAsync(
+        WebcamName webcamName = hw.get(WebcamName.class, "IntakeCam");
+        IntakeCam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+        IntakeCam.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
-                        clawCam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                        IntakeCam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
 
 //                        clawCam.setPipeline(duckSpotPipeline);
-                        clawCam.setPipeline(duckSpotPipeline);
+                        IntakeCam.setPipeline(duckSpotPipeline);
 //                        clawCam.pauseViewport();
                     }
 
@@ -364,27 +417,27 @@ public class RobotMap {
 //        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
 
 
-        if (slamra == null) {
-            //set offset from center of robot here
-            // odometryCovariance: 0==all odometry, 1==all 265
-            slamra = new T265Camera(robot265Offset, 0.1, hw.appContext
-                    ,
-                true,
-                false,
-                false
-            );//oC was 0.1
-//            slamra.;
-        }
-    }
-    public void setOdometryCovariance(float covariance)
-    {
-        if (slamra != null)
-        {
-            slamra.setOdometryInfo(
-                    (float)robot265Offset.getTranslation().getX(),
-                    (float)robot265Offset.getTranslation().getY(),
-                    (float)robot265Offset.getRotation().getRadians(),
-                    covariance);
-        }
+//        if (slamra == null) {
+//            //set offset from center of robot here
+//            // odometryCovariance: 0==all odometry, 1==all 265
+//            slamra = new T265Camera(robot265Offset, 1.0, hw.appContext
+//                    ,
+//                true,
+//                false,
+//                true
+//            );//oC was 0.1
+////            slamra.;
+//        }
+//    }
+//    public void setOdometryCovariance(float covariance)
+//    {
+//        if (slamra != null)
+//        {
+//            slamra.setOdometryInfo(
+//                    (float)robot265Offset.getTranslation().getX(),
+//                    (float)robot265Offset.getTranslation().getY(),
+//                    (float)robot265Offset.getRotation().getRadians(),
+//                    covariance);
+//        }
     }
 }

@@ -25,8 +25,10 @@ public class DuckSpotPipeline extends OpenCvPipeline {
     volatile int duckPos = -1;
     final int WIDTH = 640;
     final int HEIGHT = 480;
-    final Scalar lower = new Scalar(4, 50, 20);//150, 90
-    final Scalar upper = new Scalar(36, 255, 255);// 230, 255
+//    final Scalar lower = new Scalar(4, 50, 20);//150, 90
+//    final Scalar upper = new Scalar(36, 255, 255);
+    final Scalar lower = new Scalar(20, 50, 50);//150, 90
+    final Scalar upper = new Scalar(40, 255, 255);// 230, 255
 
 
 //99
@@ -37,15 +39,17 @@ public class DuckSpotPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        Core.rotate(input, input, Core.ROTATE_180);
+//        Core.rotate(input, input, Core.ROTATE_180);
 //        final Scalar lower = new Scalar(0, 0, 20);//188.1, 148.92);
 //        final Scalar upper = new Scalar(50, 255, 250);//203.7, 255);
 
         Mat nonCroppedHsv = new Mat();
         Imgproc.cvtColor(input, nonCroppedHsv, Imgproc.COLOR_RGB2HSV);
 
-        Rect rectCrop = new Rect(0, (int) (nonCroppedHsv.height()/2.0), (int) (nonCroppedHsv.width()*2.0/3.0), (int) (nonCroppedHsv.height()/2.0));
+
+        Rect rectCrop = new Rect(nonCroppedHsv.width()/3, (nonCroppedHsv.height()/4), (nonCroppedHsv.width()/3), (nonCroppedHsv.height()/4));
         hsv = new Mat(nonCroppedHsv, rectCrop);
+
 
         Core.inRange(hsv, lower, upper, mask);
 
@@ -53,7 +57,7 @@ public class DuckSpotPipeline extends OpenCvPipeline {
 //        grey.empty();
 //        Core.add(grey, new Scalar(255, 0, 0), grey);
 //        input.copyTo(grey, mask);
-        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3));
         Imgproc.erode(mask, mask, kernel);
         Imgproc.dilate(mask, mask, kernel);
 
@@ -79,9 +83,10 @@ public class DuckSpotPipeline extends OpenCvPipeline {
         //99 left
         //217 middle
         //321 right
-        if(boundingRect.x < 150){
+        Imgproc.rectangle(mask, boundingRect, new Scalar( 50, 50, 50));
+        if(boundingRect.x < hsv.width()/3){
             duckPos = 0;
-        } else if (boundingRect.x < 275){
+        } else if (boundingRect.x < hsv.width()*2/3){
             duckPos = 1;
         } else {
             duckPos = 2;
@@ -119,7 +124,7 @@ public class DuckSpotPipeline extends OpenCvPipeline {
 //        duckClose = duckFound;
 
 
-        Imgproc.putText(hsv, Double.toString(boundingRect.x) + ":" + Double.toString(boundingRect.y), new Point(100, 100), FONT_HERSHEY_SIMPLEX, 5, new Scalar(100, 0, 100), 4);
+        Imgproc.putText(mask, duckPos + ":" + Double.toString(boundingRect.x) + ":" + Double.toString(boundingRect.y), new Point(100, 100), FONT_HERSHEY_SIMPLEX, 5, new Scalar(100, 0, 100), 4);
 //        double maxArea = 0
 //        MatOfPoint largestContour = new MatOfPoint();
 //        for (MatOfPoint contour : contours) {
@@ -151,8 +156,8 @@ public class DuckSpotPipeline extends OpenCvPipeline {
         nonCroppedHsv.release();
         largestContour.release();
         hsv.release();
-
-        return input;
+//        Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2RGB);
+        return mask;
     }
     public int getDuckPos(){
         return duckPos;

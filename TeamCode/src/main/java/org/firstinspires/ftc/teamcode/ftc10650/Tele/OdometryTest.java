@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc10650.Tele;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Calculators.*;
 import org.firstinspires.ftc.teamcode.Op.ComplexOp;
@@ -23,40 +22,40 @@ public class OdometryTest extends ComplexOp {
 
     @Override
     public void initMove() throws InterruptedException {
-        if(!d.initArmValid) {
-//        s.add(new SpeedCalcs.ProgressSpeed(0.05, 0, SpeedCalcs.ProgressSpeed.timeOrProg.PROG));
-//        s.add(new SpeedCalcs.ProgressSpeed(0.2, 1, SpeedCalcs.ProgressSpeed.timeOrProg.PROG));
-//        p.add(new Vector3D(0, 0.3f, 0.3f));
-            d.robot.barm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            d.robot.tarm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (d.robot.bop.getState()) {
-                d.robot.barm.setPower(-0.2);
-                d.robot.tarm.setPower(-0.08);
-            }
-            d.robot.barm.setPower(0.0);
-            d.robot.barm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            d.robot.barm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            d.initBarmPos = d.robot.barm.getCurrentPosition();
-//        d.robot.barm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (d.robot.top.getState()) {
-                d.robot.tarm.setPower(0.2);
-            }
-            d.robot.tarm.setPower(0.0);
-            d.robot.tarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            d.robot.tarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            d.initTarmPos = d.robot.tarm.getCurrentPosition();
-            d.initSarmPos = d.robot.sarm.getCurrentPosition();
-//        d.robot.tarm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        } else {
-            d.firstFrameBarmPos = d.robot.barm.getCurrentPosition();
-            d.firstFrameTarmPos = d.robot.tarm.getCurrentPosition();
-            d.firstFrameSarmPos = d.robot.sarm.getCurrentPosition();
-        }
+//        if(!d.initArmValid) {
+////        s.add(new SpeedCalcs.ProgressSpeed(0.05, 0, SpeedCalcs.ProgressSpeed.timeOrProg.PROG));
+////        s.add(new SpeedCalcs.ProgressSpeed(0.2, 1, SpeedCalcs.ProgressSpeed.timeOrProg.PROG));
+////        p.add(new Vector3D(0, 0.3f, 0.3f));
+//            d.robot.barm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            d.robot.tarm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            while (d.robot.bop.getState()) {
+//                d.robot.barm.setPower(-0.2);
+//                d.robot.tarm.setPower(-0.08);
+//            }
+//            d.robot.barm.setPower(0.0);
+//            d.robot.barm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            d.robot.barm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            d.initBarmPos = d.robot.barm.getCurrentPosition();
+////        d.robot.barm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            while (d.robot.top.getState()) {
+//                d.robot.tarm.setPower(0.2);
+//            }
+//            d.robot.tarm.setPower(0.0);
+//            d.robot.tarm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            d.robot.tarm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            d.initTarmPos = d.robot.tarm.getCurrentPosition();
+//            d.initSarmPos = d.robot.sarm.getCurrentPosition();
+////        d.robot.tarm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        } else {
+//            d.firstFrameBarmPos = d.robot.barm.getCurrentPosition();
+//            d.firstFrameTarmPos = d.robot.tarm.getCurrentPosition();
+//            d.firstFrameSarmPos = d.robot.sarm.getCurrentPosition();
+//        }
     }
 
     @Override
     public void body() throws InterruptedException {
-        d.robot.clawCam.setPipeline(d.robot.cubeFindPipeline);
+//        d.robot.clawCam.setPipeline(d.robot.cubeFindPipeline);
         ComplexMove(
 //                null,
 //null,
@@ -75,9 +74,11 @@ public class OdometryTest extends ComplexOp {
 
 //                OtherCalcs.Arm2D(),
 //                OtherCalcs.FindTurnToCube(),
-                OtherCalcs.Claw(),
+//                OtherCalcs.Claw(),
                 OtherCalcs.Duck(),
-                OtherCalcs.ArmTele(),
+                OtherCalcs.TeleLift(),
+                OtherCalcs.Intake(),
+//                OtherCalcs.ArmTele(),
                 OtherCalcs.TelemetryPosition());
                 /*OrientationCalcs.lookToPointTurnWithBumperTurnWithJoystick(
                         "a",

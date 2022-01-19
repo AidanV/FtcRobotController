@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Calculators.OtherCalcs;
 import org.firstinspires.ftc.teamcode.Hardware.FreightRobotName_NA.RobotMap;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.spartronics4915.lib.T265Camera;
 
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.CompleteController;
@@ -29,9 +30,9 @@ public abstract class ComplexOp extends LinearOpMode{
 
 //    private Vector2D slamraOffset = new Vector2D(-2.0, -16.0);
 
-    private Pose2d initPose = null;
-    private double initPoseX = 0.0;
-    private double initPoseY = 0.0;
+//    private Pose2d initPose = null;
+//    private double initPoseX = 0.0;
+//    private double initPoseY = 0.0;
 
     public void ComplexMove(Interfaces.SpeedCalc speedCalc,
                             Interfaces.MotionCalc motionCalc,
@@ -77,69 +78,73 @@ public abstract class ComplexOp extends LinearOpMode{
             //_______________________
 
 
-//            Orientation orientation = d.robot.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-//            double heading = orientation.thirdAngle-d.startData.StartNorthOffset;
-//            double diffHeading = heading - previousHeading;
-//            if(diffHeading > 180.0) {
-//                diffHeading -= 360.0;
-//            } else if (diffHeading <= -180.0){
-//                diffHeading += 360.0;
-//            }
-//            d.heading += diffHeading;
-//            previousHeading = heading;
+            Orientation orientation = d.robot.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+            double heading = orientation.thirdAngle-d.startData.StartNorthOffset;
+            double diffHeading = heading - previousHeading;
+            if(diffHeading > 180.0) {
+                diffHeading -= 360.0;
+            } else if (diffHeading <= -180.0){
+                diffHeading += 360.0;
+            }
+            d.heading += diffHeading;
+            previousHeading = heading;
 //
 //            telemetry.addData("gryo", orientation.thirdAngle);
 //            telemetry.addData("orientation", d.heading);
 
-            double distanceCorrectionFactorForward = 0.019;
-            double distanceCorrectionFactorSide = 0.01864;
-            Vector2D encoderPre = d.encoderPos.clone();
-            long lastEncoderUpdateTime = d.encodePosUpdateTimeMillis;
-            d.encoderPos = mecanumDrive.getVectorDistanceCm();
-            d.encodePosUpdateTimeMillis = System.currentTimeMillis();
-            Vector2D deltaMove = d.encoderPos.getSubtracted(encoderPre);
-            Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,(d.encodePosUpdateTimeMillis - lastEncoderUpdateTime)/1000.0));
-            moveSpeed.x *= distanceCorrectionFactorForward;
-            moveSpeed.y *= distanceCorrectionFactorSide;
-            // moveSpeed.y + is moving forward
-            // moveSpeed.x + is moving robot to the right
-            // First value is y value of robot (moving forward == positive)
-            // Second value is x value of robot (positive to left of robot)
-            d.robot.slamra.sendOdometry(-moveSpeed.x,moveSpeed.y);
-
-            telemetry.addData("initPoseX","%.3f", initPoseX);
-            telemetry.addData("initPoseY","%.3f", initPoseY);
-            telemetry.addData("initPoseDeg","%.3f", initPose.getRotation().getDegrees());
-
-//            telemetry.addData("encodeMoveSpeed X","%.3f", moveSpeed.x);
-//            telemetry.addData("encodeMoveSpeed Y","%.3f", moveSpeed.y);
-
-//            deltaMove.rotateBy(Math.toRadians(d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!
-//            d.preWPos.set(d.wPos);
-//            d.wPos.add(deltaMove);
-            Pose2d p = d.robot.slamra.getLastReceivedCameraUpdate().pose;
-            telemetry.addData("new X",p.getTranslation().getX());
-            telemetry.addData("new Y",p.getTranslation().getY());
-
-//            System.out.println("\n init:" + initPoseX + "    :    " + initPoseY);
-//            System.out.println(" pose" + p.getTranslation().getX() + "    :    " + p.getTranslation().getY());
-            Vector2D slamraPos = new Vector2D(
-                    (p.getTranslation().getX()-initPoseX)*100.0,
-                    (p.getTranslation().getY()-initPoseY)*100.0);
-//            slamraPos.subtract(slamraOffset);
-            slamraPos.rotateBy(-Math.toRadians(startPositionAndOrientation().StartNorthOffset + initPose.getRotation().getDegrees()));
-
-            slamraPos.add(startPositionAndOrientation().StartPos);
-//            slamraPos.subtract(slamraOffset);
-
-//            slamraPos.subtract(slamraOffset);
-
-
-            d.heading = d.robot.slamra.getLastReceivedCameraUpdate().pose.getRotation().getDegrees() - initPose.getRotation().getDegrees();
-
-//            slamraPos.add(slamraOffset.getRotatedBy(Math.toRadians(d.heading)));
-
-            d.wPos.set(slamraPos);
+//            double distanceCorrectionFactorForward = 0.019;
+//            double distanceCorrectionFactorSide = 0.01864;
+//            Vector2D encoderPre = d.encoderPos.clone();
+//            long lastEncoderUpdateTime = d.encodePosUpdateTimeMillis;
+//            d.encoderPos = mecanumDrive.getVectorDistanceCm();
+//            telemetry.addData("encoderPos",d.encoderPos);
+//            d.encodePosUpdateTimeMillis = System.currentTimeMillis();
+//            Vector2D deltaMove = d.encoderPos.getSubtracted(encoderPre);
+//            Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,(d.encodePosUpdateTimeMillis - lastEncoderUpdateTime)/1000.0));
+//            moveSpeed.x *= distanceCorrectionFactorForward;
+//            moveSpeed.y *= distanceCorrectionFactorSide;
+//            // moveSpeed.y + is moving forward
+//            // moveSpeed.x + is moving robot to the right
+//            // First value is y value of robot (moving forward == positive)
+//            // Second value is x value of robot (positive to left of robot)
+//            d.robot.slamra.sendOdometry(-moveSpeed.x,moveSpeed.y);
+//
+//            telemetry.addData("initPoseX","%.3f", initPoseX);
+//            telemetry.addData("initPoseY","%.3f", initPoseY);
+//            telemetry.addData("initPoseDeg","%.3f", initPose.getRotation().getDegrees());
+//
+////            telemetry.addData("encodeMoveSpeed X","%.3f", moveSpeed.x);
+////            telemetry.addData("encodeMoveSpeed Y","%.3f", moveSpeed.y);
+//
+////            deltaMove.rotateBy(Math.toRadians(d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!
+////            d.preWPos.set(d.wPos);
+////            d.wPos.add(deltaMove);
+//            T265Camera.CameraUpdate cameraUpdate = d.robot.slamra.getLastReceivedCameraUpdate();
+//            Pose2d p = cameraUpdate.pose;
+//            telemetry.addData("velocity",cameraUpdate.velocity);
+//            telemetry.addData("confidence",cameraUpdate.confidence);
+//            telemetry.addData("new X",p.getTranslation().getX());
+//            telemetry.addData("new Y",p.getTranslation().getY());
+//
+////            System.out.println("\n init:" + initPoseX + "    :    " + initPoseY);
+////            System.out.println(" pose" + p.getTranslation().getX() + "    :    " + p.getTranslation().getY());
+//            Vector2D slamraPos = new Vector2D(
+//                    (p.getTranslation().getX()-initPoseX)*100.0,
+//                    (p.getTranslation().getY()-initPoseY)*100.0);
+////            slamraPos.subtract(slamraOffset);
+//            slamraPos.rotateBy(-Math.toRadians(startPositionAndOrientation().StartNorthOffset + initPose.getRotation().getDegrees()));
+//
+//            slamraPos.add(startPositionAndOrientation().StartPos);
+////            slamraPos.subtract(slamraOffset);
+//
+////            slamraPos.subtract(slamraOffset);
+//
+//
+//            d.heading = p.getRotation().getDegrees() - initPose.getRotation().getDegrees();
+//
+////            slamraPos.add(slamraOffset.getRotatedBy(Math.toRadians(d.heading)));
+//
+//            d.wPos.set(slamraPos);
             
 
             if(orientationCalc != null) d.currentCommand.orientationSpeed = orientationCalc.CalcOrientation(d);
@@ -183,7 +188,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("barm ticks", d.robot.barm.getCurrentPosition()-d.initBarmPos);
 //            telemetry.addData("tarm ticks", d.robot.tarm.getCurrentPosition()-d.initTarmPos);
 //            telemetry.addData("sarm ticks", d.robot.sarm.getCurrentPosition()-d.initSarmPos);
-            d.arm.update();
+//            d.arm.update();
             telemetry.addData("barm Angle", d.barmAngle);
             telemetry.addData("tarm Angle", d.tarmAngle);
 //            telemetry.addData("slamra x", d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getX());
@@ -278,12 +283,12 @@ public abstract class ComplexOp extends LinearOpMode{
         telemetry.addData("ENTERED INIT HARDWARE", "<-");
         d.telemetry = telemetry;
         d.robot = new RobotMap(hwMap);//, startPositionAndOrientation());
-        d.robot.slamra.setPose(new Pose2d(0, 0,
-//                startPositionAndOrientation().StartPos.x/100,
-//                startPositionAndOrientation().StartPos.y/100,
-
-                new Rotation2d(0)));//Math.toRadians(startPositionAndOrientation().StartHeading))));
-        d.robot.slamra.start();
+//        d.robot.slamra.setPose(new Pose2d(0, 0,
+////                startPositionAndOrientation().StartPos.x/100,
+////                startPositionAndOrientation().StartPos.y/100,
+//
+//                new Rotation2d(0)));//Math.toRadians(startPositionAndOrientation().StartHeading))));
+//        d.robot.slamra.start();
 
 
         mecanumDrive = new MecanumDrive(d);
@@ -301,18 +306,18 @@ public abstract class ComplexOp extends LinearOpMode{
 //        d.lastFrameBarmPos = d.robot.barm.getCurrentPosition();
 //        d.lastFrameTarmPos = d.robot.tarm.getCurrentPosition();
 //        d.lastFrameSarmPos = d.robot.sarm.getCurrentPosition();
-        d.initBarmPos = d.initBarmPos - d.robot.barm.getCurrentPosition();// - d.firstFrameBarmPos ;
-        d.initTarmPos = d.initTarmPos - d.robot.tarm.getCurrentPosition();// - d.firstFrameTarmPos ;
-        d.initSarmPos = d.initSarmPos - d.robot.sarm.getCurrentPosition();// - d.firstFrameSarmPos ;
+//        d.initBarmPos = d.initBarmPos - d.robot.barm.getCurrentPosition();// - d.firstFrameBarmPos ;
+//        d.initTarmPos = d.initTarmPos - d.robot.tarm.getCurrentPosition();// - d.firstFrameTarmPos ;
+//        d.initSarmPos = d.initSarmPos - d.robot.sarm.getCurrentPosition();// - d.firstFrameSarmPos ;
         d.robot.bright.setPower(0);
         d.robot.fright.setPower(0);
         d.robot.bleft.setPower(0);
         d.robot.fleft.setPower(0);
-        d.robot.tarm.setPower(0);
-        d.robot.barm.setPower(0);
-        d.robot.sarm.setPower(0);
-        d.robot.clawCam.stopStreaming();
-        d.robot.slamra.stop();
+//        d.robot.tarm.setPower(0);
+//        d.robot.barm.setPower(0);
+//        d.robot.sarm.setPower(0);
+        d.robot.IntakeCam.stopStreaming();
+//        d.robot.slamra.stop();
 
     }
 
@@ -361,9 +366,10 @@ public abstract class ComplexOp extends LinearOpMode{
         telemetry.addData("heading"," "+d.startData.StartNorthOffset +" | position: ("+String.valueOf(Math.round(d.startData.StartPos.x))+", "+String.valueOf(Math.round(d.startData.StartPos.y))+")");
         telemetry.update();
 
-        d.firstFrameBarmPos = d.robot.barm.getCurrentPosition();
-        d.firstFrameTarmPos = d.robot.tarm.getCurrentPosition();
-        d.firstFrameSarmPos = d.robot.sarm.getCurrentPosition();
+//        d.firstFrameBarmPos = d.robot.barm.getCurrentPosition();
+//        d.firstFrameTarmPos = d.robot.tarm.getCurrentPosition();
+//        d.firstFrameSarmPos = d.robot.sarm.getCurrentPosition();
+        d.firstLiftPos = d.robot.lift.getCurrentPosition();
 
         initMove();
 
@@ -374,10 +380,10 @@ public abstract class ComplexOp extends LinearOpMode{
 
 
 
-        initPose = d.robot.slamra.getLastReceivedCameraUpdate().pose;
-        d.telemetry.addData("confidence", d.robot.slamra.getLastReceivedCameraUpdate().confidence);
-        initPoseX = initPose.getTranslation().getX();
-        initPoseY = initPose.getTranslation().getY();
+//        initPose = d.robot.slamra.getLastReceivedCameraUpdate().pose;
+//        d.telemetry.addData("confidence", d.robot.slamra.getLastReceivedCameraUpdate().confidence);
+//        initPoseX = initPose.getTranslation().getX();
+//        initPoseY = initPose.getTranslation().getY();
         d.telemetry.update();
 
         d.isStarted = true;

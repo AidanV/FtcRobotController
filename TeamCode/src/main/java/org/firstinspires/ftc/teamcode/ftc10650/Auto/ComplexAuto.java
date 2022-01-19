@@ -21,9 +21,9 @@ public class ComplexAuto extends ComplexOp {
     @Override
     public void body() throws InterruptedException {
 //        d.robot.clawCam.setPipeline(d.robot.cubeFindPipeline);
-        d.sarmAngle = 0.0f;
-        d.robot.grip.setPosition(1.0);
-        ComplexMove(null, null, null, OtherCalcs.FindGC());
+//        d.sarmAngle = 0.0f;
+//        d.robot.grip.setPosition(1.0);
+//        ComplexMove(null, null, null, OtherCalcs.FindGC());
 
 //        ComplexMove(
 //                SpeedCalcs.SetProgressSpeed(
