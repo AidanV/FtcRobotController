@@ -37,17 +37,17 @@ import com.arcrobotics.ftclib.geometry.Translation2d;
 
 public class RobotMap {
 
-    public static DcMotor bright, fright, bleft, fleft, lift, duck;// barm, tarm, sarm, duck, shooter, intake, wobble;
+    public static DcMotor bright, fright, bleft, fleft, lift, tape, duck;// barm, tarm, sarm, duck, shooter, intake, wobble;
 
 //    public static GoBILDA5202Series goBILDA5202Series;
 //    public static int wobbleOffset = 0;
 
 
-    public static DcMotorEx brightEx, frightEx, bleftEx, fleftEx, liftEx;// duckEx;//, barmEx, tarmEx, sarmEx, duckEx, shooterEx, intakeEx, wobbleEx;
+    public static DcMotorEx brightEx, frightEx, bleftEx, fleftEx, liftEx, tapeEx;// duckEx;//, barmEx, tarmEx, sarmEx, duckEx, shooterEx, intakeEx, wobbleEx;
 
 //    public static DigitalChannel bop, top;
 
-    public static Servo bar, intake;
+    public static Servo bar, intake, base, height;
 
 //    public static Servo grip, claw;
 //    public static Servo bucket, pusher, graber;
@@ -113,8 +113,9 @@ public class RobotMap {
          */
 //PIDCoefficients pidDrive = new PIDCoefficients(50, 10, 0);
         PIDFCoefficients pidDrive = new PIDFCoefficients(20, 12, 5, 17.5);//p5 i2 d5 f17.5
-        PIDFCoefficients pidBarm = new PIDFCoefficients(20, 5, 0, 17.5);//p5 i2 d5 f17.5
-        PIDFCoefficients pidTarm = new PIDFCoefficients(20, 3, 2.5, 30);//p5 i2 d5 f17.5
+        PIDFCoefficients pidBarm = new PIDFCoefficients(20, 5, 0, 30);//p5 i2 d5 f17.5
+        PIDFCoefficients pidTape = new PIDFCoefficients(30, 12, 0, 30);//p5 i2 d5 f17.5
+        PIDFCoefficients pidTarm = new PIDFCoefficients(20, 12, 2.5, 17.5);//p5 i2 d5 f17.5
 
 //        goBILDA5202Series = hw.get(GoBILDA5202Series.class, "gobilda");
 
@@ -161,8 +162,16 @@ public class RobotMap {
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 //        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        liftEx = (DcMotorEx) lift;
+        liftEx = (DcMotorEx) lift;
 //        liftEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+
+        tape = hw.get(DcMotor.class, "tape");
+        tape.setDirection(DcMotorSimple.Direction.FORWARD);
+        tape.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        tape.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        tape.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        tapeEx = (DcMotorEx) tape;
+        tapeEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidTape);
 
         duck = hw.get(DcMotor.class, "duck");
         duck.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -271,6 +280,8 @@ public class RobotMap {
          */
         bar = hw.get(Servo.class, "bar");
         intake = hw.get(Servo.class, "intake");
+        base = hw.get(Servo.class, "base");
+        height = hw.get(Servo.class, "height");
 //        grip = hw.get(Servo.class, "grip");
 //        claw = hw.get(Servo.class, "claw");
 //        bucket = hw.get(Servo.class, "bucket");

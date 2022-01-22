@@ -92,15 +92,15 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("gryo", orientation.thirdAngle);
 //            telemetry.addData("orientation", d.heading);
 
-//            double distanceCorrectionFactorForward = 0.019;
-//            double distanceCorrectionFactorSide = 0.01864;
-//            Vector2D encoderPre = d.encoderPos.clone();
-//            long lastEncoderUpdateTime = d.encodePosUpdateTimeMillis;
-//            d.encoderPos = mecanumDrive.getVectorDistanceCm();
-//            telemetry.addData("encoderPos",d.encoderPos);
-//            d.encodePosUpdateTimeMillis = System.currentTimeMillis();
-//            Vector2D deltaMove = d.encoderPos.getSubtracted(encoderPre);
-//            Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,(d.encodePosUpdateTimeMillis - lastEncoderUpdateTime)/1000.0));
+            double distanceCorrectionFactorForward = 0.019;
+            double distanceCorrectionFactorSide = 0.01864;
+            Vector2D encoderPre = d.encoderPos.clone();
+            long lastEncoderUpdateTime = d.encodePosUpdateTimeMillis;
+            d.encoderPos = mecanumDrive.getVectorDistanceCm();
+            telemetry.addData("encoderPos",d.encoderPos);
+            d.encodePosUpdateTimeMillis = System.currentTimeMillis();
+            Vector2D deltaMove = d.encoderPos.getSubtracted(encoderPre);
+            Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,(d.encodePosUpdateTimeMillis - lastEncoderUpdateTime)/1000.0));
 //            moveSpeed.x *= distanceCorrectionFactorForward;
 //            moveSpeed.y *= distanceCorrectionFactorSide;
 //            // moveSpeed.y + is moving forward
@@ -116,9 +116,9 @@ public abstract class ComplexOp extends LinearOpMode{
 ////            telemetry.addData("encodeMoveSpeed X","%.3f", moveSpeed.x);
 ////            telemetry.addData("encodeMoveSpeed Y","%.3f", moveSpeed.y);
 //
-////            deltaMove.rotateBy(Math.toRadians(d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!
-////            d.preWPos.set(d.wPos);
-////            d.wPos.add(deltaMove);
+            deltaMove.rotateBy(Math.toRadians(d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!
+            d.preWPos.set(d.wPos);
+            d.wPos.add(deltaMove);
 //            T265Camera.CameraUpdate cameraUpdate = d.robot.slamra.getLastReceivedCameraUpdate();
 //            Pose2d p = cameraUpdate.pose;
 //            telemetry.addData("velocity",cameraUpdate.velocity);

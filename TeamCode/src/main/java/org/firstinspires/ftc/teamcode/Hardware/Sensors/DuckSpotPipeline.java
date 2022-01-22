@@ -27,8 +27,10 @@ public class DuckSpotPipeline extends OpenCvPipeline {
     final int HEIGHT = 480;
 //    final Scalar lower = new Scalar(4, 50, 20);//150, 90
 //    final Scalar upper = new Scalar(36, 255, 255);
-    final Scalar lower = new Scalar(20, 50, 50);//150, 90
-    final Scalar upper = new Scalar(40, 255, 255);// 230, 255
+    final Scalar lower = new Scalar(30, 50, 50);//150, 90
+    final Scalar upper = new Scalar(60, 255, 255);// 230, 255
+//    final Scalar lower = new Scalar(20, 50, 50);//150, 90
+//    final Scalar upper = new Scalar(40, 255, 255);// 230, 255
 
 
 //99

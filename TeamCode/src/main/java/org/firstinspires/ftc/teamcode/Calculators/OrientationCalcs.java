@@ -70,7 +70,7 @@ public class OrientationCalcs {
 
             @Override
             public double CalcOrientation(Interfaces.MoveData d){
-                return d.driver.rs().x*.75;
+                return -d.driver.rs().x*.75;
             }
         };
     }

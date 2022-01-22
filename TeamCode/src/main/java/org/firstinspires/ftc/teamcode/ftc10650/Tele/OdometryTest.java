@@ -17,7 +17,7 @@ public class OdometryTest extends ComplexOp {
 
     @Override
     public Interfaces.MoveData.StartData startPositionAndOrientation() {
-        return new Interfaces.MoveData.StartData(new Vector2D(50, 50), 90);
+        return new Interfaces.MoveData.StartData(new Vector2D(50, 50), -90);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class OdometryTest extends ComplexOp {
 //                SpeedCalcs.SetSpeed(1.0),
                SpeedCalcs.JoystickSpeed(),
 //                MotionCalcs.ObjectCentricJoystick(),
-                MotionCalcs.FieldCentricJoystick(0),
+                MotionCalcs.FieldCentricJoystick(-90),
                 //MotionCalcs.ConstantDistanceToPoint(100, new Vector2D(100,100)),
                 OrientationCalcs.turnWithJoystick(),
 //                OrientationCalcs.lookToOrientationUnderJoystick(0),
@@ -78,6 +78,7 @@ public class OdometryTest extends ComplexOp {
                 OtherCalcs.Duck(),
                 OtherCalcs.TeleLift(),
                 OtherCalcs.Intake(),
+                OtherCalcs.TeleCap(),
 //                OtherCalcs.ArmTele(),
                 OtherCalcs.TelemetryPosition());
                 /*OrientationCalcs.lookToPointTurnWithBumperTurnWithJoystick(
