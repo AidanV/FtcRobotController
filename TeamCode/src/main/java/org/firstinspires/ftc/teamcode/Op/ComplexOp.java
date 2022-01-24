@@ -79,7 +79,7 @@ public abstract class ComplexOp extends LinearOpMode{
 
 
             Orientation orientation = d.robot.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-            double heading = orientation.thirdAngle-d.startData.StartNorthOffset;
+            double heading = -orientation.thirdAngle-d.startData.StartNorthOffset;
             double diffHeading = heading - previousHeading;
             if(diffHeading > 180.0) {
                 diffHeading -= 360.0;
@@ -116,7 +116,7 @@ public abstract class ComplexOp extends LinearOpMode{
 ////            telemetry.addData("encodeMoveSpeed X","%.3f", moveSpeed.x);
 ////            telemetry.addData("encodeMoveSpeed Y","%.3f", moveSpeed.y);
 //
-            deltaMove.rotateBy(Math.toRadians(d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!
+            deltaMove.rotateBy(Math.toRadians(180+d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!
             d.preWPos.set(d.wPos);
             d.wPos.add(deltaMove);
 //            T265Camera.CameraUpdate cameraUpdate = d.robot.slamra.getLastReceivedCameraUpdate();
@@ -150,7 +150,7 @@ public abstract class ComplexOp extends LinearOpMode{
             if(orientationCalc != null) d.currentCommand.orientationSpeed = orientationCalc.CalcOrientation(d);
             if(motionCalc != null) {
                 d.currentCommand.motionSpeed = motionCalc.CalcMotion(d);
-                d.currentCommand.motionSpeed.rotateBy(Math.toRadians(90-d.heading));
+                d.currentCommand.motionSpeed.rotateBy(Math.toRadians(180+d.heading));
             }
             if(speedCalc != null) d.currentCommand.speed = speedCalc.CalcSpeed(d);
 

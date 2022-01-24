@@ -88,6 +88,7 @@ public class OtherCalcs {
         return new Interfaces.OtherCalc() {
             @Override
             public void CalcOther(Interfaces.MoveData d) {
+
                 d.robot.lift.setTargetPosition(setPosition - d.firstLiftPos);
                 d.robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 d.robot.lift.setPower(setPower);
@@ -103,7 +104,9 @@ public class OtherCalcs {
 
 
     public static Interfaces.OtherCalc TeleLift(){
+
         return new Interfaces.OtherCalc() {
+            boolean canRelease = false;
             @Override
             public void CalcOther(Interfaces.MoveData d) {
 //                d.robot.liftEx.setPower(d.manip.ls().y/5.0);
@@ -126,6 +129,15 @@ public class OtherCalcs {
                     d.robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     d.robot.lift.setPower(0.75);
 
+                }
+
+                if(d.manip.y()){
+                    d.robot.lift.setPower(-0.1);
+                    d.firstLiftPos = d.robot.lift.getCurrentPosition();
+                    canRelease = true;
+                } else if (canRelease) {
+                    d.robot.lift.setPower(0.0);
+                    canRelease = false;
                 }
                 d.telemetry.addData("lift Pos", d.robot.lift.getCurrentPosition() - d.firstLiftPos);
             }
@@ -1312,7 +1324,7 @@ public class OtherCalcs {
 
             @Override
             public void CalcOther(Interfaces.MoveData d){
-                d.robot.duck.setPower(d.driver.rt()-d.driver.lt());
+                d.robot.duck.setPower((d.driver.rt()-d.driver.lt())/2.0);
             }
         };
     }

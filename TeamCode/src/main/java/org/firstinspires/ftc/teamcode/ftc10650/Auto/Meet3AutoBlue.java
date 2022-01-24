@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.ftc10650.Auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Calculators.Interfaces;
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces.MoveData;
 import org.firstinspires.ftc.teamcode.Calculators.MotionCalcs;
 import org.firstinspires.ftc.teamcode.Calculators.OrientationCalcs;
@@ -12,15 +11,13 @@ import org.firstinspires.ftc.teamcode.Calculators.SpeedCalcs;
 import org.firstinspires.ftc.teamcode.Op.ComplexOp;
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 
-import java.util.Vector;
 
-
-@Autonomous(name = "Meet 3 Auto Red", group = "Red")
-public class Meet3AutoRed extends ComplexOp {
+@Autonomous(name = "Meet 3 Auto Blue", group = "Blue")
+public class Meet3AutoBlue extends ComplexOp {
 
     @Override
     public MoveData.StartData startPositionAndOrientation() {
-        return new MoveData.StartData(new Vector2D(150,150), 153);//60 degrees west of south is a good angle to see the barcode
+        return new MoveData.StartData(new Vector2D(150,150), -153);//60 degrees west of south is a good angle to see the barcode
     }
 
     @Override
@@ -37,7 +34,7 @@ public class Meet3AutoRed extends ComplexOp {
         //Grab Duck Position and save to data
 //        ComplexMove(null, null, OrientationCalcs.lookToOrientation(180), OtherCalcs.TimeProgress(15000));
         long currTime = System.currentTimeMillis();
-        d.robot.bar.setPosition(0.6);
+//        d.robot.bar.setPosition(0.6);
         while(System.currentTimeMillis()-currTime < 2000){
             Thread.sleep(10);
             d.robot.lift.setTargetPosition(d.cameraLiftPos-d.firstLiftPos);
@@ -47,7 +44,7 @@ public class Meet3AutoRed extends ComplexOp {
 
         d.duckPos = d.robot.duckSpotPipeline.getDuckPos();
 //        d.duckPos = 2;
-
+        d.duckPos = 2-d.duckPos;
 
 
 
@@ -81,8 +78,8 @@ public class Meet3AutoRed extends ComplexOp {
 
                     MotionCalcs.PointMotion(
                             5,
-                            new Vector2D(95, 155), //northwest side of tree
-                            new Vector2D(95, 140)
+                            new Vector2D(205, 155), //northwest side of tree
+                            new Vector2D(205, 140)
                     ),
 
                     OrientationCalcs.lookToOrientation(0),
@@ -96,7 +93,7 @@ public class Meet3AutoRed extends ComplexOp {
 //                    ),
 
                     OtherCalcs.Lift(
-                            d.middleLiftPos,// CHANGED FROM BOTTOM
+                            d.middleLiftPos,
                             0.25
                     )
             );
@@ -141,8 +138,8 @@ public class Meet3AutoRed extends ComplexOp {
 
                     MotionCalcs.PointMotion(
                             5,
-                            new Vector2D(95, 155),
-                            new Vector2D(95, 140)
+                            new Vector2D(205, 155),
+                            new Vector2D(205, 140)
                     ),
 
                     OrientationCalcs.lookToOrientation(0),
@@ -161,7 +158,7 @@ public class Meet3AutoRed extends ComplexOp {
                     )
             );
             //Set lift position to middle / move to tree
-                // move includes
+                // moveincludes
                 // turn back to south wall
                 // move to north side of tree
 
@@ -201,8 +198,8 @@ public class Meet3AutoRed extends ComplexOp {
 
                     MotionCalcs.PointMotion(
                             5,
-                            new Vector2D(95, 155), // north side of tree
-                            new Vector2D(95, 140)
+                            new Vector2D(205, 155), // north side of tree
+                            new Vector2D(205, 140)
                     ),
 
                     OrientationCalcs.lookToOrientation(0),
@@ -281,7 +278,7 @@ public class Meet3AutoRed extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         5,
-                        new Vector2D(120, 150)//,
+                        new Vector2D(180, 150)//,
 //                        new Vector2D(150, 150)
                 ),
 
@@ -328,7 +325,7 @@ public class Meet3AutoRed extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         5,
-                        new Vector2D(150, 220)//,
+                        new Vector2D(180, 220)//,
 //                        new Vector2D(150, 150)
                 ),
 

@@ -9,15 +9,15 @@ import org.firstinspires.ftc.teamcode.Utilities.Vector3D;
 
 import java.util.Vector;
 
-@TeleOp(name = "Odom Test", group = "ftc10650")
-public class OdometryTest extends ComplexOp {
+@TeleOp(name = "Red Tele", group = "Red")
+public class RedTele extends ComplexOp {
 
     Vector<SpeedCalcs.ProgressSpeed> s = new Vector<SpeedCalcs.ProgressSpeed>();
     Vector<Vector3D> p = new Vector<Vector3D>();
 
     @Override
     public Interfaces.MoveData.StartData startPositionAndOrientation() {
-        return new Interfaces.MoveData.StartData(new Vector2D(50, 50), -90);
+        return new Interfaces.MoveData.StartData(new Vector2D(50, 50), 0);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class OdometryTest extends ComplexOp {
 //                SpeedCalcs.SetSpeed(1.0),
                SpeedCalcs.JoystickSpeed(),
 //                MotionCalcs.ObjectCentricJoystick(),
-                MotionCalcs.FieldCentricJoystick(-90),
+                MotionCalcs.FieldCentricJoystick(90),
                 //MotionCalcs.ConstantDistanceToPoint(100, new Vector2D(100,100)),
                 OrientationCalcs.turnWithJoystick(),
 //                OrientationCalcs.lookToOrientationUnderJoystick(0),
