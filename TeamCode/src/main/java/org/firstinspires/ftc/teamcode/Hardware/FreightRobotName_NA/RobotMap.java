@@ -37,7 +37,7 @@ import com.arcrobotics.ftclib.geometry.Translation2d;
 
 public class RobotMap {
 
-    public static DcMotor bright, fright, bleft, fleft, lift, tape, duck;// barm, tarm, sarm, duck, shooter, intake, wobble;
+    public static DcMotor bright, fright, bleft, fleft, lift, tape, duck, intake;// barm, tarm, sarm, duck, shooter, intake, wobble;
 
 //    public static GoBILDA5202Series goBILDA5202Series;
 //    public static int wobbleOffset = 0;
@@ -47,7 +47,7 @@ public class RobotMap {
 
 //    public static DigitalChannel bop, top;
 
-    public static Servo bar, intake, base, height;
+    public static Servo bar, base, height;
 
 //    public static Servo grip, claw;
 //    public static Servo bucket, pusher, graber;
@@ -114,7 +114,7 @@ public class RobotMap {
 //PIDCoefficients pidDrive = new PIDCoefficients(50, 10, 0);
         PIDFCoefficients pidDrive = new PIDFCoefficients(20, 12, 5, 17.5);//p5 i2 d5 f17.5
         PIDFCoefficients pidBarm = new PIDFCoefficients(20, 5, 0, 30);//p5 i2 d5 f17.5
-        PIDFCoefficients pidTape = new PIDFCoefficients(30, 12, 0, 30);//p5 i2 d5 f17.5
+        PIDFCoefficients pidTape = new PIDFCoefficients(1, 1, -10, 20);
         PIDFCoefficients pidTarm = new PIDFCoefficients(20, 12, 2.5, 17.5);//p5 i2 d5 f17.5
 
 //        goBILDA5202Series = hw.get(GoBILDA5202Series.class, "gobilda");
@@ -181,7 +181,8 @@ public class RobotMap {
 //        duckEx = (DcMotorEx) duck;
 //        duckEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
 
-
+        intake = hw.get(DcMotor.class, "intake");
+        intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
 //        barm = hw.get(DcMotor.class, "barm");
 //        barm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -279,7 +280,6 @@ public class RobotMap {
          * the servos are not currently in use but this is where the would be initialized
          */
         bar = hw.get(Servo.class, "bar");
-        intake = hw.get(Servo.class, "intake");
         base = hw.get(Servo.class, "base");
         height = hw.get(Servo.class, "height");
 //        grip = hw.get(Servo.class, "grip");
@@ -359,11 +359,12 @@ public class RobotMap {
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
+//                        IntakeCam.stopStreaming();
                         IntakeCam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
 
 //                        clawCam.setPipeline(duckSpotPipeline);
                         IntakeCam.setPipeline(duckSpotPipeline);
-//                        clawCam.pauseViewport();
+//                        IntakeCam.pauseViewport();
                     }
 
                     @Override

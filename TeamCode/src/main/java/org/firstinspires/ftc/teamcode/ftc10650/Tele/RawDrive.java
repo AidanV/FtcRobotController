@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc10650.Tele;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Hardware.FreightRobotName_NA.RobotMap;
 
+@Disabled
 @TeleOp(name = "raw drive", group = "ftc10650")
 public class RawDrive  extends OpMode {
     // Declare OpMode members.

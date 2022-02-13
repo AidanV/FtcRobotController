@@ -189,6 +189,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("tarm ticks", d.robot.tarm.getCurrentPosition()-d.initTarmPos);
 //            telemetry.addData("sarm ticks", d.robot.sarm.getCurrentPosition()-d.initSarmPos);
 //            d.arm.update();
+            telemetry.addData("duck pos", d.duckPos);
             telemetry.addData("barm Angle", d.barmAngle);
             telemetry.addData("tarm Angle", d.tarmAngle);
 //            telemetry.addData("slamra x", d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getX());
@@ -289,6 +290,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //
 //                new Rotation2d(0)));//Math.toRadians(startPositionAndOrientation().StartHeading))));
 //        d.robot.slamra.start();
+
 
 
         mecanumDrive = new MecanumDrive(d);

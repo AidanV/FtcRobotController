@@ -79,6 +79,7 @@ public class RedTele extends ComplexOp {
                 OtherCalcs.TeleLift(),
                 OtherCalcs.Intake(),
                 OtherCalcs.TeleCap(),
+//                OtherCalcs.ChangeTapePIDF(),
 //                OtherCalcs.ArmTele(),
                 OtherCalcs.TelemetryPosition());
                 /*OrientationCalcs.lookToPointTurnWithBumperTurnWithJoystick(

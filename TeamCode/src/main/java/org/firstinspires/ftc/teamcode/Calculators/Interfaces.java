@@ -57,6 +57,8 @@ public class Interfaces {
          */
         public RobotMap robot = null;
 
+        public static double gateOpen = 0.6;
+        public static double gateClose = 0.375;
 
 //        public static double initBarmPos = 0;
 //        public static double initTarmPos = 0;
@@ -90,8 +92,8 @@ public class Interfaces {
         public boolean aimToPowerOverride = false;
 
         public final int topLiftPos = 1585;
-        public final int middleLiftPos = 1000;
-        public final int bottomLiftPos = 500;
+        public final int middleLiftPos = 1100;
+        public final int bottomLiftPos = 800;
         public final int safeLiftPos = 500;
         public final int cameraLiftPos = 500;
 
@@ -138,7 +140,7 @@ public class Interfaces {
         public int currentSpin = 0;
         public boolean foundSpin = false;
         public double orientationError = 0;
-        public double orientationP = 0.02;//0.01//0.005
+        public double orientationP = 0.02;//0.02//0.01//0.005
         public double orientationI;
         public double orientationD;
 

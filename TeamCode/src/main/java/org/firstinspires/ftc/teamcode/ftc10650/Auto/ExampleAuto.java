@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-
+@Disabled
 @Autonomous(name = "ExampleAuto", group = "ftc10650")
 public class ExampleAuto extends LinearOpMode {
     public Interfaces.MoveData d = new Interfaces.MoveData();

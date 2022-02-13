@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Calculators;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.PowerShotPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.StackDeterminationPipeline;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
@@ -156,6 +157,7 @@ public class OtherCalcs {
             double heightPosition = 0.5;
             @Override
             public void CalcOther(Interfaces.MoveData d) {
+                d.telemetry.addData("tape current position", d.robot.tapeEx.getCurrentPosition());
                 basePosition += d.manip.rs().x * 0.003;
                 heightPosition += d.manip.rs().y * 0.01;
                 d.robot.base.setPosition(basePosition);
@@ -172,7 +174,90 @@ public class OtherCalcs {
                 } else if (heightPosition < -1.0) {
                     heightPosition = -1.0;
                 }
-                d.robot.tapeEx.setPower(-Math.signum(d.manip.ls().x)*Math.sqrt(Math.abs(d.manip.ls().x))/10.0);
+                d.robot.tapeEx.setPower(Math.signum(d.manip.ls().y)*Math.sqrt(Math.abs(-d.manip.ls().y))/3.0);
+//                d.robot.tapeEx.setPower(d.manip.ls().x*0.15);
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc TestCapstone(){
+
+        return new Interfaces.OtherCalc() {
+            double basePosition = 0.5;
+            double heightPosition = 0.5;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                d.telemetry.addData("base position", basePosition);
+                d.telemetry.addData("height position", heightPosition);
+                d.telemetry.addData("tape current position", d.robot.tapeEx.getCurrentPosition());
+                basePosition += d.manip.rs().x * 0.003;
+                heightPosition += d.manip.rs().y * 0.01;
+                d.robot.base.setPosition(basePosition);
+                d.robot.height.setPosition(heightPosition);
+
+                if(basePosition > 1.0){
+                    basePosition = 1.0;
+                } else if (basePosition < -1.0) {
+                    basePosition = -1.0;
+                }
+
+                if(heightPosition > 1.0){
+                    heightPosition = 1.0;
+                } else if (heightPosition < -1.0) {
+                    heightPosition = -1.0;
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
+
+
+    public static Interfaces.OtherCalc ChangeTapePIDF(){
+
+        return new Interfaces.OtherCalc() {
+            int currentMode = 0;
+            boolean aReleased = true;
+            double pVal = 1;
+            double iVal = 0;
+            double dVal = -10;
+            double fVal = 20;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                double modValue = 0.0;
+                if(d.driver.a() && aReleased){
+                    currentMode++;
+                    aReleased = false;
+                } else {
+                    aReleased = true;
+                }
+                if(d.driver.u()){
+                    modValue = 0.25;
+                } else if (d.driver.d()){
+                    modValue = -0.25;
+                }
+
+                if(currentMode == 0){
+                    pVal += modValue;
+                } else if (currentMode == 1){
+                    iVal +=modValue;
+                } else if (currentMode == 2){
+                    dVal +=modValue;
+                } else {
+                    fVal +=modValue;
+                }
+                PIDFCoefficients pidTape = new PIDFCoefficients(pVal, iVal, dVal, fVal);
+                currentMode %= 4;
+                d.robot.tapeEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidTape);
+                d.telemetry.addData("PIDF val tape", "%f, %f, %f, %f", pVal, iVal, dVal, fVal);
             }
 
             @Override
@@ -184,15 +269,16 @@ public class OtherCalcs {
 
     public static Interfaces.OtherCalc Intake(){
         return new Interfaces.OtherCalc() {
-            double fudge = 0.1;
             @Override
             public void CalcOther(Interfaces.MoveData d) {
-                fudge *= -1;
-                d.robot.intake.setPosition(((-d.manip.rt())+1.0 + fudge)/2.0);
+
+                d.robot.intake.setPower(((d.manip.rt() - d.manip.lt())));
+//                    d.robot.intake.setPosition(( + 1.0) / 2.0);
+
                 if(d.manip.b()){
-                    d.robot.bar.setPosition(0.6);
+                    d.robot.bar.setPosition(d.gateOpen);
                 } else {
-                    d.robot.bar.setPosition(0.375);
+                    d.robot.bar.setPosition(d.gateClose);
                 }
             }
 

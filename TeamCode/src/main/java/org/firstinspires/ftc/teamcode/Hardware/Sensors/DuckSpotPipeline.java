@@ -22,17 +22,15 @@ public class DuckSpotPipeline extends OpenCvPipeline {
     Mat hsv = new Mat();
     Mat mask = new Mat();
     Mat hierarchy = new Mat();
-    volatile int duckPos = -1;
-    final int WIDTH = 640;
-    final int HEIGHT = 480;
+    private volatile int duckPos = -1;
 //    final Scalar lower = new Scalar(4, 25, 25);//150, 90
 //    final Scalar upper = new Scalar(50, 255, 255);// 230, 255
 //    final Scalar lower = new Scalar(4, 50, 20);//150, 90
 //    final Scalar upper = new Scalar(36, 255, 255);
-    final Scalar lower = new Scalar(30, 50, 50);//150, 90
-    final Scalar upper = new Scalar(60, 255, 255);// 230, 255
-//    final Scalar lower = new Scalar(20, 50, 50);//150, 90
-//    final Scalar upper = new Scalar(40, 255, 255);// 230, 255
+//    final Scalar lower = new Scalar(30, 50, 50);//150, 90 //Green of Capstone
+//    final Scalar upper = new Scalar(60, 255, 255);// 230, 255 //
+    final Scalar lower = new Scalar(140, 10, 10);//150, 90
+    final Scalar upper = new Scalar(180, 255, 255);// 230, 255
 
 
 //99
@@ -43,58 +41,63 @@ public class DuckSpotPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        try {
 //        Core.rotate(input, input, Core.ROTATE_180);
 //        final Scalar lower = new Scalar(0, 0, 20);//188.1, 148.92);
 //        final Scalar upper = new Scalar(50, 255, 250);//203.7, 255);
 
-        Mat nonCroppedHsv = new Mat();
-        Imgproc.cvtColor(input, nonCroppedHsv, Imgproc.COLOR_RGB2HSV);
+//        Mat nonCroppedHsv = new Mat();
+//        Imgproc.cvtColor(input, nonCroppedHsv, Imgproc.COLOR_RGB2HSV);
+//
+//
+//        Rect rectCrop = new Rect(nonCroppedHsv.width()/3, (nonCroppedHsv.height()/4), (nonCroppedHsv.width()/3), (nonCroppedHsv.height()/4));
+//        hsv = new Mat(nonCroppedHsv, rectCrop);
+
+            Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
 
-        Rect rectCrop = new Rect(nonCroppedHsv.width()/3, (nonCroppedHsv.height()/4), (nonCroppedHsv.width()/3), (nonCroppedHsv.height()/4));
-        hsv = new Mat(nonCroppedHsv, rectCrop);
-
-
-        Core.inRange(hsv, lower, upper, mask);
+            Core.inRange(hsv, lower, upper, mask);
 
 
 //        grey.empty();
 //        Core.add(grey, new Scalar(255, 0, 0), grey);
 //        input.copyTo(grey, mask);
-        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3));
-        Imgproc.erode(mask, mask, kernel);
-        Imgproc.dilate(mask, mask, kernel);
+            Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3));
+            Imgproc.erode(mask, mask, kernel);
+            Imgproc.dilate(mask, mask, kernel);
 
-        Mat cannyEdges = new Mat();
-        Imgproc.Canny(mask, cannyEdges, 10, 100);
+//        Mat cannyEdges = new Mat();
+//        Imgproc.Canny(mask, cannyEdges, 100, 200);
 
 //        MatOfPoint totalContours = new MatOfPoint();
-        List<MatOfPoint> contours = new ArrayList<>();
-        Imgproc.findContours(cannyEdges, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+            List<MatOfPoint> contours = new ArrayList<>();
+            Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        double maxArea = 0;
-        MatOfPoint largestContour = new MatOfPoint();
-        for (MatOfPoint contour : contours) {
-            double area = Imgproc.contourArea(contour);
-            if (area > maxArea) {
-                maxArea = area;
-                largestContour = contour;
-            } else {
-                contour.release();
+            double maxArea = 0;
+            MatOfPoint largestContour = new MatOfPoint();
+            for (MatOfPoint contour : contours) {
+                double area = Imgproc.contourArea(contour);
+                if (area > maxArea) {
+                    maxArea = area;
+                    largestContour = contour;
+                } else {
+                    contour.release();
+                }
             }
-        }
-        Rect boundingRect = Imgproc.boundingRect(largestContour);
-        //99 left
-        //217 middle
-        //321 right
-        Imgproc.rectangle(mask, boundingRect, new Scalar( 50, 50, 50));
-        if(boundingRect.x < hsv.width()/3){
-            duckPos = 0;
-        } else if (boundingRect.x < hsv.width()*2/3){
-            duckPos = 1;
-        } else {
-            duckPos = 2;
-        }
+            Rect boundingRect = Imgproc.boundingRect(largestContour);
+            //99 left
+            //217 middle
+            //321 right
+            Imgproc.rectangle(mask, boundingRect, new Scalar(50, 50, 50));
+            if (boundingRect.area() > 15_000) {
+                if (boundingRect.x < hsv.width() / 2) {
+                    duckPos = 0;
+                } else { //(boundingRect.x > hsv.width()/2){
+                    duckPos = 1;
+                }
+            } else {
+                duckPos = 2;
+            }
 
 //        for(int i =0; i<contours.size(); i++) {
 //            totalContours.push_back(contours.get(i));
@@ -128,7 +131,15 @@ public class DuckSpotPipeline extends OpenCvPipeline {
 //        duckClose = duckFound;
 
 
-        Imgproc.putText(mask, duckPos + ":" + Double.toString(boundingRect.x) + ":" + Double.toString(boundingRect.y), new Point(100, 100), FONT_HERSHEY_SIMPLEX, 5, new Scalar(100, 0, 100), 4);
+            Imgproc.putText(
+                    mask, duckPos + ":" +
+                            Double.toString(boundingRect.area()) + ":" +
+                            Double.toString(boundingRect.x) + ":" +
+                            Double.toString(boundingRect.y), new Point(10, 100),
+                    FONT_HERSHEY_SIMPLEX,
+                    2,
+                    new Scalar(100, 0, 100),
+                    4);
 //        double maxArea = 0
 //        MatOfPoint largestContour = new MatOfPoint();
 //        for (MatOfPoint contour : contours) {
@@ -155,13 +166,16 @@ public class DuckSpotPipeline extends OpenCvPipeline {
 //22, 79.9%, 58.4%
 
 //        Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGB2GRAY);
-        kernel.release();
-        cannyEdges.release();
-        nonCroppedHsv.release();
-        largestContour.release();
-        hsv.release();
+            kernel.release();
+//        cannyEdges.release();
+//        nonCroppedHsv.release();
+            largestContour.release();
+            hsv.release();
 //        Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_HSV2RGB);
-        return mask;
+            return mask;
+        } catch (Exception e){
+            return mask;
+        }
     }
     public int getDuckPos(){
         return duckPos;
