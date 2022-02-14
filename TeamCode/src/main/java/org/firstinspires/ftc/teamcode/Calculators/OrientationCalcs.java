@@ -142,6 +142,9 @@ public class OrientationCalcs {
     public static Interfaces.OrientationCalc spinToProgress(final spinProgress... spinData){
 
         return new Interfaces.OrientationCalc(){
+            boolean firstLoop = true;
+            double initialHeading;
+            double currSpinTo;
             @Override
             public double myProgress(Interfaces.MoveData d) {
                 return 0;
@@ -149,6 +152,11 @@ public class OrientationCalcs {
 
             @Override
             public double CalcOrientation(Interfaces.MoveData d){
+                if (firstLoop){
+                    initialHeading = d.heading;
+                    currSpinTo = initialHeading;
+                    firstLoop = false;
+                }
 
                 for(int i = 0 ; i < spinData.length ; i++){
                     if(d.progress>=spinData[i].startSpinProgress && d.progress<=spinData[i].endSpinProgress){
@@ -161,14 +169,17 @@ public class OrientationCalcs {
 
                     double currSpinProgress = (d.progress - spinData[d.currentSpin].startSpinProgress)/
                             (spinData[d.currentSpin].endSpinProgress-spinData[d.currentSpin].startSpinProgress);
-                    double currSpinTo = currSpinProgress*spinData[d.currentSpin].spinTo;
-                    d.orientationError = d.heading-currSpinTo;
-                } else {
-                    d.orientationError = 0;
+                    currSpinTo = currSpinProgress*(spinData[d.currentSpin].spinTo) +
+                            (1.0 - currSpinProgress) * ((d.currentSpin == 0) ? initialHeading : spinData[d.currentSpin - 1].spinTo);
+
+
+
+
                 }
+                d.orientationError = currSpinTo-d.heading;//d.heading-currSpinTo;
 
                 d.foundSpin = false;
-                return d.orientationError*d.orientationP;
+                return -d.orientationError*d.orientationP;
             }
         };
     }

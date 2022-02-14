@@ -92,8 +92,8 @@ public class Interfaces {
         public boolean aimToPowerOverride = false;
 
         public final int topLiftPos = 1585;
-        public final int middleLiftPos = 1100;
-        public final int bottomLiftPos = 800;
+        public final int middleLiftPos = 800;
+        public final int bottomLiftPos = 500;
         public final int safeLiftPos = 500;
         public final int cameraLiftPos = 500;
 

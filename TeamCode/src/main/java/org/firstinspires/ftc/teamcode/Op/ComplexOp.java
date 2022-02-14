@@ -100,6 +100,10 @@ public abstract class ComplexOp extends LinearOpMode{
             telemetry.addData("encoderPos",d.encoderPos);
             d.encodePosUpdateTimeMillis = System.currentTimeMillis();
             Vector2D deltaMove = d.encoderPos.getSubtracted(encoderPre);
+            double unitsForwardPerTile = 135.0/4.0;
+            double unitsStrafePerTile = 156.0/4.0;
+            deltaMove.x /= unitsStrafePerTile;
+            deltaMove.y /= unitsForwardPerTile;
             Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,(d.encodePosUpdateTimeMillis - lastEncoderUpdateTime)/1000.0));
 //            moveSpeed.x *= distanceCorrectionFactorForward;
 //            moveSpeed.y *= distanceCorrectionFactorSide;
@@ -116,7 +120,7 @@ public abstract class ComplexOp extends LinearOpMode{
 ////            telemetry.addData("encodeMoveSpeed X","%.3f", moveSpeed.x);
 ////            telemetry.addData("encodeMoveSpeed Y","%.3f", moveSpeed.y);
 //
-            deltaMove.rotateBy(Math.toRadians(180+d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!
+            deltaMove.rotateBy(Math.toRadians(-d.heading+180));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!//180+d.heading
             d.preWPos.set(d.wPos);
             d.wPos.add(deltaMove);
 //            T265Camera.CameraUpdate cameraUpdate = d.robot.slamra.getLastReceivedCameraUpdate();
@@ -190,7 +194,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("sarm ticks", d.robot.sarm.getCurrentPosition()-d.initSarmPos);
 //            d.arm.update();
             telemetry.addData("duck pos", d.duckPos);
-            telemetry.addData("barm Angle", d.barmAngle);
+            telemetry.addData("progress", d.progress);
             telemetry.addData("tarm Angle", d.tarmAngle);
 //            telemetry.addData("slamra x", d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getX());
 //            telemetry.addData("slamra y", d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getY());
@@ -243,6 +247,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("Stack Height", d.stackHeight);
 //            telemetry.addData("Motor Velocity", d.robot.shooterEx.getVelocity());
 //            telemetry.addData("fright Velocity", d.robot.frightEx.getVelocity());
+            telemetry.addData("range", "optical: %f, ultrasonic: %f", d.robot.frontRange.cmOptical(), d.robot.frontRange.cmUltrasonic());
             telemetry.addData("Robot is here", "\n"+d.field);
             telemetry.addData("position", d.wPos.x + "   " + d.wPos.y);
             telemetry.addData("heading", d.heading);

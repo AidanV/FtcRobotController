@@ -97,7 +97,8 @@ public class RobotMap {
 
 //    private static final String TFOD_MODEL_ASSET = "FreightFrenzy_BCDM.tflite";
 
-    //public static ModernRoboticsI2cRangeSensor frontRange, backRange;
+//    public static ModernRoboticsI2cRangeSensor frontRange, backRange;
+    public static ModernRoboticsI2cRangeSensor frontRange;
 
     private Transform2d robot265Offset = new Transform2d(new Translation2d(.13, -.02), new Rotation2d());
 
@@ -296,7 +297,7 @@ public class RobotMap {
          * @see backRange the back of the robots {@link ModernRoboticsI2cRangeSensor} distance sensor
          * it is expected to add the other sides of the robot later
          */
-        //frontRange = hw.get(ModernRoboticsI2cRangeSensor.class, "frontRange");
+        frontRange = hw.get(ModernRoboticsI2cRangeSensor.class, "frontRange");
         //backRange  = hw.get(ModernRoboticsI2cRangeSensor.class, "backRange");
 //        int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
 //        yeetCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
