@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Calculators.OtherCalcs;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
@@ -193,6 +194,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("tarm ticks", d.robot.tarm.getCurrentPosition()-d.initTarmPos);
 //            telemetry.addData("sarm ticks", d.robot.sarm.getCurrentPosition()-d.initSarmPos);
 //            d.arm.update();
+            telemetry.addData("amps", d.robot.brightEx.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("duck pos", d.duckPos);
             telemetry.addData("progress", d.progress);
             telemetry.addData("tarm Angle", d.tarmAngle);

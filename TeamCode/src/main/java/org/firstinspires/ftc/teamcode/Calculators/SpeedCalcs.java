@@ -36,6 +36,18 @@ public class SpeedCalcs {
         };
     }
 
+    public static Interfaces.SpeedCalc StandardRampUpDown(double minSpeed, double maxSpeed, double reachMaxByProgress){
+        return SpeedCalcs.SetProgressSpeed(
+                new SpeedCalcs.ProgressSpeed(minSpeed, 0.0, SpeedCalcs.ProgressSpeed.timeOrProg.PROG),
+
+                new SpeedCalcs.ProgressSpeed(maxSpeed, reachMaxByProgress, SpeedCalcs.ProgressSpeed.timeOrProg.PROG),
+
+                new SpeedCalcs.ProgressSpeed(maxSpeed, 1.0-reachMaxByProgress, SpeedCalcs.ProgressSpeed.timeOrProg.PROG),
+
+                new SpeedCalcs.ProgressSpeed(minSpeed, 1.0, SpeedCalcs.ProgressSpeed.timeOrProg.PROG)
+        );
+    }
+
 
     public static Interfaces.SpeedCalc SetProgressSpeed(final ProgressSpeed... progressSpeed){
 

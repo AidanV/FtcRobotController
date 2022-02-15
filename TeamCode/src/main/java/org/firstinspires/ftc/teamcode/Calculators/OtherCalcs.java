@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode.Calculators;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
         import java.util.Vector;
@@ -30,10 +31,9 @@ public class OtherCalcs {
         };
     }
 
-    public static Interfaces.OtherCalc TimeProgress(final long millis){
+    public static Interfaces.OtherCalc TimeProgress(final double millis){
         return new Interfaces.OtherCalc() {
-            long finalMillis = millis + System.currentTimeMillis();
-            long initialMillis = System.currentTimeMillis();
+            final long initialMillis = System.currentTimeMillis();
             @Override
             public void CalcOther(Interfaces.MoveData d) {
 
@@ -41,7 +41,7 @@ public class OtherCalcs {
 
             @Override
             public double myProgress(Interfaces.MoveData d) {
-                return (System.currentTimeMillis() - initialMillis)/(finalMillis - initialMillis);
+                return (System.currentTimeMillis() - initialMillis)/(millis);
             }
         };
     }
@@ -98,6 +98,150 @@ public class OtherCalcs {
             @Override
             public double myProgress(Interfaces.MoveData d) {
                 return 0;
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc AutoPlaceCube(double outtakeTimeMillis){
+        return new Interfaces.OtherCalc() {
+            final long startTime = System.currentTimeMillis();
+            double myProgress = 0.0;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+
+                myProgress = (System.currentTimeMillis()-startTime)/outtakeTimeMillis;
+
+                d.robot.bar.setPosition(d.gateOpen);
+
+                if(myProgress >= 1.0) {
+                    d.robot.bar.setPosition(d.gateClose);
+                    d.robot.intake.setPower(0.0);
+                } else if(myProgress > 0.1){
+                    d.robot.intake.setPower(0.4);
+                }
+             }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc AutoDuckBlue(double totalTimeMillis){
+
+        return new Interfaces.OtherCalc() {
+            final long startTime = System.currentTimeMillis();
+            double myProgress = 0.0;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                myProgress = (System.currentTimeMillis()-startTime)/totalTimeMillis;
+                d.robot.duck.setPower(0.3);
+                if(myProgress >= 1.0){
+                    d.robot.duck.setPower(0.0);
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc StopAtStall(double amps){
+        return new Interfaces.OtherCalc() {
+            double myProgress = 0.0;
+            double averageCurrent = 0.0;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                averageCurrent = averageCurrent * 0.8 + d.robot.brightEx.getCurrent(CurrentUnit.AMPS) * 0.2;
+                if(averageCurrent > amps) myProgress = 1.0;
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc AutoCupGrabBlue(double totalTimeMillis){
+        return new Interfaces.OtherCalc() {
+            final long startTime = System.currentTimeMillis();
+            double myProgress = 0.0;
+            boolean hover = false;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                myProgress = (System.currentTimeMillis()-startTime)/totalTimeMillis;
+                if(myProgress < 0.2) {
+                    if (d.duckPos == 0) {
+                        d.robot.base.setPosition(0.3651);
+                        d.robot.height.setPosition(0.2654);
+
+                        //437 out
+                        //base 0.3651
+                        //height 0.2654
+                    } else if (d.duckPos == 1) {
+                        d.robot.base.setPosition(0.4849);
+                        d.robot.height.setPosition(0.2830);
+
+                        //372 out
+                        //base 0.4849
+                        //height 0.2830
+                    } else if (d.duckPos == 2) {
+                        d.robot.base.setPosition(0.5925);
+                        d.robot.height.setPosition(0.2867);
+
+                        //434 out
+                        //base 0.6080
+                        //height 0.2867
+                    }
+                } else if (myProgress < 0.4){
+                    if (d.duckPos == 0) {
+                        if (d.robot.tapeEx.getCurrentPosition() < 410){
+                            d.robot.tapeEx.setPower(0.2);
+                        } else {
+                            d.robot.tapeEx.setPower(0.0);
+
+                        }
+                        //437 out
+                    } else if (d.duckPos == 1) {
+                        if (d.robot.tapeEx.getCurrentPosition() < 400){
+                            d.robot.tapeEx.setPower(0.2);
+                        } else {
+                            d.robot.tapeEx.setPower(0.0);
+
+                        }
+                        //372 out
+                    } else if (d.duckPos == 2) {
+                        if (d.robot.tapeEx.getCurrentPosition() < 440){
+                            d.robot.tapeEx.setPower(0.2);
+                        } else {
+                            d.robot.tapeEx.setPower(0.0);
+
+                        }
+                        //434 out
+                    }
+                } else if (myProgress < 0.6){
+                    d.robot.height.setPosition(0.15);
+                } else if (myProgress < 0.7){
+                    d.robot.height.setPosition(0.5);
+                }
+
+                else {
+                    d.robot.tapeEx.setPower(-0.15);
+                    if(d.robot.tapeEx.getCurrentPosition() < 75){
+                        d.robot.tapeEx.setPower(0.0);
+                        d.robot.base.setPosition(0.5);
+                        myProgress = 1.0;
+                    }
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
             }
         };
     }
@@ -211,6 +355,7 @@ public class OtherCalcs {
                 } else if (heightPosition < -1.0) {
                     heightPosition = -1.0;
                 }
+                d.robot.tapeEx.setPower(Math.signum(d.manip.ls().y)*Math.sqrt(Math.abs(-d.manip.ls().y))/3.0);
             }
 
             @Override

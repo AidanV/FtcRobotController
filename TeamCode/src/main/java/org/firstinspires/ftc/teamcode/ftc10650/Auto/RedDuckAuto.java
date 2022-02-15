@@ -15,27 +15,24 @@ public class RedDuckAuto extends ComplexOp {
 
     @Override
     public Interfaces.MoveData.StartData startPositionAndOrientation() {
-        return new Interfaces.MoveData.StartData(new Vector2D(200,200), 90);
+        return new Interfaces.MoveData.StartData(new Vector2D(6,1), 90);
     }
 
     @Override
     public void body() throws InterruptedException {
         ComplexMove(
-                SpeedCalcs.SetProgressSpeed(
-                        new SpeedCalcs.ProgressSpeed(0.05, 0.0, SpeedCalcs.ProgressSpeed.timeOrProg.PROG),
 
-                        new SpeedCalcs.ProgressSpeed(0.2, 0.5, SpeedCalcs.ProgressSpeed.timeOrProg.PROG),
-
-                        new SpeedCalcs.ProgressSpeed(0.05, 1.0, SpeedCalcs.ProgressSpeed.timeOrProg.PROG)
+                SpeedCalcs.StandardRampUpDown(
+                        0.1, 1.0, 0.3
                 ),
 
                 MotionCalcs.PointMotion(
                         5,
-                        new Vector2D(100, 200)
+                        new Vector2D(2, 1)
                 ),
 
                 OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.5, -180)
+                        new OrientationCalcs.spinProgress(0.2, 0.8, -180)
                 ),
 //                OrientationCalcs.lookToOrientation(-90),
 
