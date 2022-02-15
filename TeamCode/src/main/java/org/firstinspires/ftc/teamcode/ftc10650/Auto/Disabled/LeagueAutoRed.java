@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode.ftc10650.Auto;
+package org.firstinspires.ftc.teamcode.ftc10650.Auto.Disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces.MoveData;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Calculators.SpeedCalcs;
 import org.firstinspires.ftc.teamcode.Op.ComplexOp;
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 
-
+@Disabled
 @Autonomous(name = "League Auto Red", group = "Red")
 public class LeagueAutoRed extends ComplexOp {
 

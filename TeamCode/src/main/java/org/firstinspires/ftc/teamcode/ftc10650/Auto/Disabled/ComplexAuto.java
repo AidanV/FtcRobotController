@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc10650.Auto;
+package org.firstinspires.ftc.teamcode.ftc10650.Auto.Disabled;
 
 import org.firstinspires.ftc.teamcode.Calculators.*;
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces.MoveData;

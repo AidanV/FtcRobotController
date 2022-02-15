@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Calculators;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.PowerShotPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.StackDeterminationPipeline;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -149,13 +150,13 @@ public class OtherCalcs {
         };
     }
 
-    public static Interfaces.OtherCalc StopAtStall(double amps){
+    public static Interfaces.OtherCalc StopAtStall(double amps, DcMotorEx motor){
         return new Interfaces.OtherCalc() {
             double myProgress = 0.0;
             double averageCurrent = 0.0;
             @Override
             public void CalcOther(Interfaces.MoveData d) {
-                averageCurrent = averageCurrent * 0.8 + d.robot.brightEx.getCurrent(CurrentUnit.AMPS) * 0.2;
+                averageCurrent = averageCurrent * 0.8 + motor.getCurrent(CurrentUnit.AMPS) * 0.2;
                 if(averageCurrent > amps) myProgress = 1.0;
             }
 
@@ -199,7 +200,7 @@ public class OtherCalcs {
                     }
                 } else if (myProgress < 0.4){
                     if (d.duckPos == 0) {
-                        if (d.robot.tapeEx.getCurrentPosition() < 410){
+                        if (d.robot.tapeEx.getCurrentPosition() < 440){
                             d.robot.tapeEx.setPower(0.2);
                         } else {
                             d.robot.tapeEx.setPower(0.0);

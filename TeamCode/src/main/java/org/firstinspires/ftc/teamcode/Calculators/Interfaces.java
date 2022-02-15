@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.FreightRobotName_NA.RobotMap;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.CompleteController;
 import org.firstinspires.ftc.teamcode.Utilities.*;
+import org.firstinspires.ftc.teamcode.ftc10650.Auto.Disabled.ExampleAuto;
 //import org.opencv.core.Rect;
 
 
@@ -39,7 +40,7 @@ public class Interfaces {
 
         /**
          * StartPos and StartHeading is defined at the beginning of the game code
-         * {@link org.firstinspires.ftc.teamcode.ftc10650.Auto.ExampleAuto} for an example of this
+         * {@link ExampleAuto} for an example of this
          */
         public static class StartData {
             public Vector2D StartPos;
