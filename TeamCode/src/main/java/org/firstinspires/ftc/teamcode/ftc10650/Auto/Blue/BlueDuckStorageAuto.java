@@ -104,7 +104,7 @@ public class BlueDuckStorageAuto extends ComplexOp {
                 ),
 
                 OtherCalcs.Lift(
-                        d.endLiftPos,
+                        d.intakeLiftPos,
                         0.25
                 )
         );

@@ -86,6 +86,27 @@ public class OtherCalcs {
 //            }
 //        };
 //    }
+    public static Interfaces.OtherCalc ResetYPosition(){
+        return new Interfaces.OtherCalc() {
+            double average = 1.8; // supposed field tiles from wall
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+
+                //totalCm = 18cm from distance sensor to center of robot + cmUltrasonic()
+                //totalTiles = totalCm / 59.5
+                //offset from wall = 6.0 - totalTiles
+                average = average * 0.8 + (6.0 - ((18.0 + d.robot.frontRange.cmUltrasonic()) / 59.5)) * 0.2;
+                d.wPos.y = average;
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
+
+
     public static Interfaces.OtherCalc Lift(final int setPosition, final double setPower){
         return new Interfaces.OtherCalc() {
             @Override
@@ -166,6 +187,29 @@ public class OtherCalcs {
             }
         };
     }
+
+    public static Interfaces.OtherCalc StopAtIntake(){
+        return new Interfaces.OtherCalc() {
+            double myProgress = 0.0;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+
+                if(d.robot.intakedPipeline.isIntaked()){
+                    d.robot.lift.setTargetPosition(d.safeLiftPos);
+                    d.robot.intake.setPower(0.2);
+                    myProgress = 1.0;
+                } else {
+                    d.robot.intake.setPower(0.65);
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+        };
+    }
+
 
     public static Interfaces.OtherCalc AutoCupGrabBlue(double totalTimeMillis){
         return new Interfaces.OtherCalc() {

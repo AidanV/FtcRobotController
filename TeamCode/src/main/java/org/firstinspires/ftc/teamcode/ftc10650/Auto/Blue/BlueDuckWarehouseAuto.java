@@ -104,7 +104,7 @@ public class BlueDuckWarehouseAuto extends ComplexOp {
                 ),
 
                 OtherCalcs.Lift(
-                        d.endLiftPos,
+                        d.intakeLiftPos,
                         0.25
                 )
         );
@@ -160,7 +160,7 @@ public class BlueDuckWarehouseAuto extends ComplexOp {
         ComplexMove(null, null, null,
 
                 OtherCalcs.Lift(
-                        d.endLiftPos,
+                        d.intakeLiftPos,
                         0.25
                 ),
 

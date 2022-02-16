@@ -56,7 +56,11 @@ public class BlueWarehouseAuto extends ComplexOp {
 
 
         //grab capstone
-        ComplexMove(null, null, null, OtherCalcs.AutoCupGrabBlue(5000));
+        ComplexMove(null, null, null, OtherCalcs.AutoCupGrabBlue(4500));
+
+
+        //set vision to cube pickup
+        d.robot.IntakeCam.setPipeline(d.robot.intakedPipeline);
 
 
         //drive to alliance shipping hub
@@ -110,15 +114,117 @@ public class BlueWarehouseAuto extends ComplexOp {
         );
 
 
+        //lower lift to reset position and reset y position
+        ComplexMove(null, null, null,
+
+                OtherCalcs.Lift(
+                        d.intakeLiftPos,
+                        0.25
+                ),
+
+                OtherCalcs.ResetYPosition(),
+
+                OtherCalcs.TimeProgress(1300)
+        );
+
+
+        //drive until intake
+        ComplexMove(
+
+                SpeedCalcs.SetSpeed(0.1),
+
+                MotionCalcs.PointMotion(
+                        0.01,
+                        new Vector2D(0.25, 5.75)
+                ),
+
+                OrientationCalcs.spinToProgress(
+                        new OrientationCalcs.spinProgress(0.0, 0.25, -45)
+                ),
+
+                OtherCalcs.StopAtIntake()
+        );
+
+
+        //drive out of warehouse
+        ComplexMove(
+
+                SpeedCalcs.StandardRampUpDown(
+                        0.1, 0.6, 0.2
+                ),
+
+                MotionCalcs.PointMotion(
+                        0.01,
+                        new Vector2D(1.3, 5.2),
+                        new Vector2D(1.3, 3.3)
+                ),
+
+                OrientationCalcs.spinToProgress(
+                        new OrientationCalcs.spinProgress(0.0, 0.3, 0)
+                )
+        );
+
+
+        //drive to alliance shipping hub
+        ComplexMove(
+
+                SpeedCalcs.StandardRampUpDown(
+                        0.1, 0.4, 0.4
+                ),
+
+                MotionCalcs.PointMotion(
+                        0.01,
+                        new Vector2D(2.0, 3.1)
+                ),
+
+                OrientationCalcs.spinToProgress(
+                        new OrientationCalcs.spinProgress(0.0, 0.5, 0)
+                ),
+
+                OtherCalcs.Lift(
+                        d.topLiftPos,
+                        0.25
+                )
+        );
+
+
+        //place cube on shipping hub
+        ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(2000));
+
+
+        //drive into warehouse
+        ComplexMove(
+
+                SpeedCalcs.StandardRampUpDown(
+                        0.1, 0.6, 0.2
+                ),
+
+                MotionCalcs.PointMotion(
+                        0.1,
+                        new Vector2D(1.3, 3.3),
+                        new Vector2D(1.3, 5.2)
+                ),
+
+                OrientationCalcs.spinToProgress(
+                        new OrientationCalcs.spinProgress(0.0, 0.5, 0)
+                ),
+
+                OtherCalcs.Lift(
+                        d.safeLiftPos,
+                        0.25
+                )
+        );
+
+
         //lower lift to reset position
         ComplexMove(null, null, null,
 
                 OtherCalcs.Lift(
-                        d.endLiftPos,
+                        d.intakeLiftPos,
                         0.25
                 ),
 
-                OtherCalcs.TimeProgress(5000)
+                OtherCalcs.TimeProgress(2000)
         );
     }
 }

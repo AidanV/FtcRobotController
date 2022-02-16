@@ -97,7 +97,7 @@ public class Interfaces {
         public final int bottomLiftPos = 800;//500
         public final int safeLiftPos = 500;
         public final int cameraLiftPos = 500;
-        public final int endLiftPos = 5;
+        public final int intakeLiftPos = 5;
 
         public final int[] cubeLiftPositions = {
                 bottomLiftPos,
