@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.CubeFindPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.DuckSpotPipeline;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.IntakedPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -71,6 +72,7 @@ public class RobotMap {
 
 //    public final CubeFindPipeline cubeFindPipeline = new CubeFindPipeline();
     public final DuckSpotPipeline duckSpotPipeline = new DuckSpotPipeline();
+    public final IntakedPipeline intakedPipeline = new IntakedPipeline();
 
 //    public static TFObjectDetector tfod;
 
@@ -365,6 +367,7 @@ public class RobotMap {
 
 //                        clawCam.setPipeline(duckSpotPipeline);
                         IntakeCam.setPipeline(duckSpotPipeline);
+//                        IntakeCam.setPipeline(intakedPipeline);
 //                        IntakeCam.pauseViewport();
                     }
 

@@ -11,12 +11,12 @@ import org.firstinspires.ftc.teamcode.Hardware.FreightRobotName_NA.RobotMap;
 import org.firstinspires.ftc.teamcode.Op.ComplexOp;
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 
-@Autonomous(name = "Blue Duck Warehouse Auto", group = "Blue")
-public class BlueDuckWarehouseAuto extends ComplexOp {
+@Autonomous(name = "Blue Warehouse Auto", group = "Blue")
+public class BlueWarehouseAuto extends ComplexOp {
 
     @Override
     public Interfaces.MoveData.StartData startPositionAndOrientation() {
-        return new Interfaces.MoveData.StartData(new Vector2D(0.0 + (.353),1.0 + (.3142)), -90);
+        return new Interfaces.MoveData.StartData(new Vector2D(0.0 + (.353),3.0 + (.3142)), -90);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class BlueDuckWarehouseAuto extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         5,
-                        new Vector2D(0.5, 1.3142)
+                        new Vector2D(0.5, 3.3142)
                 ),
 
                 OrientationCalcs.spinToProgress(
@@ -68,11 +68,11 @@ public class BlueDuckWarehouseAuto extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         0.1,
-                        new Vector2D(1.9, 1.7)
+                        new Vector2D(2.0, 3.3)
                 ),
 
                 OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.6, 180)
+                        new OrientationCalcs.spinProgress(0.0, 0.6, 0)
                 ),
 
                 OtherCalcs.Lift(
@@ -86,67 +86,21 @@ public class BlueDuckWarehouseAuto extends ComplexOp {
         ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(2000));
 
 
-        //drive near carousel
+        //drive into warehouse
         ComplexMove(
 
                 SpeedCalcs.StandardRampUpDown(
-                        0.1, 0.6, 0.4
+                        0.1, 0.6, 0.2
                 ),
 
                 MotionCalcs.PointMotion(
                         0.1,
-                        new Vector2D(1.9, 1.0),
-                        new Vector2D(0.75, 0.75)
+                        new Vector2D(1.3, 3.3),
+                        new Vector2D(1.3, 5.2)
                 ),
 
                 OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.1, 0.75, 360)
-                ),
-
-                OtherCalcs.Lift(
-                        d.endLiftPos,
-                        0.25
-                )
-        );
-
-
-        //drive against carousel
-        ComplexMove(
-
-                SpeedCalcs.SetSpeed(0.05),
-
-                MotionCalcs.PointMotion(
-                        0.1,
-                        new Vector2D(0.5, 0.5)
-                ),
-
-                OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.5, 360)
-                ),
-
-                OtherCalcs.StopAtStall(3.0, RobotMap.brightEx)
-        );
-
-
-        //spin carousel
-        ComplexMove(null, null, null, OtherCalcs.AutoDuckBlue(5000));
-
-
-        //park in warehouse
-        ComplexMove(
-
-                SpeedCalcs.StandardRampUpDown(
-                        0.1, 0.7, 0.2
-                ),
-
-                MotionCalcs.PointMotion(
-                        0.0,
-                        new Vector2D(1.2, 3.0),
-                        new Vector2D(1.5, 5.2)
-                ),
-
-                OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.5, 360)
+                        new OrientationCalcs.spinProgress(0.0, 0.5, 0)
                 ),
 
                 OtherCalcs.Lift(
@@ -166,6 +120,5 @@ public class BlueDuckWarehouseAuto extends ComplexOp {
 
                 OtherCalcs.TimeProgress(5000)
         );
-
     }
 }

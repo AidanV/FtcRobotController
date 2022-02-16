@@ -44,7 +44,7 @@ public class RedDuckWarehouseAuto extends ComplexOp {
         );
 
 
-        //wait 1500 millis
+        //wait 500 millis
         ComplexMove(null, null, null, OtherCalcs.TimeProgress(500));
 
 
@@ -138,8 +138,8 @@ public class RedDuckWarehouseAuto extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         0.1,
-                        new Vector2D(4.5, 3.0),
-                        new Vector2D(4.5, 4.5)
+                        new Vector2D(4.8, 3.0),
+                        new Vector2D(4.5, 5.2)
                 ),
 
                 OrientationCalcs.spinToProgress(
@@ -152,5 +152,16 @@ public class RedDuckWarehouseAuto extends ComplexOp {
                 )
         );
 
+
+        //lower lift to reset position
+        ComplexMove(null, null, null,
+
+                OtherCalcs.Lift(
+                        d.endLiftPos,
+                        0.25
+                ),
+
+                OtherCalcs.TimeProgress(5000)
+        );
     }
 }

@@ -94,7 +94,7 @@ public class Interfaces {
 
         public final int topLiftPos = 1585;
         public final int middleLiftPos = 1100;//800
-        public final int bottomLiftPos = 750;//500
+        public final int bottomLiftPos = 800;//500
         public final int safeLiftPos = 500;
         public final int cameraLiftPos = 500;
         public final int endLiftPos = 5;

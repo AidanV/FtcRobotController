@@ -177,7 +177,7 @@ public class OtherCalcs {
                 myProgress = (System.currentTimeMillis()-startTime)/totalTimeMillis;
                 if(myProgress < 0.2) {
                     if (d.duckPos == 0) {
-                        d.robot.base.setPosition(0.3651);
+                        d.robot.base.setPosition(0.375);
                         d.robot.height.setPosition(0.2654);
 
                         //437 out
@@ -216,7 +216,7 @@ public class OtherCalcs {
                         }
                         //372 out
                     } else if (d.duckPos == 2) {
-                        if (d.robot.tapeEx.getCurrentPosition() < 440){
+                        if (d.robot.tapeEx.getCurrentPosition() < 480){
                             d.robot.tapeEx.setPower(0.2);
                         } else {
                             d.robot.tapeEx.setPower(0.0);
@@ -231,7 +231,7 @@ public class OtherCalcs {
                 }
 
                 else {
-                    d.robot.tapeEx.setPower(-0.15);
+                    d.robot.tapeEx.setPower(-0.1);
                     if(d.robot.tapeEx.getCurrentPosition() < 75){
                         d.robot.tapeEx.setPower(0.0);
                         d.robot.base.setPosition(0.5);
@@ -274,7 +274,10 @@ public class OtherCalcs {
                     d.robot.lift.setTargetPosition(700-d.firstLiftPos);
                     d.robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     d.robot.lift.setPower(0.75);
-
+                } else if((d.manip.rt()>0.001 || d.manip.rb()) && d.robot.intakedPipeline.isIntaked()){
+                    d.robot.lift.setTargetPosition(700-d.firstLiftPos);
+                    d.robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    d.robot.lift.setPower(0.75);
                 }
 
                 if(d.manip.y()){
@@ -417,12 +420,16 @@ public class OtherCalcs {
         return new Interfaces.OtherCalc() {
             @Override
             public void CalcOther(Interfaces.MoveData d) {
+                if(d.manip.rb() && !d.robot.intakedPipeline.isIntaked() && d.robot.lift.getCurrentPosition() < 50){
+                    d.robot.intake.setPower(0.6);
+                } else {
+                    d.robot.intake.setPower((d.robot.intakedPipeline.isIntaked()?0.0:d.manip.rt()) - d.manip.lt());
 
-                d.robot.intake.setPower(((d.manip.rt() - d.manip.lt())));
-//                    d.robot.intake.setPosition(( + 1.0) / 2.0);
+                }
 
                 if(d.manip.b()){
                     d.robot.bar.setPosition(d.gateOpen);
+                    d.robot.intake.setPower(0.3);
                 } else {
                     d.robot.bar.setPosition(d.gateClose);
                 }

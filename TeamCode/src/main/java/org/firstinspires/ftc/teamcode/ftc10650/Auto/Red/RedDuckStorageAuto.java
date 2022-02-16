@@ -44,7 +44,7 @@ public class RedDuckStorageAuto extends ComplexOp {
         );
 
 
-        //wait 1500 millis
+        //wait 500 millis
         ComplexMove(null, null, null, OtherCalcs.TimeProgress(500));
 
 
