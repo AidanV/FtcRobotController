@@ -94,6 +94,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
      */
     public static Interfaces.MotionCalc PointMotion(final double turnRadius, final Vector2D... points) {
 
+        final Interfaces.OtherCalc telemtryMap = OtherCalcs.TelemetryPosition();
 
         return new Interfaces.MotionCalc() {
 
@@ -256,10 +257,9 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                     firstLoop = false;
                 }
 
-//                worldDist += d.wPos.distance(d.preWPos);
-//                currentSegment = GetSegmentByWorldDist(worldDist);
-                //Making a ratio of how much we have traveled over what we should travel to create progress
 
+
+                telemtryMap.CalcOther(d);
 
 
                 SegmentData currentSegment = segmentDataArray.get(currentSegmentIndex);
@@ -287,6 +287,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                     rval = currentSegment.endPos.getSubtracted(d.wPos).getNormalized();
                     //Alternative that doesn't use current location: rval = currentSegment.startDirection;
                 }
+
                 return rval;
             }
         };

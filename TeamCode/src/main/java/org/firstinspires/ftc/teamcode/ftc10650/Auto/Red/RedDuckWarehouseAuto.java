@@ -139,7 +139,7 @@ public class RedDuckWarehouseAuto extends ComplexOp {
                 MotionCalcs.PointMotion(
                         0.1,
                         new Vector2D(4.8, 3.0),
-                        new Vector2D(4.5, 5.2)
+                        new Vector2D(4.8, 5.2)
                 ),
 
                 OrientationCalcs.spinToProgress(

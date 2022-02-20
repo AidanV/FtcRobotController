@@ -6,48 +6,20 @@ import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 
 public class OrientationCalcs {
 
-    public static Interfaces.OrientationCalc GameOrient(){
-        Vector2D ultimatePoint = new Vector2D(128, 330);
-        final Interfaces.OrientationCalc lookUltimate = lookToPoint(new lookProgress(ultimatePoint,  1.0));
-        Vector2D power1Point = new Vector2D(110, 330);
-        Vector2D power2Point = new Vector2D(100, 330);
-        Vector2D power3Point = new Vector2D(90, 330);
-        final Interfaces.OrientationCalc[] lookPower = {
-                lookToPoint(new lookProgress(power1Point,  1.0)),
-                lookToPoint(new lookProgress(power2Point,  1.0)),
-                lookToPoint(new lookProgress(power3Point,  1.0))};
+    public static Interfaces.OrientationCalc GameOrientBlue(){
+
+
         final Interfaces.OrientationCalc joystick = turnWithJoystick();
+        final Interfaces.OrientationCalc lookBackToTree  = lookToOrientation(-45);
+        final Interfaces.OrientationCalc lookForward  = lookToOrientation(0);
         return new Interfaces.OrientationCalc() {
-            boolean aHasUp = true, turnToGoal = true;
-            boolean bHasUp = true, turnToPower = false;
-            boolean rbHasUp = true, lbHasUp = true;
-            int currPower = 0;
+
             @Override
             public double CalcOrientation(Interfaces.MoveData d) {
-                if (!d.manip.a()) aHasUp = true;
-                if (!d.manip.b()) bHasUp = true;
-                if (!d.manip.rb()) rbHasUp = true;
-                if (!d.manip.lb()) lbHasUp = true;
-                if (d.manip.a() && aHasUp){
-                    aHasUp = false;
-                    turnToGoal = !turnToGoal;
-                    turnToPower = false;
-                }
-                if (d.manip.b() && bHasUp){
-                    bHasUp = false;
-                    turnToPower = !turnToPower;
-                    turnToGoal = false;
-                }
-
-
-                if(d.manip.rb() && rbHasUp) {currPower+=2;rbHasUp=false;}
-                if(d.manip.lb() && lbHasUp) {++currPower;lbHasUp=false;}
-                currPower = Math.abs(currPower);
-                currPower %= 3;
-                if(turnToGoal) {
-                    return lookUltimate.CalcOrientation(d);
-                } else if (turnToPower){
-                    return lookPower[currPower].CalcOrientation(d);
+                if(d.driver.rb()) {
+                    return lookBackToTree.CalcOrientation(d);
+                } else if (d.driver.lb()){
+                    return lookForward.CalcOrientation(d);
                 } else {
                     return joystick.CalcOrientation(d);
                 }

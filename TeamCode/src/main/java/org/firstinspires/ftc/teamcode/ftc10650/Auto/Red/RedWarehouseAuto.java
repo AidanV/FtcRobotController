@@ -24,28 +24,14 @@ public class RedWarehouseAuto extends ComplexOp {
 
         //drive to vision position
         ComplexMove(
-
                 SpeedCalcs.SetSpeed(0.05),
-
-                MotionCalcs.PointMotion(
-                        5,
-                        new Vector2D(5.5, 3.3142)
-                ),
-
+                MotionCalcs.PointMotion(5, new Vector2D(5.5, 3.3142)),
                 OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 1.0, -90)
-                ),
+                        new OrientationCalcs.spinProgress(0.0, 1.0, -90)),
+                OtherCalcs.Lift(d.cameraLiftPos, 0.25));
 
-                OtherCalcs.Lift(
-                        d.cameraLiftPos,
-                        0.25
-                )
-        );
-
-
-        //wait 500 millis
+        //wait for vision
         ComplexMove(null, null, null, OtherCalcs.TimeProgress(500));
-
 
         //grab duck position
         d.duckPos = d.robot.duckSpotPipeline.getDuckPos();
@@ -120,7 +106,7 @@ public class RedWarehouseAuto extends ComplexOp {
 
                 OtherCalcs.ResetYPosition(),
 
-                OtherCalcs.TimeProgress(1300)
+                OtherCalcs.TimeProgress(2000)
         );
 
 

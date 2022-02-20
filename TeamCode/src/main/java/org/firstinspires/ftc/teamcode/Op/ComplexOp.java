@@ -163,101 +163,12 @@ public abstract class ComplexOp extends LinearOpMode{
 
             if (d.timeRemainingUntilEndgame >= 0) endGameTime = (float)(Math.round(d.timeRemainingUntilEndgame / 100) / 10.0);
 
-            //could add specific telemetry data to show through an implementation of complexOp
-
-            //telemetry.addData("Position: ("+String.valueOf(Math.round(d.wPos.x))+", "+String.valueOf(Math.round(d.wPos.y))+")", "\n"+d.field);
-            //telemetry.addData("heading", Math.round(d.heading*10)/10.0);
-            //telemetry.addData("position", " "+String.valueOf(Math.round(d.wPos.x))+", "+String.valueOf(Math.round(d.wPos.y)));
-            /*
-            int z = 0;
-            short[]ss = d.robot.vexCrap.readAll();
-            for(short s: ss){
-                telemetry.addData("Vex Encoder Register: " + z + ": ", s);
-                z++;
-            }
-            */
-//            telemetry.addData("manip lx",d.manip.ls().x);
-//            telemetry.addData("manip ly", d.manip.ls().y);
-//            telemetry.addData("manip rx", d.manip.rs().x);
-//            telemetry.addData("manip ry", d.manip.rs().y);
-//            telemetry.addData("x pos", d.wPos.x);
-//            telemetry.addData("y pos", d.wPos.y);
-//            telemetry.addData("right joystick x", d.driver.rs().x);
-//            telemetry.addData("wobble position", d.robot.wobbleEx.getCurrentPosition());
-//            telemetry.addData("offset", d.robot.wobbleOffset);
-//            telemetry.addData("right stick x", d.driver.rs().x);
-//            telemetry.addData("right stick x raw", gamepad1.right_stick_x);
-//            telemetry.addData("bop", d.robot.barm.getCurrentPosition());
-//            telemetry.addData("top", d.robot.tarm.getCurrentPosition());
-
-//            telemetry.addData("barm ticks", d.robot.barm.getCurrentPosition()-d.initBarmPos);
-//            telemetry.addData("tarm ticks", d.robot.tarm.getCurrentPosition()-d.initTarmPos);
-//            telemetry.addData("sarm ticks", d.robot.sarm.getCurrentPosition()-d.initSarmPos);
-//            d.arm.update();
-            telemetry.addData("amps", d.robot.brightEx.getCurrent(CurrentUnit.AMPS));
-            telemetry.addData("duck pos", d.duckPos);
-            telemetry.addData("progress", d.progress);
-            telemetry.addData("tarm Angle", d.tarmAngle);
-//            telemetry.addData("slamra x", d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getX());
-//            telemetry.addData("slamra y", d.robot.slamra.getLastReceivedCameraUpdate().pose.getTranslation().getY());
-//            telemetry.addData("slamra just X", d.robot.slamra.getLastReceivedCameraUpdate().pose.getX());
-//            telemetry.addData("slamra just Y", d.robot.slamra.getLastReceivedCameraUpdate().pose.getY());
-
-//            telemetry.addData("duck pos", d.duckPos);
-//            telemetry.addData("barm velocity", d.debugData1);
-//            telemetry.addData("tarm velocity", d.debugData2);
-//            telemetry.addData("barmAngle", d.barmAngle);
-//            telemetry.addData("tarmAngle", d.tarmAngle);
-//            telemetry.addData("x", d.arm.getCartesian().x);
-//            telemetry.addData("y", d.arm.getCartesian().y);
-//            telemetry.addData("z", d.arm.getCartesian().z);
-
-            //telemetry.addData("goal position", d.goalPosition);
-
-//            telemetry.addData("goal position", d.goalBox);
-
-//            telemetry.addData("H", d.hsvValues[0]);
-//            telemetry.addData("S", d.hsvValues[1]);
-//            telemetry.addData("V", d.hsvValues[2]);
-
-//            telemetry.addData("height", d.powerCenter.x);
-
-
-//            telemetry.addData("heading", d.heading);
-//            telemetry.addData("bucket", d.robot.bucket.getPosition());
-//            telemetry.addData("", d.robot.shooter.getCurrentPosition() - last);
-//            last = d.robot.shooter.getCurrentPosition();
-
-//            telemetry.addData("l button", d.manip.l());
-
-//            DcMotorControllerEx motorControllerEx = (DcMotorControllerEx)d.robot.shooter.getController();
-//            int motorIndex = ((DcMotorEx)d.robot.shooter).getPortNumber();
-//            telemetry.addData("P", motorControllerEx.);
-            //PIDCoefficients pidNew = new PIDCoefficients(NEW_P, NEW_I, NEW_D);
-            //motorControllerEx.setPIDCoefficients(motorIndex, DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
-//            DcMotorEx motorExLeft = (DcMotorEx)hardwareMap.get(DcMotor.class, "shooter");
-//            PIDCoefficients pidModified = motorExLeft.getPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-//            telemetry.addData("P", pidModified.p);
-//            telemetry.addData("I", pidModified.i);
-//            telemetry.addData("D", pidModified.d);
-//            telemetry.addData(d.robot.shooter.)
-//            telemetry.addData("bucket pos", d.robot.bucket.getPosition());
-//            telemetry.addData("pid orig p", pidOrig.p);
-//            telemetry.addData("pid orig i", pidOrig.i);
-//            telemetry.addData("pid orig d", pidOrig.d);
-//            telemetry.addData("Yeetor speed", d.manip.lt());
-//            telemetry.addData("Stack Height", d.stackHeight);
-//            telemetry.addData("Motor Velocity", d.robot.shooterEx.getVelocity());
-//            telemetry.addData("fright Velocity", d.robot.frightEx.getVelocity());
-            telemetry.addData("range", "optical: %f, ultrasonic: %f", d.robot.frontRange.cmOptical(), d.robot.frontRange.cmUltrasonic());
+            telemetry.addData("Duck Position", d.duckPos);
             telemetry.addData("Robot is here", "\n"+d.field);
-            telemetry.addData("position", d.wPos.x + "   " + d.wPos.y);
-            telemetry.addData("heading", d.heading);
+            telemetry.addData("Position", d.wPos.x + "   " + d.wPos.y);
+            telemetry.addData("Heading", d.heading);
             telemetry.update();
 
-            //Camera camera = new Camera(hardwareMap,false);
-            //camera.cycle();
-            //d.robot.yeetCam.cycle();
 
             mecanumDrive.driveMecanum(
                     d.currentCommand.motionSpeed,
@@ -372,7 +283,7 @@ public abstract class ComplexOp extends LinearOpMode{
         posDisplay.CalcOther(d);
 
         telemetry.addData("Place robot here", "\n"+d.field);
-        telemetry.addData("heading"," "+d.startData.StartNorthOffset +" | position: ("+String.valueOf(Math.round(d.startData.StartPos.x))+", "+String.valueOf(Math.round(d.startData.StartPos.y))+")");
+        telemetry.addData("heading"," "+d.startData.StartNorthOffset +" | position: ("+String.valueOf((d.startData.StartPos.x))+", "+String.valueOf((d.startData.StartPos.y))+")");
         telemetry.update();
 
 //        d.firstFrameBarmPos = d.robot.barm.getCurrentPosition();

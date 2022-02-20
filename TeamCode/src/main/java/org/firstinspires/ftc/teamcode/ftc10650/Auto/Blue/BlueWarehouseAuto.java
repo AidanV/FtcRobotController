@@ -124,7 +124,7 @@ public class BlueWarehouseAuto extends ComplexOp {
 
                 OtherCalcs.ResetYPosition(),
 
-                OtherCalcs.TimeProgress(1300)
+                OtherCalcs.TimeProgress(2000)
         );
 
 

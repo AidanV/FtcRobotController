@@ -12,7 +12,7 @@ public class RedTele extends ComplexOp {
 
     @Override
     public Interfaces.MoveData.StartData startPositionAndOrientation() {
-        return new Interfaces.MoveData.StartData(new Vector2D(50, 50), 0);
+        return new Interfaces.MoveData.StartData(new Vector2D(5, 3), 0);
     }
 
     @Override

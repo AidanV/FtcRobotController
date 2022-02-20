@@ -357,14 +357,15 @@ public class RobotMap {
 
         int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
         WebcamName webcamName = hw.get(WebcamName.class, "IntakeCam");
+
         IntakeCam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
         IntakeCam.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
 //                        IntakeCam.stopStreaming();
-                        IntakeCam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
 
+                        IntakeCam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
 //                        clawCam.setPipeline(duckSpotPipeline);
                         IntakeCam.setPipeline(duckSpotPipeline);
 //                        IntakeCam.setPipeline(intakedPipeline);

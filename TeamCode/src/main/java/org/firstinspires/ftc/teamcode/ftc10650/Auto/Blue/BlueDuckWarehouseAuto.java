@@ -142,7 +142,7 @@ public class BlueDuckWarehouseAuto extends ComplexOp {
                 MotionCalcs.PointMotion(
                         0.0,
                         new Vector2D(1.2, 3.0),
-                        new Vector2D(1.5, 5.2)
+                        new Vector2D(1.2, 5.2)
                 ),
 
                 OrientationCalcs.spinToProgress(

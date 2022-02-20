@@ -12,7 +12,7 @@ public class BlueTele extends ComplexOp {
 
     @Override
     public Interfaces.MoveData.StartData startPositionAndOrientation() {
-        return new Interfaces.MoveData.StartData(new Vector2D(50, 50), 0);
+        return new Interfaces.MoveData.StartData(new Vector2D(1, 3), 0);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class BlueTele extends ComplexOp {
         ComplexMove(
             SpeedCalcs.JoystickSpeed(),
             MotionCalcs.FieldCentricJoystick(-90),
-            OrientationCalcs.turnWithJoystick(),
+            OrientationCalcs.GameOrientBlue(),
             OtherCalcs.Duck(),
             OtherCalcs.TeleLift(),
             OtherCalcs.Intake(),
