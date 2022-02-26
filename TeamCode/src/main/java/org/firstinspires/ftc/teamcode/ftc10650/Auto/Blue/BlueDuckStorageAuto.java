@@ -56,7 +56,7 @@ public class BlueDuckStorageAuto extends ComplexOp {
 
 
         //grab capstone
-        ComplexMove(null, null, null, OtherCalcs.AutoCupGrabBlue(5000));
+        ComplexMove(null, null, null, OtherCalcs.AutoCupGrabBlue(false, 5000));
 
 
         //drive to alliance shipping hub

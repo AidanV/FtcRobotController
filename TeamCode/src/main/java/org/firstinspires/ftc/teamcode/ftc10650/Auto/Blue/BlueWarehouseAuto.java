@@ -56,7 +56,7 @@ public class BlueWarehouseAuto extends ComplexOp {
 
 
         //grab capstone
-        ComplexMove(null, null, null, OtherCalcs.AutoCupGrabBlue(4500));
+        ComplexMove(null, null, null, OtherCalcs.AutoCupGrabBlue(true, 4500));
 
 
         //set vision to cube pickup

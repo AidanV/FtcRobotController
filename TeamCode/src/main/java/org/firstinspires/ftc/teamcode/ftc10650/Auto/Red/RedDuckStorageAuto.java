@@ -53,7 +53,7 @@ public class RedDuckStorageAuto extends ComplexOp {
 
 
         //grab capstone
-//        ComplexMove(null, null, null, OtherCalcs.AutoCupGrabBlue(5000));
+        ComplexMove(null, null, null, OtherCalcs.AutoCupGrabBlue(false, 5000));
 
 
         //drive to alliance shipping hub
@@ -126,7 +126,7 @@ public class RedDuckStorageAuto extends ComplexOp {
 
 
         //spin carousel
-        ComplexMove(null, null, null, OtherCalcs.AutoDuckBlue(5000));
+        ComplexMove(null, null, null, OtherCalcs.AutoDuckRed(5000));
 
 
         //park in storage unit
