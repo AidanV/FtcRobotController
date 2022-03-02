@@ -131,6 +131,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("new X",p.getTranslation().getX());
 //            telemetry.addData("new Y",p.getTranslation().getY());
 //
+            telemetry.addData("intake pos", d.robot.intake.getCurrentPosition());
 ////            System.out.println("\n init:" + initPoseX + "    :    " + initPoseY);
 ////            System.out.println(" pose" + p.getTranslation().getX() + "    :    " + p.getTranslation().getY());
 //            Vector2D slamraPos = new Vector2D(

@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.CubeFindPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.DuckSpotPipeline;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.FindDuckPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.IntakedPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -73,6 +74,7 @@ public class RobotMap {
 //    public final CubeFindPipeline cubeFindPipeline = new CubeFindPipeline();
     public final DuckSpotPipeline duckSpotPipeline = new DuckSpotPipeline();
     public final IntakedPipeline intakedPipeline = new IntakedPipeline();
+    public final FindDuckPipeline findDuckPipeline = new FindDuckPipeline();
 
 //    public static TFObjectDetector tfod;
 
@@ -186,6 +188,11 @@ public class RobotMap {
 
         intake = hw.get(DcMotor.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        intakeEx = (DcMotorEx) tape;
+//        intakeEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidTape);
 
 //        barm = hw.get(DcMotor.class, "barm");
 //        barm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -368,6 +375,7 @@ public class RobotMap {
                         IntakeCam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
 //                        clawCam.setPipeline(duckSpotPipeline);
                         IntakeCam.setPipeline(duckSpotPipeline);
+//                        IntakeCam.setPipeline(findDuckPipeline);
 //                        IntakeCam.setPipeline(intakedPipeline);
 //                        IntakeCam.pauseViewport();
                     }

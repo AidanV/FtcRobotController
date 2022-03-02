@@ -36,14 +36,18 @@ public class MotionCalcs { //This will always output a power on the x axis of th
      */
     public static Interfaces.MotionCalc FieldCentricJoystick(final double driverOffsetDeg){
         return new Interfaces.MotionCalc() {
+            double myProgress = 0.0;
             @Override
             public double myProgress(Interfaces.MoveData d) {
-                return 0;
+
+                return myProgress;
             }
 
             @Override
             public Vector2D CalcMotion(Interfaces.MoveData d) {
+
                 return d.driver.ls().getRotatedBy(Math.toRadians(driverOffsetDeg)).getNormalizedSquare();
+
             }
         };
     }
@@ -289,6 +293,30 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 }
 
                 return rval;
+            }
+        };
+    }
+
+    public static Interfaces.MotionCalc DriveTowardsDuckRed(){
+        return new Interfaces.MotionCalc() {
+            double myProgress = 0.0;
+            @Override
+            public Vector2D CalcMotion(Interfaces.MoveData d) {
+                //find the ducks offset from the center of the intake
+                int duckOffset  = d.robot.findDuckPipeline.duckOffset;
+
+                //if it will run into a wall it will move on
+                if(d.wPos.x > 5.8 || d.wPos.x < 0.2){
+                    myProgress = 1.0;
+                }
+                //if the duck offset is less than 20 it will go forward
+                //the ducks offset to the left or right is proportional to speed in teh y direction
+                return new Vector2D(Math.abs(duckOffset)<20?1.0: 0.0, -duckOffset/160.0);
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
             }
         };
     }

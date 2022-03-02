@@ -18,14 +18,16 @@ public class RedTele extends ComplexOp {
     @Override
     public void body() throws InterruptedException {
         d.robot.IntakeCam.setPipeline(d.robot.intakedPipeline);
+
         ComplexMove(
-               SpeedCalcs.JoystickSpeed(),
+                SpeedCalcs.JoystickSpeed(),
                 MotionCalcs.FieldCentricJoystick(90),
-                OrientationCalcs.turnWithJoystick(),
+                OrientationCalcs.GameOrientRed(),
                 OtherCalcs.Duck(),
                 OtherCalcs.TeleLift(),
                 OtherCalcs.Intake(),
                 OtherCalcs.TeleCap(),
                 OtherCalcs.TelemetryPosition());
+
     }
 }

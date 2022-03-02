@@ -32,6 +32,32 @@ public class OrientationCalcs {
         };
     }
 
+    public static Interfaces.OrientationCalc GameOrientRed(){
+
+
+        final Interfaces.OrientationCalc joystick = turnWithJoystick();
+        final Interfaces.OrientationCalc lookBackToTree  = lookToOrientation(45);
+        final Interfaces.OrientationCalc lookForward  = lookToOrientation(0);
+        return new Interfaces.OrientationCalc() {
+
+            @Override
+            public double CalcOrientation(Interfaces.MoveData d) {
+                if(d.driver.rb()) {
+                    return lookBackToTree.CalcOrientation(d);
+                } else if (d.driver.lb()){
+                    return lookForward.CalcOrientation(d);
+                } else {
+                    return joystick.CalcOrientation(d);
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
+
     public static Interfaces.OrientationCalc turnWithJoystick(){
 
         return new Interfaces.OrientationCalc(){

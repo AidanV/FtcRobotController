@@ -91,6 +91,7 @@ public class OtherCalcs {
             double myProgress = 0.0;
             @Override
             public void CalcOther(Interfaces.MoveData d) {
+                d.robot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
                 myProgress = (System.currentTimeMillis()-startTime)/outtakeTimeMillis;
 
@@ -100,9 +101,36 @@ public class OtherCalcs {
                     d.robot.bar.setPosition(d.gateClose);
                     d.robot.intake.setPower(0.0);
                 } else if(myProgress > 0.1){
-                    d.robot.intake.setPower(0.4);
+                    d.robot.intake.setPower(0.3);
                 }
              }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc AutoPlaceDuck(double outtakeTimeMillis){
+        return new Interfaces.OtherCalc() {
+            final long startTime = System.currentTimeMillis();
+            double myProgress = 0.0;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                d.robot.intake.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                myProgress = (System.currentTimeMillis()-startTime)/outtakeTimeMillis;
+
+                d.robot.bar.setPosition(d.gateOpen);
+
+                if(myProgress >= 1.0) {
+                    d.robot.bar.setPosition(d.gateClose);
+                    d.robot.intake.setPower(0.0);
+                } else if(myProgress > 0.1){
+                    d.robot.intake.setPower(0.3);
+                }
+            }
 
             @Override
             public double myProgress(Interfaces.MoveData d) {
@@ -119,7 +147,7 @@ public class OtherCalcs {
             @Override
             public void CalcOther(Interfaces.MoveData d) {
                 myProgress = (System.currentTimeMillis()-startTime)/totalTimeMillis;
-                d.robot.duck.setPower(0.3);
+                d.robot.duck.setPower(0.4);
                 if(myProgress >= 1.0){
                     d.robot.duck.setPower(0.0);
                 }
@@ -140,7 +168,7 @@ public class OtherCalcs {
             @Override
             public void CalcOther(Interfaces.MoveData d) {
                 myProgress = (System.currentTimeMillis()-startTime)/totalTimeMillis;
-                d.robot.duck.setPower(-0.3);
+                d.robot.duck.setPower(-0.4);
                 if(myProgress >= 1.0){
                     d.robot.duck.setPower(0.0);
                 }
@@ -178,10 +206,10 @@ public class OtherCalcs {
 
                 if(d.robot.intakedPipeline.isIntaked()){
                     d.robot.lift.setTargetPosition(d.safeLiftPos);
-                    d.robot.intake.setPower(0.2);
+                    d.robot.intake.setPower(0.0);
                     myProgress = 1.0;
                 } else {
-                    d.robot.intake.setPower(1.0);
+                    d.robot.intake.setPower(0.7);
                 }
             }
 
@@ -203,22 +231,22 @@ public class OtherCalcs {
                 myProgress = (System.currentTimeMillis()-startTime)/totalTimeMillis;
                 if(myProgress < 0.2) {
                     if (d.duckPos == 0) {
-                        d.robot.base.setPosition(0.375);
-                        d.robot.height.setPosition(0.2654);
+                        d.robot.base.setPosition(0.385);
+                        d.robot.height.setPosition(0.16);
 
                         //437 out
                         //base 0.3651
                         //height 0.2654
                     } else if (d.duckPos == 1) {
                         d.robot.base.setPosition(0.4849);
-                        d.robot.height.setPosition(0.2830);
+                        d.robot.height.setPosition(0.16);
 
                         //372 out
                         //base 0.4849
                         //height 0.2830
                     } else if (d.duckPos == 2) {
                         d.robot.base.setPosition(0.5925);
-                        d.robot.height.setPosition(0.2867);
+                        d.robot.height.setPosition(0.2);
 
                         //434 out
                         //base 0.6080
@@ -250,15 +278,14 @@ public class OtherCalcs {
                         }
                         //434 out
                     }
-                } else if (myProgress < 0.6){
-                    d.robot.height.setPosition(0.15);
-                } else if (myProgress < 0.7){
+                } else if (myProgress < 0.65){
                     d.robot.height.setPosition(0.5);
+                    d.robot.tapeEx.setPower(0.0);
                 }
 
                 else {
-                    d.robot.tapeEx.setPower(-0.1);
-                    if(d.robot.tapeEx.getCurrentPosition() < 75){
+                    d.robot.tapeEx.setPower(-0.2);
+                    if(d.robot.tapeEx.getCurrentPosition() < 0){
                         myProgress = 1.0;
                     }
                 }
@@ -287,22 +314,22 @@ public class OtherCalcs {
                 myProgress = (System.currentTimeMillis()-startTime)/totalTimeMillis;
                 if(myProgress < 0.2) {
                     if (d.duckPos == 0) {
-                        d.robot.base.setPosition(0.375);
-                        d.robot.height.setPosition(0.2654);
+                        d.robot.base.setPosition(.4805);
+                        d.robot.height.setPosition(.18);
 
                         //437 out
                         //base 0.3651
                         //height 0.2654
                     } else if (d.duckPos == 1) {
-                        d.robot.base.setPosition(0.4849);
-                        d.robot.height.setPosition(0.2830);
+                        d.robot.base.setPosition(.5860);
+                        d.robot.height.setPosition(.209);
 
                         //372 out
                         //base 0.4849
                         //height 0.2830
                     } else if (d.duckPos == 2) {
-                        d.robot.base.setPosition(0.5925);
-                        d.robot.height.setPosition(0.2867);
+                        d.robot.base.setPosition(0.6413);
+                        d.robot.height.setPosition(0.24);
 
                         //434 out
                         //base 0.6080
@@ -310,7 +337,7 @@ public class OtherCalcs {
                     }
                 } else if (myProgress < 0.4){
                     if (d.duckPos == 0) {
-                        if (d.robot.tapeEx.getCurrentPosition() < 440){
+                        if (d.robot.tapeEx.getCurrentPosition() < 400){
                             d.robot.tapeEx.setPower(0.2);
                         } else {
                             d.robot.tapeEx.setPower(0.0);
@@ -318,7 +345,7 @@ public class OtherCalcs {
                         }
                         //437 out
                     } else if (d.duckPos == 1) {
-                        if (d.robot.tapeEx.getCurrentPosition() < 400){
+                        if (d.robot.tapeEx.getCurrentPosition() < 520){
                             d.robot.tapeEx.setPower(0.2);
                         } else {
                             d.robot.tapeEx.setPower(0.0);
@@ -326,7 +353,7 @@ public class OtherCalcs {
                         }
                         //372 out
                     } else if (d.duckPos == 2) {
-                        if (d.robot.tapeEx.getCurrentPosition() < 480){
+                        if (d.robot.tapeEx.getCurrentPosition() < 620){
                             d.robot.tapeEx.setPower(0.2);
                         } else {
                             d.robot.tapeEx.setPower(0.0);
@@ -334,15 +361,14 @@ public class OtherCalcs {
                         }
                         //434 out
                     }
-                } else if (myProgress < 0.6){
-                    d.robot.height.setPosition(0.15);
                 } else if (myProgress < 0.7){
                     d.robot.height.setPosition(0.5);
+                    d.robot.tapeEx.setPower(0.0);
                 }
 
                 else {
-                    d.robot.tapeEx.setPower(-0.1);
-                    if(d.robot.tapeEx.getCurrentPosition() < 75){
+                    d.robot.tapeEx.setPower(-0.2);
+                    if(d.robot.tapeEx.getCurrentPosition() < 0){
                         myProgress = 1.0;
                     }
                 }
@@ -482,6 +508,38 @@ public class OtherCalcs {
     }
 
 
+    public static Interfaces.OtherCalc IntakeDuck(){
+        return new Interfaces.OtherCalc() {
+            double myProgress = 0.0;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                int currentPosition = d.robot.intake.getCurrentPosition();
+                d.robot.intake.setPower(0.2);
+                if(d.robot.findDuckPipeline.intaked){
+                    d.robot.lift.setTargetPosition(d.safeLiftPos);
+                    double modVal = (currentPosition*3)  % 145;
+                    d.robot.intake.setTargetPosition((int) (currentPosition + (145 - modVal) / 3.0) + 20);
+
+//                    if(modVal / 145.0> .5){
+//                        d.robot.intake.setTargetPosition((int) (currentPosition + (145 - modVal) / 3.0));
+//                    } else {
+//                        d.robot.intake.setTargetPosition((int) (currentPosition - modVal / 3.0));
+//                    }
+
+                    d.robot.intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    d.robot.intake.setPower(1.0);
+                    myProgress = 1.0;
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+        };
+    }
+
+
     public static Interfaces.OtherCalc ChangeTapePIDF(){
 
         return new Interfaces.OtherCalc() {
@@ -536,9 +594,10 @@ public class OtherCalcs {
                 if(d.manip.rb() && !d.robot.intakedPipeline.isIntaked() && d.robot.lift.getCurrentPosition() < 50){
                     d.robot.intake.setPower(0.7);
                 } else {
-                    d.robot.intake.setPower((d.robot.intakedPipeline.isIntaked()?0.0:d.manip.rt()) - d.manip.lt());
-
+                    d.robot.intake.setPower((d.robot.intakedPipeline.isIntaked() ? 0.0 : d.manip.rt()) - d.manip.lt());
                 }
+
+
 
                 if(d.manip.b()){
                     d.robot.bar.setPosition(d.gateOpen);

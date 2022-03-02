@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.Calculators.MotionCalcs;
 import org.firstinspires.ftc.teamcode.Calculators.OrientationCalcs;
 import org.firstinspires.ftc.teamcode.Calculators.OtherCalcs;
 import org.firstinspires.ftc.teamcode.Calculators.SpeedCalcs;
+import org.firstinspires.ftc.teamcode.Hardware.FreightRobotName_NA.RobotMap;
 import org.firstinspires.ftc.teamcode.Op.ComplexOp;
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 
@@ -36,177 +37,74 @@ public class RedWarehouseAuto extends ComplexOp {
         //grab duck position
         d.duckPos = d.robot.duckSpotPipeline.getDuckPos();
 
-
         //grab capstone
         ComplexMove(null, null, null, OtherCalcs.AutoCupGrabRed(true, 5000));
 
-
         //set vision to cube pickup
-        d.robot.IntakeCam.setPipeline(d.robot.intakedPipeline);
-
+        RobotMap.IntakeCam.setPipeline(d.robot.intakedPipeline);
 
         //drive to alliance shipping hub
         ComplexMove(
-
-                SpeedCalcs.StandardRampUpDown(
-                        0.1, 0.4, 0.3
-                ),
-
-                MotionCalcs.PointMotion(
-                        0.1,
-                        new Vector2D(4.0, 3.3)
-                ),
-
-                OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.6, 0)
-                ),
-
-                OtherCalcs.Lift(
-                        d.cubeLiftPositions[d.duckPos],
-                        0.25
-                )
-        );
-
+                SpeedCalcs.StandardRampUpDown(0.1, 0.4, 0.3),
+                MotionCalcs.PointMotion(0.1, new Vector2D(4.0, 3.3)),
+                OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.6, 0)),
+                OtherCalcs.Lift(d.cubeLiftPositions[d.duckPos], 0.25));
 
         //place cube on shipping hub
         ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(2000));
 
-
         //drive into warehouse
         ComplexMove(
-
-                SpeedCalcs.StandardRampUpDown(
-                        0.1, 0.6, 0.2
-                ),
-
-                MotionCalcs.PointMotion(
-                        0.1,
+                SpeedCalcs.StandardRampUpDown(0.1, 0.6, 0.2),
+                MotionCalcs.PointMotion(0.1,
                         new Vector2D(4.7, 3.3),
-                        new Vector2D(4.7, 5.2)
-                ),
+                        new Vector2D(4.7, 5.2)),
+                OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.5, 0)),
+                OtherCalcs.Lift(d.safeLiftPos, 0.25));
 
-                OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.5, 0)
-                ),
-
-                OtherCalcs.Lift(
-                        d.safeLiftPos,
-                        0.25
-                )
-        );
-
-
-//lower lift to reset position and reset y position
+        //lower lift to reset position and reset y position
         ComplexMove(null, null, null,
-
-                OtherCalcs.Lift(
-                        d.intakeLiftPos,
-                        0.25
-                ),
-
+                OtherCalcs.Lift(d.intakeLiftPos, 0.25),
                 OtherCalcs.ResetYPosition(),
-
-                OtherCalcs.TimeProgress(2000)
-        );
-
+                OtherCalcs.TimeProgress(2000));
 
         //drive until intake
         ComplexMove(
-
                 SpeedCalcs.SetSpeed(0.1),
-
-                MotionCalcs.PointMotion(
-                        0.01,
-                        new Vector2D(5.75, 5.75)
-                ),
-
-                OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.25, 45)
-                ),
-
-                OtherCalcs.StopAtIntake()
-        );
-
+                MotionCalcs.PointMotion(0.01, new Vector2D(5.75, 5.75)),
+                OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.25, 45)),
+                OtherCalcs.StopAtIntake());
 
         //drive out of warehouse
         ComplexMove(
-
-                SpeedCalcs.StandardRampUpDown(
-                        0.1, 0.6, 0.2
-                ),
-
-                MotionCalcs.PointMotion(
-                        0.01,
+                SpeedCalcs.StandardRampUpDown(0.1, 0.6, 0.2),
+                MotionCalcs.PointMotion(0.01,
                         new Vector2D(4.7, 5.2),
-                        new Vector2D(4.7, 3.3)
-                ),
-
-                OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.3, 0)
-                )
-        );
-
+                        new Vector2D(4.7, 3.3)),
+                OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.3, 0)));
 
         //drive to alliance shipping hub
         ComplexMove(
-
-                SpeedCalcs.StandardRampUpDown(
-                        0.1, 0.4, 0.4
-                ),
-
-                MotionCalcs.PointMotion(
-                        0.01,
-                        new Vector2D(4.0, 3.1)
-                ),
-
-                OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.5, 0)
-                ),
-
-                OtherCalcs.Lift(
-                        d.topLiftPos,
-                        0.25
-                )
-        );
-
+                SpeedCalcs.StandardRampUpDown(0.1, 0.4, 0.4),
+                MotionCalcs.PointMotion(0.01, new Vector2D(4.0, 3.1)),
+                OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.5, 0)),
+                OtherCalcs.Lift(d.topLiftPos, 0.25));
 
         //place cube on shipping hub
         ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(2000));
 
-
         //drive into warehouse
         ComplexMove(
-
-                SpeedCalcs.StandardRampUpDown(
-                        0.1, 0.6, 0.2
-                ),
-
-                MotionCalcs.PointMotion(
-                        0.1,
+                SpeedCalcs.StandardRampUpDown(0.1, 0.6, 0.2),
+                MotionCalcs.PointMotion(0.1,
                         new Vector2D(4.7, 3.3),
-                        new Vector2D(4.7, 5.2)
-                ),
-
-                OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.5, 0)
-                ),
-
-                OtherCalcs.Lift(
-                        d.safeLiftPos,
-                        0.25
-                )
-        );
-
+                        new Vector2D(4.7, 5.2)),
+                OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.5, 0)),
+                OtherCalcs.Lift(d.safeLiftPos, 0.25));
 
         //lower lift to reset position
         ComplexMove(null, null, null,
-
-                OtherCalcs.Lift(
-                        d.intakeLiftPos,
-                        0.25
-                ),
-
-                OtherCalcs.TimeProgress(2000)
-        );
+                OtherCalcs.Lift(d.intakeLiftPos, 0.25),
+                OtherCalcs.TimeProgress(2000));
     }
 }
