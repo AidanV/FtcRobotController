@@ -20,7 +20,7 @@ public class FindDuckPipeline extends OpenCvPipeline {
     Mat hsvIntaked = new Mat();
     final Scalar lower = new Scalar(10, 50, 20);//150, 90
     final Scalar upper = new Scalar(30, 255, 255);
-    public volatile int duckOffset = -160;
+    public volatile int duckOffset = -161;
     public volatile boolean intaked = false;
 
 

@@ -39,7 +39,7 @@ public class BlueWarehouseAuto extends ComplexOp {
 
                 OtherCalcs.Lift(
                         d.cameraLiftPos,
-                        0.25
+                        0.5
                 )
         );
 
@@ -81,7 +81,7 @@ public class BlueWarehouseAuto extends ComplexOp {
 
                 OtherCalcs.Lift(
                         d.cubeLiftPositions[d.duckPos],
-                        0.25
+                        0.5
                 )
         );
 
@@ -174,7 +174,7 @@ public class BlueWarehouseAuto extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         0.01,
-                        new Vector2D(2.0, 3.1)
+                        new Vector2D(2.1, 3.1)
                 ),
 
                 OrientationCalcs.spinToProgress(

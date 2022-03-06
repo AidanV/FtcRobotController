@@ -109,6 +109,33 @@ public class RobotMap {
     public RobotMap(HardwareMap hw) {//, Interfaces.MoveData.StartData posh) {
 
         this.hw = hw;
+
+
+        int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
+        WebcamName webcamName = hw.get(WebcamName.class, "IntakeCam");
+
+        IntakeCam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+        IntakeCam.openCameraDeviceAsync(
+                new OpenCvCamera.AsyncCameraOpenListener() {
+                    @Override
+                    public void onOpened() {
+//                        IntakeCam.stopStreaming();
+
+                        IntakeCam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+//                        clawCam.setPipeline(duckSpotPipeline);
+                        IntakeCam.setPipeline(duckSpotPipeline);////<----
+//                        IntakeCam.setPipeline(findDuckPipeline);
+//                        IntakeCam.setPipeline(intakedPipeline);
+//                        IntakeCam.pauseViewport();
+                    }
+
+                    @Override
+                    public void onError(int errorCode) {
+
+                    }
+                }
+        );
+
         /**
          * @see <a href="https://ftc-tricks.com/dc-motors/"</a>
          * @see DcMotor.RunMode.RUN_USING_ENCODER this implements a PID for all of the motors
@@ -362,30 +389,7 @@ public class RobotMap {
 //                }
 //        );
 
-        int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
-        WebcamName webcamName = hw.get(WebcamName.class, "IntakeCam");
 
-        IntakeCam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
-        IntakeCam.openCameraDeviceAsync(
-                new OpenCvCamera.AsyncCameraOpenListener() {
-                    @Override
-                    public void onOpened() {
-//                        IntakeCam.stopStreaming();
-
-                        IntakeCam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
-//                        clawCam.setPipeline(duckSpotPipeline);
-                        IntakeCam.setPipeline(duckSpotPipeline);
-//                        IntakeCam.setPipeline(findDuckPipeline);
-//                        IntakeCam.setPipeline(intakedPipeline);
-//                        IntakeCam.pauseViewport();
-                    }
-
-                    @Override
-                    public void onError(int errorCode) {
-
-                    }
-                }
-        );
 
 //        while(true) {
 //            try {

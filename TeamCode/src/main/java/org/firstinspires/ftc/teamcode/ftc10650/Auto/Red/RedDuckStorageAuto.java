@@ -39,7 +39,7 @@ public class RedDuckStorageAuto extends ComplexOp {
 
                 OtherCalcs.Lift(
                         d.cameraLiftPos,
-                        0.25
+                        0.5
                 )
         );
 
@@ -50,6 +50,7 @@ public class RedDuckStorageAuto extends ComplexOp {
 
         //grab duck position
         d.duckPos = d.robot.duckSpotPipeline.getDuckPos();
+        d.robot.base.setPosition(0.5);
 
 
         //grab capstone
@@ -79,7 +80,7 @@ public class RedDuckStorageAuto extends ComplexOp {
 
                 OtherCalcs.Lift(
                         d.cubeLiftPositions[d.duckPos],
-                        0.25
+                        0.5
                 )
         );
 
@@ -97,7 +98,7 @@ public class RedDuckStorageAuto extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         0.1,
-                        new Vector2D(4.1, 1.0),
+                        new Vector2D(4.3, 1.0),
                         new Vector2D(5.4, 0.6)
                 ),
 
@@ -107,7 +108,7 @@ public class RedDuckStorageAuto extends ComplexOp {
 
                 OtherCalcs.Lift(
                         d.intakeLiftPos,
-                        0.25
+                        0.5
                 )
         );
 
@@ -179,15 +180,17 @@ public class RedDuckStorageAuto extends ComplexOp {
                         new OrientationCalcs.spinProgress(0.0, 0.6, -180)
                 ),
 
+                OtherCalcs.HoldIntakePosition(),
+
                 OtherCalcs.Lift(
                         d.topLiftPos,
-                        0.25
+                        0.5
                 )
         );
 
 
         //place duck on shipping hub
-        ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(2000));
+        ComplexMove(null, null, null, OtherCalcs.AutoPlaceDuck(2000));
 
 
 
@@ -209,7 +212,7 @@ public class RedDuckStorageAuto extends ComplexOp {
 
                 OtherCalcs.Lift(
                         d.intakeLiftPos,
-                        0.25
+                        0.5
                 )
         );
 

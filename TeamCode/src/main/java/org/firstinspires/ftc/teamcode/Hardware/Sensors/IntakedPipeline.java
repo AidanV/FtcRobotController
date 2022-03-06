@@ -71,7 +71,9 @@ public class IntakedPipeline extends OpenCvPipeline {
 
 
             //crop the hsv mat
-            Rect rectCropIntake = new Rect(nonCroppedHsv.width()/2, (boundingRect.y + (boundingRect.width / 2)), (nonCroppedHsv.width()*3/32), (nonCroppedHsv.height()/64));
+            Rect rectCropIntake = new Rect(nonCroppedHsv.width()/8, (boundingRect.y + (boundingRect.width / 2)), (nonCroppedHsv.width()/2), (nonCroppedHsv.height()/64));
+
+//            Rect rectCropIntake = new Rect(nonCroppedHsv.width()/2, (boundingRect.y + (boundingRect.width / 2)), (nonCroppedHsv.width()*3/32), (nonCroppedHsv.height()/64));
             hsvIntake = new Mat(nonCroppedHsv, rectCropIntake);
 
 
@@ -82,8 +84,11 @@ public class IntakedPipeline extends OpenCvPipeline {
             //find if the average hsv "value" is above 150
 //            isIntaked = s.val[2] > 150;
 
-            isIntaked = s.val[2] - lastV > 100;
-            lastV = 0.95*lastV + 0.05*s.val[2];
+
+            isIntaked = s.val[2] > 110;
+
+//            isIntaked = s.val[2] - lastV > 100;
+//            lastV = 0.9*lastV + 0.1*s.val[2];
 
 
             //cleanup

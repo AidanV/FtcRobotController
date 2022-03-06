@@ -39,7 +39,7 @@ public class BlueDuckStorageAuto extends ComplexOp {
 
                 OtherCalcs.Lift(
                         d.cameraLiftPos,
-                        0.25
+                        0.5
                 )
         );
 
@@ -54,9 +54,11 @@ public class BlueDuckStorageAuto extends ComplexOp {
         //blue side fix
         d.duckPos = (d.duckPos + 1) % 3;
 
+        //move tape out of way
+        d.robot.base.setPosition(0.5);
 
-        //grab capstone
-        ComplexMove(null, null, null, OtherCalcs.AutoCupGrabBlue(false, 5000));
+        //change pipeline
+        d.robot.IntakeCam.setPipeline(d.robot.findDuckPipeline);
 
 
         //drive to alliance shipping hub
@@ -68,22 +70,23 @@ public class BlueDuckStorageAuto extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         0.1,
-                        new Vector2D(1.9, 1.7)
+                        new Vector2D(1.9, 1.4),
+                        new Vector2D(1.9, 2.0)
                 ),
 
                 OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.6, 180)
+                        new OrientationCalcs.spinProgress(0.0, 0.3, 180)
                 ),
 
                 OtherCalcs.Lift(
                         d.cubeLiftPositions[d.duckPos],
-                        0.25
+                        0.5
                 )
         );
 
 
         //place cube on shipping hub
-        ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(2000));
+        ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(1500));
 
 
         //drive near carousel
@@ -95,8 +98,8 @@ public class BlueDuckStorageAuto extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         0.1,
-                        new Vector2D(1.9, 1.0),
-                        new Vector2D(0.75, 0.75)
+                        new Vector2D(1.7, 1.0),
+                        new Vector2D(0.6, 0.6)
                 ),
 
                 OrientationCalcs.spinToProgress(
@@ -105,7 +108,7 @@ public class BlueDuckStorageAuto extends ComplexOp {
 
                 OtherCalcs.Lift(
                         d.intakeLiftPos,
-                        0.25
+                        0.5
                 )
         );
 
@@ -113,7 +116,7 @@ public class BlueDuckStorageAuto extends ComplexOp {
         //drive against carousel
         ComplexMove(
 
-                SpeedCalcs.SetSpeed(0.05),
+                SpeedCalcs.SetSpeed(0.1),
 
                 MotionCalcs.PointMotion(
                         0.1,
@@ -124,12 +127,70 @@ public class BlueDuckStorageAuto extends ComplexOp {
                         new OrientationCalcs.spinProgress(0.0, 0.5, 360)
                 ),
 
-                OtherCalcs.StopAtStall(3.0, RobotMap.brightEx)
+                OtherCalcs.StopAtStall(3.2, RobotMap.brightEx)
         );
 
 
         //spin carousel
-        ComplexMove(null, null, null, OtherCalcs.AutoDuckBlue(5000));
+        ComplexMove(null, null, null, OtherCalcs.AutoDuckBlue(4000));
+
+
+        ComplexMove(
+
+                SpeedCalcs.StandardRampUpDown(
+                        0.1, 0.3, 0.3
+                ),
+
+                MotionCalcs.PointMotion(
+                        0.1,
+                        new Vector2D(1.0, 0.5)
+                ),
+
+                OrientationCalcs.spinToProgress(
+                        new OrientationCalcs.spinProgress(0.0, 0.8, 270)
+                )
+        );
+
+        //pick up duck
+        ComplexMove(
+
+                SpeedCalcs.SetSpeed(0.2),
+
+                MotionCalcs.DriveTowardsDuckBlue(),
+
+                OrientationCalcs.lookToOrientation(270),
+
+                OtherCalcs.IntakeDuck()
+        );
+
+        //drive to alliance shipping hub
+        ComplexMove(
+
+                SpeedCalcs.StandardRampUpDown(
+                        0.1, 0.4, 0.3
+                ),
+
+                MotionCalcs.PointMotion(
+                        0.1,
+                        new Vector2D(1.85, 1.6),
+                        new Vector2D(1.85, 2.0)
+                ),
+
+                OrientationCalcs.spinToProgress(
+                        new OrientationCalcs.spinProgress(0.0, 0.4, 180)
+                ),
+
+                OtherCalcs.HoldIntakePosition(),
+
+                OtherCalcs.Lift(
+                        d.topLiftPos,
+                        0.5
+                )
+        );
+
+
+        //place duck on shipping hub
+        ComplexMove(null, null, null, OtherCalcs.AutoPlaceDuck(2000));
 
 
         //park in storage unit
@@ -141,13 +202,17 @@ public class BlueDuckStorageAuto extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         0.1,
-                        new Vector2D(1.53, 0.5)
+                        new Vector2D(1.45, 0.4)
                 ),
 
                 OrientationCalcs.spinToProgress(
                         new OrientationCalcs.spinProgress(0.0, 0.5, 360)
+                ),
+
+                OtherCalcs.Lift(
+                        d.intakeLiftPos,
+                        0.5
                 )
         );
-
     }
 }

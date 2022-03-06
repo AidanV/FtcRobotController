@@ -101,7 +101,7 @@ public class OtherCalcs {
                     d.robot.bar.setPosition(d.gateClose);
                     d.robot.intake.setPower(0.0);
                 } else if(myProgress > 0.1){
-                    d.robot.intake.setPower(0.3);
+                    d.robot.intake.setPower(0.25);
                 }
              }
 
@@ -128,7 +128,7 @@ public class OtherCalcs {
                     d.robot.bar.setPosition(d.gateClose);
                     d.robot.intake.setPower(0.0);
                 } else if(myProgress > 0.1){
-                    d.robot.intake.setPower(0.3);
+                    d.robot.intake.setPower(0.1);
                 }
             }
 
@@ -147,7 +147,7 @@ public class OtherCalcs {
             @Override
             public void CalcOther(Interfaces.MoveData d) {
                 myProgress = (System.currentTimeMillis()-startTime)/totalTimeMillis;
-                d.robot.duck.setPower(0.4);
+                d.robot.duck.setPower(0.45);
                 if(myProgress >= 1.0){
                     d.robot.duck.setPower(0.0);
                 }
@@ -168,7 +168,7 @@ public class OtherCalcs {
             @Override
             public void CalcOther(Interfaces.MoveData d) {
                 myProgress = (System.currentTimeMillis()-startTime)/totalTimeMillis;
-                d.robot.duck.setPower(-0.4);
+                d.robot.duck.setPower(-0.45);
                 if(myProgress >= 1.0){
                     d.robot.duck.setPower(0.0);
                 }
@@ -254,7 +254,7 @@ public class OtherCalcs {
                     }
                 } else if (myProgress < 0.4){
                     if (d.duckPos == 0) {
-                        if (d.robot.tapeEx.getCurrentPosition() < 440){
+                        if (d.robot.tapeEx.getCurrentPosition() < 480){
                             d.robot.tapeEx.setPower(0.2);
                         } else {
                             d.robot.tapeEx.setPower(0.0);
@@ -262,7 +262,7 @@ public class OtherCalcs {
                         }
                         //437 out
                     } else if (d.duckPos == 1) {
-                        if (d.robot.tapeEx.getCurrentPosition() < 400){
+                        if (d.robot.tapeEx.getCurrentPosition() < 440){
                             d.robot.tapeEx.setPower(0.2);
                         } else {
                             d.robot.tapeEx.setPower(0.0);
@@ -270,7 +270,7 @@ public class OtherCalcs {
                         }
                         //372 out
                     } else if (d.duckPos == 2) {
-                        if (d.robot.tapeEx.getCurrentPosition() < 480){
+                        if (d.robot.tapeEx.getCurrentPosition() < 500){
                             d.robot.tapeEx.setPower(0.2);
                         } else {
                             d.robot.tapeEx.setPower(0.0);
@@ -418,15 +418,11 @@ public class OtherCalcs {
                     d.robot.lift.setTargetPosition(700-d.firstLiftPos);
                     d.robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                     d.robot.lift.setPower(0.75);
-                }
-
-                if(d.manip.y()){
+                } else if(d.manip.y()){
+                    d.robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     d.robot.lift.setPower(-0.1);
                     d.firstLiftPos = d.robot.lift.getCurrentPosition();
-                    canRelease = true;
-                } else if (canRelease) {
-                    d.robot.lift.setPower(0.0);
-                    canRelease = false;
+//                    canRelease = true;
                 }
             }
 
@@ -460,7 +456,9 @@ public class OtherCalcs {
                 } else if (heightPosition < -1.0) {
                     heightPosition = -1.0;
                 }
-                d.robot.tapeEx.setPower(Math.signum(d.manip.ls().y)*Math.sqrt(Math.abs(-d.manip.ls().y))/3.0);
+//                d.robot.tapeEx.setPower(Math.signum(d.manip.ls().y)*Math.sqrt(Math.abs(-d.manip.ls().y))/3.0);
+                d.robot.tapeEx.setPower((d.manip.ls().y)/4.0);
+
 //                d.robot.tapeEx.setPower(d.manip.ls().x*0.15);
             }
 
@@ -516,18 +514,9 @@ public class OtherCalcs {
                 int currentPosition = d.robot.intake.getCurrentPosition();
                 d.robot.intake.setPower(0.2);
                 if(d.robot.findDuckPipeline.intaked){
-                    d.robot.lift.setTargetPosition(d.safeLiftPos);
-                    double modVal = (currentPosition*3)  % 145;
-                    d.robot.intake.setTargetPosition((int) (currentPosition + (145 - modVal) / 3.0) + 20);
-
-//                    if(modVal / 145.0> .5){
-//                        d.robot.intake.setTargetPosition((int) (currentPosition + (145 - modVal) / 3.0));
-//                    } else {
-//                        d.robot.intake.setTargetPosition((int) (currentPosition - modVal / 3.0));
-//                    }
-
-                    d.robot.intake.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    d.robot.intake.setPower(1.0);
+                    d.holdPosition = true;
+                    d.robot.lift.setTargetPosition(d.safeLiftPos - d.firstLiftPos);
+                    d.robot.intake.setPower(0.0);
                     myProgress = 1.0;
                 }
             }
@@ -535,6 +524,34 @@ public class OtherCalcs {
             @Override
             public double myProgress(Interfaces.MoveData d) {
                 return myProgress;
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc HoldIntakePosition() {
+        return new Interfaces.OtherCalc() {
+            double targetHoldPosition;
+            boolean firstHoldPosition = true;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+
+                int currentPosition = d.robot.intake.getCurrentPosition();
+
+
+
+                if (firstHoldPosition) {
+                    double modVal = (currentPosition * 3) % 145;
+                    targetHoldPosition = currentPosition + (145 - modVal) / 3.0;
+                    firstHoldPosition = false;
+//                    d.robot.intake.setTargetPosition((int) (currentPosition + (145 - modVal) / 3.0));
+
+                }
+
+                d.robot.intake.setPower((targetHoldPosition - currentPosition) / 200.0);
+            }
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0.0;
             }
         };
     }
@@ -588,24 +605,29 @@ public class OtherCalcs {
 
     public static Interfaces.OtherCalc Intake(){
         return new Interfaces.OtherCalc() {
+
             @Override
             public void CalcOther(Interfaces.MoveData d) {
-
-                if(d.manip.rb() && !d.robot.intakedPipeline.isIntaked() && d.robot.lift.getCurrentPosition() < 50){
-                    d.robot.intake.setPower(0.7);
+                if(d.manip.lb()) {
+                    d.holdPosition = true;
                 } else {
-                    d.robot.intake.setPower((d.robot.intakedPipeline.isIntaked() ? 0.0 : d.manip.rt()) - d.manip.lt());
-                }
+                    d.holdPosition = false;
+                    if (d.manip.rb() && !d.robot.intakedPipeline.isIntaked() && d.robot.lift.getCurrentPosition() < 50) {
+                        d.robot.intake.setPower(0.7);
+                    } else {
+                        d.robot.intake.setPower((d.robot.intakedPipeline.isIntaked() ? 0.0 : d.manip.rt()) - d.manip.lt());
+                    }
 
 
-
-                if(d.manip.b()){
-                    d.robot.bar.setPosition(d.gateOpen);
-                    d.robot.intake.setPower(0.3);
-                } else {
-                    d.robot.bar.setPosition(d.gateClose);
+                    if (d.manip.b()) {
+                        d.robot.bar.setPosition(d.gateOpen);
+                        d.robot.intake.setPower(0.3);
+                    } else {
+                        d.robot.bar.setPosition(d.gateClose);
+                    }
                 }
             }
+
 
             @Override
             public double myProgress(Interfaces.MoveData d) {

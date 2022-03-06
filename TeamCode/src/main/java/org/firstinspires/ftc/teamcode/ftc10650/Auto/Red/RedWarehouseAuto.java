@@ -29,7 +29,7 @@ public class RedWarehouseAuto extends ComplexOp {
                 MotionCalcs.PointMotion(5, new Vector2D(5.5, 3.3142)),
                 OrientationCalcs.spinToProgress(
                         new OrientationCalcs.spinProgress(0.0, 1.0, -90)),
-                OtherCalcs.Lift(d.cameraLiftPos, 0.25));
+                OtherCalcs.Lift(d.cameraLiftPos, 0.5));
 
         //wait for vision
         ComplexMove(null, null, null, OtherCalcs.TimeProgress(500));
@@ -48,7 +48,7 @@ public class RedWarehouseAuto extends ComplexOp {
                 SpeedCalcs.StandardRampUpDown(0.1, 0.4, 0.3),
                 MotionCalcs.PointMotion(0.1, new Vector2D(4.0, 3.3)),
                 OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.6, 0)),
-                OtherCalcs.Lift(d.cubeLiftPositions[d.duckPos], 0.25));
+                OtherCalcs.Lift(d.cubeLiftPositions[d.duckPos], 0.5));
 
         //place cube on shipping hub
         ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(2000));
@@ -60,19 +60,19 @@ public class RedWarehouseAuto extends ComplexOp {
                         new Vector2D(4.7, 3.3),
                         new Vector2D(4.7, 5.2)),
                 OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.5, 0)),
-                OtherCalcs.Lift(d.safeLiftPos, 0.25));
+                OtherCalcs.Lift(d.safeLiftPos, 0.5));
 
         //lower lift to reset position and reset y position
         ComplexMove(null, null, null,
-                OtherCalcs.Lift(d.intakeLiftPos, 0.25),
+                OtherCalcs.Lift(d.intakeLiftPos, 0.5),
                 OtherCalcs.ResetYPosition(),
-                OtherCalcs.TimeProgress(2000));
+                OtherCalcs.TimeProgress(1000));
 
         //drive until intake
         ComplexMove(
                 SpeedCalcs.SetSpeed(0.1),
                 MotionCalcs.PointMotion(0.01, new Vector2D(5.75, 5.75)),
-                OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.25, 45)),
+                OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.2, 45)),
                 OtherCalcs.StopAtIntake());
 
         //drive out of warehouse
@@ -81,14 +81,16 @@ public class RedWarehouseAuto extends ComplexOp {
                 MotionCalcs.PointMotion(0.01,
                         new Vector2D(4.7, 5.2),
                         new Vector2D(4.7, 3.3)),
-                OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.3, 0)));
+                OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.3, 0)),
+                OtherCalcs.HoldIntakePosition());
 
         //drive to alliance shipping hub
         ComplexMove(
                 SpeedCalcs.StandardRampUpDown(0.1, 0.4, 0.4),
                 MotionCalcs.PointMotion(0.01, new Vector2D(4.0, 3.1)),
                 OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.5, 0)),
-                OtherCalcs.Lift(d.topLiftPos, 0.25));
+                OtherCalcs.Lift(d.topLiftPos, 0.5),
+                OtherCalcs.HoldIntakePosition());
 
         //place cube on shipping hub
         ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(2000));
@@ -100,11 +102,11 @@ public class RedWarehouseAuto extends ComplexOp {
                         new Vector2D(4.7, 3.3),
                         new Vector2D(4.7, 5.2)),
                 OrientationCalcs.spinToProgress(new OrientationCalcs.spinProgress(0.0, 0.5, 0)),
-                OtherCalcs.Lift(d.safeLiftPos, 0.25));
+                OtherCalcs.Lift(d.safeLiftPos, 0.5));
 
         //lower lift to reset position
         ComplexMove(null, null, null,
-                OtherCalcs.Lift(d.intakeLiftPos, 0.25),
+                OtherCalcs.Lift(d.intakeLiftPos, 0.5),
                 OtherCalcs.TimeProgress(2000));
     }
 }
