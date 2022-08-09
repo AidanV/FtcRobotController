@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
-        import java.util.Vector;
+import java.util.Vector;
 //import org.openftc.easyopencv.OpenCvCamera;
 //import org.openftc.easyopencv.OpenCvCameraRotation;
 
@@ -103,7 +103,7 @@ public class OtherCalcs {
                 } else if(myProgress > 0.1){
                     d.robot.intake.setPower(0.25);
                 }
-             }
+            }
 
             @Override
             public double myProgress(Interfaces.MoveData d) {
@@ -714,27 +714,27 @@ public class OtherCalcs {
                 int adjustedRow = (int)Math.round((d.wPos.y/realFieldHeight)* stringFieldHeight);
                 String rval = "";
                 for(int row = stringFieldHeight-1; row>-1; row--){
-                    if(row == stringFieldHeight-1) rval += "\u2004______________________________________________\n";
-                    rval += "|";
+                if(row == stringFieldHeight-1) rval += "\u2004______________________________________________\n";
+                rval += "|";
 
-                    for(int col = 0; col< stringFieldWidth; col++){
+                for(int col = 0; col< stringFieldWidth; col++){
 
-                        if(row == adjustedRow && col == adjustedColumn){
-                            rval += "■";
-                        } else {
-                            rval += "\u2004\u2002";
-                        }
+                if(row == adjustedRow && col == adjustedColumn){
+                    rval += "■";
+                } else {
+                    rval += "\u2004\u2002";
+                }
 
-                        if(col == stringFieldWidth-1) {
-                            if (row == 0) {
-                                rval += "|";
-                            } else {
-                                rval += "|\n";
-                            }
-                        }
-
+                if(col == stringFieldWidth-1) {
+                    if (row == 0) {
+                        rval += "|";
+                    } else {
+                        rval += "|\n";
                     }
                 }
+
+            }
+            }
                 rval += "_______________________________________________\u2004";
                 d.field = rval;
             }
