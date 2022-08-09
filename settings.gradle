@@ -1,4 +1,4 @@
-//include ':ftc265'
+include ':virtual_robot_lib'//include ':ftc265'
 include ':FtcRobotController'
 include ':TeamCode'
 //include ':ftc265'
