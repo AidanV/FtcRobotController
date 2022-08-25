@@ -1,6 +1,4 @@
-include ':virtual_robot_lib'//include ':ftc265'
-include ':FtcRobotController'
-include ':TeamCode'
+include 'virtual_robot_lib', 'FtcRobotController', 'TeamCode'
 //include ':ftc265'
 //project(':ftc265').projectDir=file('../ftc265')
 //include ':TeamCode'

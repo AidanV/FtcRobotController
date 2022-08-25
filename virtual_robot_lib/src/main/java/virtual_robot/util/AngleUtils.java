@@ -1,4 +1,4 @@
-package com.example.src.virtual_robot.util;
+package virtual_robot.util;
 
 /**
  * For internal use only. Static functions helpful for working with angles.

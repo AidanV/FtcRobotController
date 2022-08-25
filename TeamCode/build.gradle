@@ -14,7 +14,9 @@
 // Include common definitions from above.
 //apply from: '../build.common.gradle'
 apply from: '../build.common.gradle'
+//apply from: '../build.virtual.gradle'
 apply from: '../build.dependencies.gradle'
+
 
 repositories {
     maven { url = "https://maven.0x778.tk" }
@@ -22,6 +24,7 @@ repositories {
 
 dependencies {
     implementation project(':FtcRobotController')
+//    implementation project(':virtual_robot_lib')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
     implementation files('/Users/vanduyneai/Documents/GitHub/2021FtcRobotController/librealsense-2.41.1-ftc265.aar')
     implementation files('/Users/vanduyneai/Documents/GitHub/ftc265/lib/build/outputs/aar/lib-release.aar')

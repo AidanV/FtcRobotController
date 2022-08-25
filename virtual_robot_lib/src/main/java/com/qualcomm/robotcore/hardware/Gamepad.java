@@ -1,6 +1,6 @@
 package com.qualcomm.robotcore.hardware;
 
-import com.studiohartman.jamepad.ControllerState;
+//import com.studiohartman.jamepad.ControllerState;
 import virtual_robot.controller.VirtualGamePadController;
 
 /**
@@ -80,29 +80,29 @@ public class Gamepad {
         right_trigger = 0;
     }
 
-    public void update(ControllerState state){
-        x = state.x;
-        y = state.y;
-        a = state.a;
-        b = state.b;
-        left_stick_x = setWithDeadzone(state.leftStickX);
-        left_stick_y = setWithDeadzone(-state.leftStickY);
-        right_stick_x = setWithDeadzone(state.rightStickX);
-        right_stick_y = setWithDeadzone(-state.rightStickY);
-        dpad_up = state.dpadUp;
-        dpad_down = state.dpadDown;
-        dpad_left = state.dpadLeft;
-        dpad_right = state.dpadRight;
-        back = state.back;
-        guide = state.guide;
-        start = state.start;
-        left_bumper = state.lb;
-        right_bumper = state.rb;
-        left_stick_button = state.leftStickClick;
-        right_stick_button = state.rightStickClick;
-        left_trigger = setWithDeadzone(state.leftTrigger);
-        right_trigger = setWithDeadzone(state.rightTrigger);
-    }
+//    public void update(ControllerState state){
+//        x = state.x;
+//        y = state.y;
+//        a = state.a;
+//        b = state.b;
+//        left_stick_x = setWithDeadzone(state.leftStickX);
+//        left_stick_y = setWithDeadzone(-state.leftStickY);
+//        right_stick_x = setWithDeadzone(state.rightStickX);
+//        right_stick_y = setWithDeadzone(-state.rightStickY);
+//        dpad_up = state.dpadUp;
+//        dpad_down = state.dpadDown;
+//        dpad_left = state.dpadLeft;
+//        dpad_right = state.dpadRight;
+//        back = state.back;
+//        guide = state.guide;
+//        start = state.start;
+//        left_bumper = state.lb;
+//        right_bumper = state.rb;
+//        left_stick_button = state.leftStickClick;
+//        right_stick_button = state.rightStickClick;
+//        left_trigger = setWithDeadzone(state.leftTrigger);
+//        right_trigger = setWithDeadzone(state.rightTrigger);
+//    }
 
     public void update(VirtualGamePadController.ControllerState state){
         x = state.x;

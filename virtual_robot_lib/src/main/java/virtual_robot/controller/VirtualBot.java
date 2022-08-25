@@ -1,19 +1,5 @@
 package virtual_robot.controller;
 
-import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Scale;
-import javafx.scene.transform.Translate;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -38,29 +24,29 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 public abstract class VirtualBot {
 
-    protected static VirtualRobotController controller;
+    public static VirtualRobotController controller;
 
     protected HardwareMap hardwareMap;
 
-    protected Group displayGroup = null;
-
-    protected StackPane fieldPane;
-    protected double fieldWidth;
-    protected double halfFieldWidth;
-    protected double halfBotWidth;
-    protected double botWidth;
+//    protected Group displayGroup = null;
+//
+//    protected StackPane fieldPane;
+//    protected double fieldWidth;
+//    protected double halfFieldWidth;
+//    protected double halfBotWidth;
+//    protected double botWidth;
 
     protected double x = 0;
     protected double y = 0;
     protected double headingRadians = 0;
 
     public VirtualBot(){
-        fieldPane = controller.getFieldPane();
+//        fieldPane = controller.getFieldPane();
         createHardwareMap();
-        this.fieldWidth = fieldPane.getPrefWidth();
-        halfFieldWidth = fieldWidth / 2.0;
-        botWidth = fieldWidth / 8.0;
-        halfBotWidth = botWidth / 2.0;
+//        this.fieldWidth = fieldPane.getPrefWidth();
+//        halfFieldWidth = fieldWidth / 2.0;
+//        botWidth = fieldWidth / 8.0;
+//        halfBotWidth = botWidth / 2.0;
     }
 
     static void setController(VirtualRobotController ctrl){
@@ -73,46 +59,46 @@ public abstract class VirtualBot {
      * on top of that rectangle.
      *
      */
-    protected void setUpDisplayGroup(Group group){
-
-        displayGroup = group;
-
-        /*
-           Create a transparent 600x600 rectangle to serve as the base layer of the robot. It will go
-           below the 75x75 chassis rectangle.
-        */
-
-        Rectangle baseRect = new Rectangle(0, 0, 600, 600);
-        baseRect.setFill(new Color(1.0, 0.0, 1.0, 0.0));
-        baseRect.setVisible(true);
-
-        /*
-          Translate the display group by (300 - 37.5) in X and Y, so that the
-          center of the chassis rectangle will be at the same location as the center of the 600x600 base
-          rectangle.
-         */
-
-        displayGroup.setTranslateX(displayGroup.getTranslateX() + 300 - 37.5);
-        displayGroup.setTranslateY(displayGroup.getTranslateY() + 300 - 37.5);
-
-        //Create a new display group with the 600x600 transparent rectangle as its base layer, and
-        //the original display group as its upper layer.
-
-        displayGroup = new Group(baseRect, displayGroup);
-
-        /*
-          Add transforms. They will be applied in the opposite order from the order in which they are added.
-          The scale transform scales the entire display group so that the base layer has the same width as the field,
-          and the chassis rectangle (originally the 75x75 rectangle) is one-eight of the field width.
-          The rotate and translate transforms are added so that they can be manipulated later, when the robot moves
-          around the field.
-         */
-        displayGroup.getTransforms().add(new Translate(0, 0));
-        displayGroup.getTransforms().add(new Rotate(0, halfFieldWidth, halfFieldWidth));
-        displayGroup.getTransforms().add(new Scale(botWidth/75.0, botWidth/75.0, 0, 0));
-
-        fieldPane.getChildren().add(displayGroup);
-    }
+//    protected void setUpDisplayGroup(Group group){
+//
+//        displayGroup = group;
+//
+//        /*
+//           Create a transparent 600x600 rectangle to serve as the base layer of the robot. It will go
+//           below the 75x75 chassis rectangle.
+//        */
+//
+//        Rectangle baseRect = new Rectangle(0, 0, 600, 600);
+//        baseRect.setFill(new Color(1.0, 0.0, 1.0, 0.0));
+//        baseRect.setVisible(true);
+//
+//        /*
+//          Translate the display group by (300 - 37.5) in X and Y, so that the
+//          center of the chassis rectangle will be at the same location as the center of the 600x600 base
+//          rectangle.
+//         */
+//
+//        displayGroup.setTranslateX(displayGroup.getTranslateX() + 300 - 37.5);
+//        displayGroup.setTranslateY(displayGroup.getTranslateY() + 300 - 37.5);
+//
+//        //Create a new display group with the 600x600 transparent rectangle as its base layer, and
+//        //the original display group as its upper layer.
+//
+//        displayGroup = new Group(baseRect, displayGroup);
+//
+//        /*
+//          Add transforms. They will be applied in the opposite order from the order in which they are added.
+//          The scale transform scales the entire display group so that the base layer has the same width as the field,
+//          and the chassis rectangle (originally the 75x75 rectangle) is one-eight of the field width.
+//          The rotate and translate transforms are added so that they can be manipulated later, when the robot moves
+//          around the field.
+//         */
+//        displayGroup.getTransforms().add(new Translate(0, 0));
+//        displayGroup.getTransforms().add(new Rotate(0, halfFieldWidth, halfFieldWidth));
+//        displayGroup.getTransforms().add(new Scale(botWidth/75.0, botWidth/75.0, 0, 0));
+//
+//        fieldPane.getChildren().add(displayGroup);
+//    }
 
     /**
      *  Update the state of the robot. This includes the x, y, and headingRadians variables, as well other variables
@@ -176,9 +162,9 @@ public abstract class VirtualBot {
 //        }
 //    }
 
-    public void removeFromDisplay(StackPane fieldPane){
-        fieldPane.getChildren().remove(displayGroup);
-    }
+//    public void removeFromDisplay(StackPane fieldPane){
+//        fieldPane.getChildren().remove(displayGroup);
+//    }
 
     public HardwareMap getHardwareMap(){ return hardwareMap; }
 

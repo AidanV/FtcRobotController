@@ -2,6 +2,9 @@ package com.qualcomm.robotcore.hardware;
 
 import java.util.Random;
 
+import io.vertx.core.json.JsonObject;
+import virtual_robot.controller.VirtualRobotApplication;
+
 /**
  * Implementation of the DcMotor interface.
  */
@@ -33,6 +36,8 @@ public class DcMotorImpl implements DcMotor {
     private double systematicErrorFrac = 0.0;
     private double inertia;
 
+    private String id = null;
+
 
 
     /**
@@ -53,6 +58,10 @@ public class DcMotorImpl implements DcMotor {
         if (mode == RunMode.STOP_AND_RESET_ENCODER){
             encoderBasePosition = actualPosition;
         }
+    }
+
+    public void setId(String s){
+      this.id = s;
     }
 
     /**
@@ -85,6 +94,16 @@ public class DcMotorImpl implements DcMotor {
      */
     public synchronized void setPower(double power){
         this.power = Math.max(-1, Math.min(1, power));
+        if(id != null) {
+          JsonObject data = new JsonObject()
+            .put("power", this.power)
+            .put("mode", this.mode);
+          JsonObject update = new JsonObject()
+            .put("objectType", "motor")
+            .put("instance", this.id)
+            .put("data", data);
+          VirtualRobotApplication.sendData(update.toString());
+        }
     }
 
     /**

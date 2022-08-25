@@ -2,17 +2,15 @@ package virtual_robot.controller.robots.classes;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.hardware.ColorSensorImpl;
 import com.qualcomm.robotcore.hardware.ServoImpl;
-import javafx.fxml.FXML;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.robotcore.hardware.DcMotorImpl;
 import com.qualcomm.robotcore.hardware.MotorType;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamNameImpl;
-import sun.nio.fs.MacOSXFileSystemProvider;
+//import sun.nio.fs.MacOSXFileSystemProvider;
 import virtual_robot.controller.BotConfig;
 import virtual_robot.controller.VirtualBot;
 import virtual_robot.controller.VirtualRobotController;
@@ -33,12 +31,12 @@ public class MechanumBot extends VirtualBot {
     //private VirtualRobotController.GyroSensorImpl gyro = null;
     private BNO055IMUImpl imu = null;
     private NavxMicroNavigationSensor navX = null;
-    private VirtualRobotController.ColorSensorImpl colorSensor = null;
+    private ColorSensorImpl colorSensor = null;
     private ServoImpl gripper, swinger, hooker, booker;
     private ModernRoboticsI2cRangeSensor[] distanceSensors = null;
 
     // backServoArm is instantiated during loading via a fx:id property.
-    @FXML Rectangle backServoArm;
+//    @FXML Rectangle backServoArm;
 
     private double wheelCircumference;
     private double interWheelWidth;
@@ -65,17 +63,17 @@ public class MechanumBot extends VirtualBot {
         //gyro = (VirtualRobotController.GyroSensorImpl)hardwareMap.gyroSensor.get("gyro_sensor");
         imu = hardwareMap.get(BNO055IMUImpl.class, "imu");
         navX = hardwareMap.get(NavxMicroNavigationSensor.class, "navX");
-        colorSensor = (VirtualRobotController.ColorSensorImpl)hardwareMap.colorSensor.get("color_sensor");
+        colorSensor = (ColorSensorImpl)hardwareMap.colorSensor.get("color_sensor");
 
         gripper = (ServoImpl)hardwareMap.servo.get("firm grasp");
         swinger = (ServoImpl)hardwareMap.servo.get("ragtime");
         hooker = (ServoImpl)hardwareMap.servo.get("hooker");
         booker = (ServoImpl)hardwareMap.servo.get("booker");
 
-        wheelCircumference = Math.PI * botWidth / 4.5;
-        interWheelWidth = botWidth * 8.0 / 9.0;
-        interWheelLength = botWidth * 7.0 / 9.0;
-        wlAverage = (interWheelLength + interWheelWidth) / 2.0;
+//        wheelCircumference = Math.PI * botWidth / 4.5;
+//        interWheelWidth = botWidth * 8.0 / 9.0;
+//        interWheelLength = botWidth * 7.0 / 9.0;
+//        wlAverage = (interWheelLength + interWheelWidth) / 2.0;
 
         tWR = new double[][] {
                 {-0.25, 0.25, -0.25, 0.25},
@@ -87,7 +85,7 @@ public class MechanumBot extends VirtualBot {
 
     public void initialize(){
         //backServoArm = (Rectangle)displayGroup.getChildren().get(8);
-        backServoArm.getTransforms().add(new Rotate(0, 37.5, 67.5));
+//        backServoArm.getTransforms().add(new Rotate(0, 37.5, 67.5));
     }
 
     protected void createHardwareMap(){
@@ -100,7 +98,7 @@ public class MechanumBot extends VirtualBot {
         //hardwareMap.put("gyro_sensor", controller.new GyroSensorImpl());
         hardwareMap.put("navX", new NavxMicroNavigationSensor(this,10));
         hardwareMap.put("imu", new BNO055IMUImpl(this, 10));
-        hardwareMap.put("color_sensor", controller.new ColorSensorImpl());
+        hardwareMap.put("color_sensor", new ColorSensorImpl());
 
         hardwareMap.put("firm grasp", new ServoImpl());
         hardwareMap.put("ragtime", new ServoImpl());
@@ -140,10 +138,10 @@ public class MechanumBot extends VirtualBot {
         y += dxR * sin + dyR * cos;
         headingRadians += headingChange;
 
-        if (x >  (halfFieldWidth - halfBotWidth)) x = halfFieldWidth - halfBotWidth;
-        else if (x < (halfBotWidth - halfFieldWidth)) x = halfBotWidth - halfFieldWidth;
-        if (y > (halfFieldWidth - halfBotWidth)) y = halfFieldWidth - halfBotWidth;
-        else if (y < (halfBotWidth - halfFieldWidth)) y = halfBotWidth - halfFieldWidth;
+//        if (x >  (halfFieldWidth - halfBotWidth)) x = halfFieldWidth - halfBotWidth;
+//        else if (x < (halfBotWidth - halfFieldWidth)) x = halfBotWidth - halfFieldWidth;
+//        if (y > (halfFieldWidth - halfBotWidth)) y = halfFieldWidth - halfBotWidth;
+//        else if (y < (halfBotWidth - halfFieldWidth)) y = halfBotWidth - halfFieldWidth;
 
         if (headingRadians > Math.PI) headingRadians -= 2.0 * Math.PI;
         else if (headingRadians < -Math.PI) headingRadians += 2.0 * Math.PI;
@@ -151,15 +149,15 @@ public class MechanumBot extends VirtualBot {
         imu.updateHeadingRadians(headingRadians);
         navX.updateHeadingRadians(headingRadians);
 
-        colorSensor.updateColor(x, y);
+
 
         final double piOver2 = Math.PI / 2.0;
 
-        for (int i = 0; i<4; i++){
-            double sensorHeading = AngleUtils.normalizeRadians(headingRadians + i * piOver2);
-            distanceSensors[i].updateDistance( x - halfBotWidth * Math.sin(sensorHeading),
-                    y + halfBotWidth * Math.cos(sensorHeading), sensorHeading);
-        }
+//        for (int i = 0; i<4; i++){
+//            double sensorHeading = AngleUtils.normalizeRadians(headingRadians + i * piOver2);
+//            distanceSensors[i].updateDistance( x - halfBotWidth * Math.sin(sensorHeading),
+//                    y + halfBotWidth * Math.cos(sensorHeading), sensorHeading);
+//        }
 
     }
 

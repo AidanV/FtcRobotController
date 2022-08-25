@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Vector2D
 import kotlin.jvm.Throws
 
 
+
 @TeleOp(name = "Blue Kotlin", group = "Blue")
 class Blue : ComplexOp() {
     override fun startPositionAndOrientation(): StartData {
@@ -17,6 +18,7 @@ class Blue : ComplexOp() {
 
     @Throws(InterruptedException::class)
     override fun body() {
+
         RobotMap.IntakeCam.setPipeline(d.robot.intakedPipeline)
         ComplexMove(
                 SpeedCalcs.JoystickSpeed(),
