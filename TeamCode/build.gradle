@@ -22,6 +22,11 @@ repositories {
     maven { url = "https://maven.0x778.tk" }
 }
 
+android {
+  namespace = 'org.firstinspires.ftc.teamcode'
+}
+
+
 dependencies {
     implementation project(':FtcRobotController')
 //    implementation project(':virtual_robot_lib')
