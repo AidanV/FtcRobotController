@@ -9,7 +9,7 @@ import java.util.Random;
 import virtual_robot.controller.robots.classes.MechanumBot;
 
 public class BlueOpMode extends LinearOpMode {
-  DcMotorImpl bleft, fleft, bright, fright;
+  public static DcMotorImpl bleft, fleft, bright, fright;
   Random r = new Random();
   @Override
   public void runOpMode() throws InterruptedException {
@@ -23,12 +23,18 @@ public class BlueOpMode extends LinearOpMode {
     bright.setId("bright");
     fright = (DcMotorImpl) hardwareMap.dcMotor.get("fright");
     fright.setId("fright");
+    waitForStart();
 //    while(!opModeIsActive()) {
 //    motorRight = hardwareMap.get(DcMotor.class, "motorRight");
-      bleft.setPower(Math.sin(System.currentTimeMillis() / 10000.0));
-      fleft.setPower(-Math.sin(System.currentTimeMillis() / 10000.0));
-      bright.setPower(Math.sin(System.currentTimeMillis() / 10000.0));
-      fright.setPower(-Math.sin(System.currentTimeMillis() / 10000.0));
+//      bleft.setPower(Math.sin(System.currentTimeMillis() / 10000.0));
+//      fleft.setPower(-Math.cos(System.currentTimeMillis() / 10000.0));
+//      bright.setPower(Math.cos(System.currentTimeMillis() / 10000.0));
+//      fright.setPower(-Math.sin(System.currentTimeMillis() / 10000.0));
+      bleft.setPower(1.0);
+      fleft.setPower(1.0);
+      bright.setPower(-1.0);
+      fright.setPower(1.0);
+      System.out.println(bleft.getCurrentPosition());
 //    }
   }
 }

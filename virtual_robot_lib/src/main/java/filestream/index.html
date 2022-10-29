@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-        <title>Babylon.js sample code</title>
+        <title>Hazmat FTC Sim</title>
 
         <!-- Babylon.js -->
         <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script>
@@ -32,6 +32,7 @@
             }
 
             #renderCanvas {
+                position: fixed;
                 width: 100%;
                 height: 100%;
                 touch-action: none;
@@ -39,12 +40,12 @@
         </style>
     </head>
 <body>
+    <button id="startButton">TEXT</button>
+    <canvas id="renderCanvas">
 
-    <canvas id="renderCanvas"></canvas>
+    </canvas>
     <script src="./webSocket.js"></script>
     <script src="./babylonScene.js"></script>
-
-    <div id="thing"></div>
 
 </body>
 </html>

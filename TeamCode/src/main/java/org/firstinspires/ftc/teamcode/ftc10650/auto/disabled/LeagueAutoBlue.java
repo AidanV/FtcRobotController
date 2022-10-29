@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc10650.auto.Disabled;
+package org.firstinspires.ftc.teamcode.ftc10650.auto.disabled;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -13,12 +13,12 @@ import org.firstinspires.ftc.teamcode.op.ComplexOp;
 import org.firstinspires.ftc.teamcode.utilities.Vector2D;
 
 @Disabled
-@Autonomous(name = "League Auto Red", group = "Red")
-public class LeagueAutoRed extends ComplexOp {
+@Autonomous(name = "League Auto Blue", group = "Blue")
+public class LeagueAutoBlue extends ComplexOp {
 
     @Override
     public MoveData.StartData startPositionAndOrientation() {
-        return new MoveData.StartData(new Vector2D(200,200), 90);//60 degrees west of south is a good angle to see the barcode
+        return new MoveData.StartData(new Vector2D(200,200), -90);//60 degrees west of south is a good angle to see the barcode
     }
 
     @Override
@@ -59,11 +59,11 @@ public class LeagueAutoRed extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         5,
-                        new Vector2D(185, 200)
+                        new Vector2D(215, 200)
                 ),
 
 
-                OrientationCalcs.lookToOrientation(-90),
+                OrientationCalcs.lookToOrientation(90),
 
 
                 OtherCalcs.Lift(
@@ -84,12 +84,14 @@ public class LeagueAutoRed extends ComplexOp {
 
         d.duckPos = d.robot.duckSpotPipeline.getDuckPos();
 
+        d.duckPos = (d.duckPos + 1) % 3;
+
         int initialTape = d.robot.tapeEx.getCurrentPosition();
 //915 1485
         if(d.duckPos == 0){
-            while(opModeIsActive() && d.robot.tapeEx.getCurrentPosition() < 270+initialTape){
-                d.robot.base.setPosition(0.5);
-                d.robot.height.setPosition(0.5);//0.08
+            while(opModeIsActive() && d.robot.tapeEx.getCurrentPosition() < 310+initialTape){
+                d.robot.base.setPosition(0.345);
+                d.robot.height.setPosition(0.1329);
                 d.robot.tapeEx.setPower(0.3);
                 Thread.sleep(10);
             }
@@ -100,7 +102,7 @@ public class LeagueAutoRed extends ComplexOp {
             }
             currTime = System.currentTimeMillis();
             while(opModeIsActive() && System.currentTimeMillis()-currTime < 1000){
-                d.robot.height.setPosition(0.05);
+                d.robot.height.setPosition(0.06);
                 Thread.sleep(10);
             }
             while(opModeIsActive() && d.robot.tapeEx.getCurrentPosition() > initialTape + 100){
@@ -110,12 +112,11 @@ public class LeagueAutoRed extends ComplexOp {
                 Thread.sleep(10);
             }
         }
-
 
         else if (d.duckPos == 1){
-            while(opModeIsActive() && d.robot.tapeEx.getCurrentPosition()<385+initialTape){
-                d.robot.base.setPosition(0.63);
-                d.robot.height.setPosition(0.23);//.13
+            while(opModeIsActive() && d.robot.tapeEx.getCurrentPosition()<255+initialTape){
+                d.robot.base.setPosition(0.500);
+                d.robot.height.setPosition(0.1288);
                 d.robot.tapeEx.setPower(0.3);
                 Thread.sleep(10);
             }
@@ -126,7 +127,7 @@ public class LeagueAutoRed extends ComplexOp {
             }
             currTime = System.currentTimeMillis();
             while(opModeIsActive() && System.currentTimeMillis()-currTime < 1000){
-                d.robot.height.setPosition(0.10);
+                d.robot.height.setPosition(0.045);
                 Thread.sleep(10);
             }
             while(opModeIsActive() && d.robot.tapeEx.getCurrentPosition() > initialTape + 100){
@@ -135,15 +136,12 @@ public class LeagueAutoRed extends ComplexOp {
                 d.robot.tapeEx.setPower(-0.05);
                 Thread.sleep(10);
             }
-        }
+        } else if (d.duckPos == 2) {
 
 
-        else if (d.duckPos == 2) {
-
-
-            while(opModeIsActive() && d.robot.tapeEx.getCurrentPosition()<570+initialTape){
-                d.robot.base.setPosition(0.695);
-                d.robot.height.setPosition(0.3);//.19
+            while(opModeIsActive() && d.robot.tapeEx.getCurrentPosition()<400+initialTape){
+                d.robot.base.setPosition(0.64);
+                d.robot.height.setPosition(0.1817);
                 d.robot.tapeEx.setPower(0.3);
                 Thread.sleep(10);
             }
@@ -154,10 +152,10 @@ public class LeagueAutoRed extends ComplexOp {
             }
             currTime = System.currentTimeMillis();
             while(opModeIsActive() && System.currentTimeMillis()-currTime < 1000){
-                d.robot.height.setPosition(0.15);
+                d.robot.height.setPosition(0.125);
                 Thread.sleep(10);
             }
-            while(opModeIsActive() && d.robot.tapeEx.getCurrentPosition() > initialTape + 150){
+            while(opModeIsActive() && d.robot.tapeEx.getCurrentPosition() > initialTape + 100){
 //            d.robot.tapeEx.setTargetPosition(100+initialTape);
                 d.robot.tapeEx.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 d.robot.tapeEx.setPower(-0.05);
@@ -218,8 +216,7 @@ public class LeagueAutoRed extends ComplexOp {
 
                     MotionCalcs.PointMotion(
                             5,
-                            new Vector2D(170, 203),
-                            new Vector2D(170, 200)
+                            new Vector2D(235, 199.5)
                     ),
 
 
@@ -272,8 +269,7 @@ public class LeagueAutoRed extends ComplexOp {
 
                     MotionCalcs.PointMotion(
                             5,
-                            new Vector2D(170, 199)
-//                            new Vector2D(170, 200)
+                            new Vector2D(235, 197.5)
 
                     ),
 
@@ -333,8 +329,8 @@ public class LeagueAutoRed extends ComplexOp {
 
                     MotionCalcs.PointMotion(
                             5,
-                            new Vector2D(170, 202),
-                            new Vector2D(170, 199)
+                            new Vector2D(235, 203),
+                            new Vector2D(235, 198)
                     ),
 
                     OrientationCalcs.lookToOrientation(0),
@@ -416,7 +412,7 @@ public class LeagueAutoRed extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         5,
-                        new Vector2D(195, 200)//,
+                        new Vector2D(205, 200)//,
 //                        new Vector2D(150, 150)
                 ),
 
@@ -463,7 +459,7 @@ public class LeagueAutoRed extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         5,
-                        new Vector2D(195, 275)//,
+                        new Vector2D(205, 275)//,
 //                        new Vector2D(150, 150)
                 ),
 

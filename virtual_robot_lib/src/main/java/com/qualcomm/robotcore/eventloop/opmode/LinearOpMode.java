@@ -125,7 +125,7 @@ public abstract class LinearOpMode extends OpMode {
     @Override
     final public void start() {
         stopRequested = false;
-        isStarted = true;
+//        isStarted = true;
         synchronized (this) {
             this.notifyAll();
         }
@@ -175,8 +175,8 @@ public abstract class LinearOpMode extends OpMode {
     protected void handleLoop() {
 
         //If runOpMode has exited, check for exceptions, shut down the executorService, then interrupt the opMode thread (currentThread)
-        if (helper.isFinished()) {
-            if (helper.hasException()){
+        if (this.helper.isFinished()) {
+            if (this.helper.hasException()){
                 System.out.println("Exception from runOpMode:");
                 System.out.println(helper.getException().getClass().getName());
                 System.out.println(helper.getException().getLocalizedMessage());

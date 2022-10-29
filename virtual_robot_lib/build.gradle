@@ -23,7 +23,8 @@ plugins {
 dependencies {
 //  implementation files("/Users/vanduyneai/Documents/GitHub/2021FtcRobotController/TeamCode/src/main/java")
 //  runtimeClasspath("/Users/vanduyneai/Documents/GitHub/2021FtcRobotController/TeamCode/src/main/java")
-  implementation group: 'org.reflections', name: 'reflections', version: '0.9.9'
+
+//  implementation group: 'org.reflections', name: 'reflections', version: '0.9.9'
 
 //  implementation project(':TeamCode')
 //  runtimeOnly(fileTree('/Users/vanduyneai/Documents/GitHub/2021FtcRobotController/TeamCode/src/main/java'))

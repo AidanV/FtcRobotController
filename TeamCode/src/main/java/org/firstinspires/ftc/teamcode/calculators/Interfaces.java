@@ -6,7 +6,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardware.FreightRobotName_NA.RobotMap;
 import org.firstinspires.ftc.teamcode.hardware.Sensors.CompleteController;
 import org.firstinspires.ftc.teamcode.utilities.*;
-import org.firstinspires.ftc.teamcode.ftc10650.auto.Disabled.ExampleAuto;
+import org.firstinspires.ftc.teamcode.ftc10650.auto.disabled.ExampleAuto;
 //import org.opencv.core.Rect;
 
 

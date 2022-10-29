@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc10650.auto.Blue;
+package org.firstinspires.ftc.teamcode.ftc10650.auto.blue;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -7,16 +7,15 @@ import org.firstinspires.ftc.teamcode.calculators.MotionCalcs;
 import org.firstinspires.ftc.teamcode.calculators.OrientationCalcs;
 import org.firstinspires.ftc.teamcode.calculators.OtherCalcs;
 import org.firstinspires.ftc.teamcode.calculators.SpeedCalcs;
-import org.firstinspires.ftc.teamcode.hardware.FreightRobotName_NA.RobotMap;
 import org.firstinspires.ftc.teamcode.op.ComplexOp;
 import org.firstinspires.ftc.teamcode.utilities.Vector2D;
 
-@Autonomous(name = "Blue Duck Storage Auto", group = "Blue")
-public class BlueDuckStorageAuto extends ComplexOp {
+@Autonomous(name = "Blue Warehouse Auto", group = "Blue")
+public class BlueWarehouseAuto extends ComplexOp {
 
     @Override
     public Interfaces.MoveData.StartData startPositionAndOrientation() {
-        return new Interfaces.MoveData.StartData(new Vector2D(0.0 + (.353),1.0 + (.3142)), -90);
+        return new Interfaces.MoveData.StartData(new Vector2D(0.0 + (.353),3.0 + (.3142)), -90);
     }
 
     @Override
@@ -30,7 +29,7 @@ public class BlueDuckStorageAuto extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         5,
-                        new Vector2D(0.5, 1.3142)
+                        new Vector2D(0.5, 3.3142)
                 ),
 
                 OrientationCalcs.spinToProgress(
@@ -54,11 +53,13 @@ public class BlueDuckStorageAuto extends ComplexOp {
         //blue side fix
         d.duckPos = (d.duckPos + 1) % 3;
 
-        //move tape out of way
-        d.robot.base.setPosition(0.5);
 
-        //change pipeline
-        d.robot.IntakeCam.setPipeline(d.robot.findDuckPipeline);
+        //grab capstone
+        ComplexMove(null, null, null, OtherCalcs.AutoCupGrabBlue(true, 4500));
+
+
+        //set vision to cube pickup
+        d.robot.IntakeCam.setPipeline(d.robot.intakedPipeline);
 
 
         //drive to alliance shipping hub
@@ -70,12 +71,11 @@ public class BlueDuckStorageAuto extends ComplexOp {
 
                 MotionCalcs.PointMotion(
                         0.1,
-                        new Vector2D(1.9, 1.4),
-                        new Vector2D(1.9, 2.0)
+                        new Vector2D(2.0, 3.3)
                 ),
 
                 OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.3, 180)
+                        new OrientationCalcs.spinProgress(0.0, 0.6, 0)
                 ),
 
                 OtherCalcs.Lift(
@@ -86,133 +86,144 @@ public class BlueDuckStorageAuto extends ComplexOp {
 
 
         //place cube on shipping hub
-        ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(1500));
+        ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(2000));
 
 
-        //drive near carousel
+        //drive into warehouse
         ComplexMove(
 
                 SpeedCalcs.StandardRampUpDown(
-                        0.1, 0.6, 0.4
+                        0.1, 0.6, 0.2
                 ),
 
                 MotionCalcs.PointMotion(
                         0.1,
-                        new Vector2D(1.7, 1.0),
-                        new Vector2D(0.6, 0.6)
+                        new Vector2D(1.3, 3.3),
+                        new Vector2D(1.3, 5.2)
                 ),
 
                 OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.1, 0.75, 360)
+                        new OrientationCalcs.spinProgress(0.0, 0.5, 0)
                 ),
 
                 OtherCalcs.Lift(
-                        d.intakeLiftPos,
-                        0.5
+                        d.safeLiftPos,
+                        0.25
                 )
         );
 
 
-        //drive against carousel
+        //lower lift to reset position and reset y position
+        ComplexMove(null, null, null,
+
+                OtherCalcs.Lift(
+                        d.intakeLiftPos,
+                        0.25
+                ),
+
+                OtherCalcs.ResetYPosition(),
+
+                OtherCalcs.TimeProgress(2000)
+        );
+
+
+        //drive until intake
         ComplexMove(
 
                 SpeedCalcs.SetSpeed(0.1),
 
                 MotionCalcs.PointMotion(
-                        0.1,
-                        new Vector2D(0.5, 0.5)
+                        0.01,
+                        new Vector2D(0.25, 5.75)
                 ),
 
                 OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.5, 360)
+                        new OrientationCalcs.spinProgress(0.0, 0.25, -45)
                 ),
 
-                OtherCalcs.StopAtStall(3.2, RobotMap.brightEx)
+                OtherCalcs.StopAtIntake()
         );
 
 
-        //spin carousel
-        ComplexMove(null, null, null, OtherCalcs.AutoDuckBlue(4000));
-
-
+        //drive out of warehouse
         ComplexMove(
 
                 SpeedCalcs.StandardRampUpDown(
-                        0.1, 0.3, 0.3
+                        0.1, 0.6, 0.2
                 ),
 
                 MotionCalcs.PointMotion(
-                        0.1,
-                        new Vector2D(1.0, 0.5)
+                        0.01,
+                        new Vector2D(1.3, 5.2),
+                        new Vector2D(1.3, 3.3)
                 ),
 
                 OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.8, 270)
+                        new OrientationCalcs.spinProgress(0.0, 0.3, 0)
                 )
         );
 
-        //pick up duck
-        ComplexMove(
-
-                SpeedCalcs.SetSpeed(0.2),
-
-                MotionCalcs.DriveTowardsDuckBlue(),
-
-                OrientationCalcs.lookToOrientation(270),
-
-                OtherCalcs.IntakeDuck()
-        );
 
         //drive to alliance shipping hub
         ComplexMove(
 
                 SpeedCalcs.StandardRampUpDown(
-                        0.1, 0.4, 0.3
+                        0.1, 0.4, 0.4
                 ),
 
                 MotionCalcs.PointMotion(
-                        0.1,
-                        new Vector2D(1.85, 1.6),
-                        new Vector2D(1.85, 2.0)
+                        0.01,
+                        new Vector2D(2.1, 3.1)
                 ),
 
                 OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.4, 180)
+                        new OrientationCalcs.spinProgress(0.0, 0.5, 0)
                 ),
-
-                OtherCalcs.HoldIntakePosition(),
 
                 OtherCalcs.Lift(
                         d.topLiftPos,
-                        0.5
+                        0.25
                 )
         );
 
 
-        //place duck on shipping hub
-        ComplexMove(null, null, null, OtherCalcs.AutoPlaceDuck(2000));
+        //place cube on shipping hub
+        ComplexMove(null, null, null, OtherCalcs.AutoPlaceCube(2000));
 
 
-        //park in storage unit
+        //drive into warehouse
         ComplexMove(
 
                 SpeedCalcs.StandardRampUpDown(
-                        0.1, 0.3, 0.3
+                        0.1, 0.6, 0.2
                 ),
 
                 MotionCalcs.PointMotion(
                         0.1,
-                        new Vector2D(1.45, 0.4)
+                        new Vector2D(1.3, 3.3),
+                        new Vector2D(1.3, 5.2)
                 ),
 
                 OrientationCalcs.spinToProgress(
-                        new OrientationCalcs.spinProgress(0.0, 0.5, 360)
+                        new OrientationCalcs.spinProgress(0.0, 0.5, 0)
                 ),
 
                 OtherCalcs.Lift(
-                        d.intakeLiftPos,
-                        0.5
+                        d.safeLiftPos,
+                        0.25
                 )
+        );
+
+
+        //lower lift to reset position
+        ComplexMove(null, null, null,
+
+                OtherCalcs.Lift(
+                        d.intakeLiftPos,
+                        0.25
+                ),
+
+                OtherCalcs.TimeProgress(2000)
         );
     }
 }

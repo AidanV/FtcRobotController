@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc10650.auto.Blue;
+package org.firstinspires.ftc.teamcode.ftc10650.auto.blue;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 

@@ -24,7 +24,6 @@ class Blue : ComplexOp() {
                 SpeedCalcs.JoystickSpeed(),
                 MotionCalcs.FieldCentricJoystick(-90.0),
                 OrientationCalcs.GameOrientBlue(),
-//                OtherCalcs.Duck(),
                 OtherCalcs.TeleLift(),
                 OtherCalcs.Intake(),
                 OtherCalcs.TeleCap(),
