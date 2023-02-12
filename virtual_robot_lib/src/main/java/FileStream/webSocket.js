@@ -1,4 +1,4 @@
-var webSocketSetup = (handleData) => {
+var webSocketSetup = (handleData, onOpen) => {
   var socket;
   if (window.WebSocket) {
       socket = new WebSocket("ws://localhost:8080/index.html");
@@ -18,6 +18,7 @@ var webSocketSetup = (handleData) => {
 //            scene = createScene();
       }
       socket.onopen = function (event) {
+        if(onOpen) onOpen()
 //            alert("Web Socket opened!");
       };
       socket.onclose = function (event) {
@@ -34,7 +35,8 @@ var webSocketSetup = (handleData) => {
       if (socket.readyState == WebSocket.OPEN) {
           socket.send(message);
       } else {
-          alert("The socket is not open.");
+//          alert("The socket is not open.");
       }
   }
+  return send
 }

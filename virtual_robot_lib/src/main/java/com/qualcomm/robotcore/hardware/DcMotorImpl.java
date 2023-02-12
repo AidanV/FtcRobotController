@@ -116,6 +116,10 @@ public class DcMotorImpl implements DcMotor {
                 direction == Direction.REVERSE && !MOTOR_TYPE.REVERSED ? -result : result;
     }
 
+    public void setCurrentPosition(double position){
+      actualPosition += (position - (actualPosition - encoderBasePosition));
+    }
+
     /**
      * For internal use only.
      * @return
